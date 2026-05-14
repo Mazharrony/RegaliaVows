@@ -1,0 +1,161 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* Brightened palette for readability on dark surfaces */
+    --background: #111216;
+    --foreground: #ffffff;
+    --gilded: #d6a140;
+    --champagne: #f3e3bf;
+  }
+
+  html,
+  body {
+    background: var(--background);
+    color: var(--foreground);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+    font-size: 17px;
+  }
+
+  /* Reading-comfort defaults for long-form copy on dark surfaces */
+  p {
+    line-height: 1.75;
+    color: rgba(255, 255, 255, 0.92);
+  }
+
+  /* Lift muted-text utilities so they remain legible at full brightness */
+  .text-pearl\/40 { color: rgba(255, 255, 255, 0.7) !important; }
+  .text-pearl\/50 { color: rgba(255, 255, 255, 0.78) !important; }
+  .text-pearl\/60 { color: rgba(255, 255, 255, 0.82) !important; }
+  .text-pearl\/70 { color: rgba(255, 255, 255, 0.88) !important; }
+  .text-pearl\/80 { color: rgba(255, 255, 255, 0.92) !important; }
+  .text-pearl\/85 { color: rgba(255, 255, 255, 0.95) !important; }
+  .text-pearl\/90 { color: rgba(255, 255, 255, 0.97) !important; }
+
+  html {
+    scroll-behavior: auto; /* Lenis owns scrolling */
+  }
+
+  html.lenis,
+  html.lenis body {
+    height: auto;
+  }
+
+  .lenis.lenis-smooth {
+    scroll-behavior: auto !important;
+  }
+
+  .lenis.lenis-smooth [data-lenis-prevent] {
+    overscroll-behavior: contain;
+  }
+
+  .lenis.lenis-stopped {
+    overflow: clip;
+  }
+
+  ::selection {
+    background: rgba(230, 207, 153, 0.45);
+    color: #ffffff;
+  }
+
+  /* Theme-by-section: light surfaces */
+  [data-theme="light"] {
+    --background: #faf6ee;
+    --foreground: #0b0b0d;
+    background: var(--background);
+    color: var(--foreground);
+  }
+  [data-theme="light"] p { color: rgba(11, 11, 13, 0.9); }
+
+  :focus-visible {
+    outline: 2px solid var(--gilded);
+    outline-offset: 3px;
+    border-radius: 2px;
+  }
+}
+
+@layer components {
+  .hairline {
+    @apply h-px w-full bg-gradient-to-r from-transparent via-gilded/70 to-transparent;
+  }
+
+  .eyebrow {
+    @apply text-eyebrow uppercase tracking-widest2 text-gilded-200;
+  }
+
+  .display {
+    @apply font-display font-light;
+  }
+
+  /* Vibrant flowing gold text — apply to any element to make it shimmer */
+  .text-gold {
+    background-image: linear-gradient(
+      110deg,
+      #6b4a12 0%,
+      #8b6418 12%,
+      #b07f2a 28%,
+      #d6a140 44%,
+      #f0d08c 52%,
+      #d6a140 60%,
+      #b07f2a 76%,
+      #8b6418 90%,
+      #6b4a12 100%
+    );
+    background-size: 220% 100%;
+    background-position: 0% 50%;
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: transparent;
+    animation: gold-pan 7s ease-in-out infinite;
+    text-shadow: 0 0 18px rgba(214, 161, 64, 0.18);
+  }
+
+  /* Same flowing gold, but as a background (use on dividers, dots, fills) */
+  .bg-gold-flow {
+    background-image: linear-gradient(
+      110deg,
+      #6b4a12 0%,
+      #8b6418 12%,
+      #b07f2a 28%,
+      #d6a140 44%,
+      #f0d08c 52%,
+      #d6a140 60%,
+      #b07f2a 76%,
+      #8b6418 90%,
+      #6b4a12 100%
+    );
+    background-size: 220% 100%;
+    animation: gold-pan 7s ease-in-out infinite;
+  }
+
+  @keyframes gold-pan {
+    0%, 100% { background-position: 0% 50%; }
+    50%      { background-position: 100% 50%; }
+  }
+
+  .grain::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background-image: url("/textures/grain.svg");
+    opacity: 0.05;
+    mix-blend-mode: overlay;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
