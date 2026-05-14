@@ -29,7 +29,7 @@ export default function ContactPage() {
               data-cursor="link"
               className="font-tight text-eyebrow uppercase tracking-widest2 text-ink/70 transition-colors hover:text-gilded-600"
             >
-              Corporate & private events →
+              Briefing a brand, corporate or private event →
             </Link>
           </div>
 

@@ -1,58 +1,55 @@
 "use client";
 
-import dynamic from "next/dynamic";
 import { useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
 import { Eyebrow } from "@/components/ui/Eyebrow";
 import { Button } from "@/components/ui/Button";
 import { SplitText } from "@/components/motion/SplitText";
 
-const HeroScene = dynamic(
-  () => import("@/components/3d/HeroScene").then((m) => m.HeroScene),
-  { ssr: false }
-);
+// Local cinematic hero clips. Each entry provides a desktop and mobile source;
+// the <video> uses <source media> to pick the right one per viewport.
+type Clip = { desktop: string; mobile: string; poster?: string };
 
-// Cinematic wedding stock footage — Mixkit (free, commercial use, no attribution required).
-// Drop your own clip into /public/videos/hero.mp4 to override the entire reel.
-type Clip = { src: string; poster: string };
-
-const LOCAL_CLIP: Clip | null = null; // set to { src: "/videos/hero.mp4", poster: "/videos/hero-poster.jpg" } once you add a local file
-
-const REEL: Clip[] = [
+const LOCAL_REEL: Clip[] = [
   {
-    // Newlyweds walking hand in hand — soft slow-motion, very cinematic
-    src: "https://assets.mixkit.co/videos/40596/40596-1080.mp4",
-    poster: "",
+    desktop: "/videos/hero-1-desktop.mp4",
+    mobile: "/videos/hero-1-mobile.mp4",
   },
   {
-    // Bride walking with bouquet
-    src: "https://assets.mixkit.co/videos/40591/40591-720.mp4",
-    poster: "",
-  },
-  {
-    // Newlyweds posing in garden
-    src: "https://assets.mixkit.co/videos/40601/40601-1080.mp4",
-    poster: "",
-  },
-  {
-    // Bride and groom standing head-on in a party garden
-    src: "https://assets.mixkit.co/videos/40627/40627-720.mp4",
-    poster: "",
-  },
-  {
-    // Bridal bouquet close-up
-    src: "https://assets.mixkit.co/videos/18204/18204-720.mp4",
-    poster: "",
+    desktop: "/videos/hero-2-desktop.mp4",
+    mobile: "/videos/hero-2-mobile.mp4",
   },
 ];
 
+// Royalty-free stock wedding cinematics (Mixkit CDN). Used only when every
+// local clip fails to load — so the hero never falls back to a blank frame.
+const STOCK_REEL: Clip[] = [
+  {
+    desktop:
+      "https://assets.mixkit.co/videos/preview/mixkit-couple-of-newlyweds-walking-towards-each-other-in-a-39880-large.mp4",
+    mobile:
+      "https://assets.mixkit.co/videos/preview/mixkit-couple-of-newlyweds-walking-towards-each-other-in-a-39880-small.mp4",
+  },
+  {
+    desktop:
+      "https://assets.mixkit.co/videos/preview/mixkit-bride-and-groom-leaving-the-church-after-the-ceremony-39885-large.mp4",
+    mobile:
+      "https://assets.mixkit.co/videos/preview/mixkit-bride-and-groom-leaving-the-church-after-the-ceremony-39885-small.mp4",
+  },
+];
+
+// Ultimate fallback when even stock video fails or prefers-reduced-motion is on.
+const POSTER =
+  "https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=2000&q=75";
+
 export function HomeHero() {
   const [reduce, setReduce] = useState(false);
+  const [useStock, setUseStock] = useState(false);
   const [videoFailed, setVideoFailed] = useState(false);
   const [clipIndex, setClipIndex] = useState(0);
   const videoRef = useRef<HTMLVideoElement>(null);
 
-  const clips: Clip[] = LOCAL_CLIP ? [LOCAL_CLIP] : REEL;
+  const clips: Clip[] = useStock ? STOCK_REEL : LOCAL_REEL;
   const current = clips[clipIndex % clips.length];
 
   useEffect(() => {
@@ -72,7 +69,7 @@ export function HomeHero() {
     if (v.readyState >= 2) tryPlay();
     else v.addEventListener("loadeddata", tryPlay, { once: true });
     return () => v.removeEventListener("loadeddata", tryPlay);
-  }, [reduce, videoFailed, clipIndex]);
+  }, [reduce, videoFailed, clipIndex, useStock]);
 
   // Force the video to never stay paused. If anything (browser UI, tab switch,
   // long-press menu, iOS low-power mode, scroll-out) pauses it, immediately
@@ -122,7 +119,7 @@ export function HomeHero() {
       window.clearInterval(tick);
       io?.disconnect();
     };
-  }, [reduce, videoFailed, clipIndex]);
+  }, [reduce, videoFailed, clipIndex, useStock]);
 
   const useVideo = !reduce && !videoFailed;
   const advance = () => setClipIndex((i) => (i + 1) % clips.length);
@@ -130,9 +127,17 @@ export function HomeHero() {
   return (
     <section className="relative isolate min-h-[100svh] w-full overflow-hidden bg-ink text-pearl">
       <div className="absolute inset-0 pointer-events-none select-none">
-        {useVideo ? (
+        {/* Poster image — sits behind the video and remains visible if the
+            video fails to load on any viewport, ensuring no blank hero. */}
+        <div
+          aria-hidden
+          className="absolute inset-0 bg-cover bg-center"
+          style={{ backgroundImage: `url(${POSTER})` }}
+        />
+
+        {useVideo && (
           <video
-            key={current.src}
+            key={`${useStock ? "stock" : "local"}-${clipIndex}`}
             ref={videoRef}
             className="absolute inset-0 h-full w-full object-cover pointer-events-none select-none"
             autoPlay
@@ -140,7 +145,7 @@ export function HomeHero() {
             loop={clips.length === 1}
             playsInline
             preload="auto"
-            {...(current.poster ? { poster: current.poster } : {})}
+            poster={POSTER}
             aria-hidden="true"
             tabIndex={-1}
             controls={false}
@@ -160,14 +165,22 @@ export function HomeHero() {
             }}
             onEnded={clips.length > 1 ? advance : undefined}
             onError={() => {
-              if (clips.length > 1 && clipIndex < clips.length - 1) advance();
-              else setVideoFailed(true);
+              // Cycle within the current reel first; if every clip in the
+              // local reel has failed, switch to the stock wedding fallback;
+              // if even stock fails, give up and let the poster image show.
+              if (clipIndex < clips.length - 1) {
+                advance();
+              } else if (!useStock) {
+                setUseStock(true);
+                setClipIndex(0);
+              } else {
+                setVideoFailed(true);
+              }
             }}
           >
-            <source src={current.src} type="video/mp4" />
+            <source media="(max-width: 767px)" src={current.mobile} type="video/mp4" />
+            <source media="(min-width: 768px)" src={current.desktop} type="video/mp4" />
           </video>
-        ) : (
-          !reduce && <HeroScene />
         )}
 
         {/* Cinematic darkening so the headline always reads cleanly over footage */}
@@ -202,6 +215,9 @@ export function HomeHero() {
           >
             Regalia Vows is for couples who treat their wedding as a work of art.
             Conceived in Dubai, staged the world over.
+            <span className="mt-3 block text-pearl/55">
+              And, on request, the corporate, brand and private occasions our clients ask us to compose next.
+            </span>
           </motion.p>
 
           <motion.div
@@ -213,7 +229,7 @@ export function HomeHero() {
             <Button href="/contact" variant="gilded" size="lg" withArrow>
               Begin the Conversation
             </Button>
-            <Button href="/portfolio" variant="outline" size="lg" withArrow>
+            <Button href="/case-studies" variant="outline" size="lg" withArrow>
               View Regalia Vows&apos; Work
             </Button>
           </motion.div>

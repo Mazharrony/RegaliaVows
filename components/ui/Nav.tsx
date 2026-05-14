@@ -12,8 +12,9 @@ import { Monogram } from "./Monogram";
 const nav = [
   { href: "/about", label: "Story" },
   { href: "/services", label: "Services" },
+  { href: "/sectors", label: "Sectors" },
   { href: "/experience", label: "Experience" },
-  { href: "/portfolio", label: "Portfolio" },
+  { href: "/case-studies", label: "Portfolio" },
   { href: "/venues", label: "Venues" },
   { href: "/journal", label: "Journal" },
 ];
@@ -55,7 +56,7 @@ export function Nav() {
             className="group flex items-center gap-3"
             data-cursor="link"
           >
-            <Monogram className="h-9 w-9 text-gilded" />
+            <Monogram className="h-11 w-11 text-gilded transition-transform duration-700 ease-silk group-hover:scale-105 md:h-12 md:w-12" />
             <span className="hidden font-display text-lg italic text-pearl/95 md:block">
               {site.name}
             </span>
@@ -110,7 +111,7 @@ function MobileMenu({ onClose }: { onClose: () => void }) {
       <div className="absolute inset-0 bg-gold-foil opacity-30" aria-hidden />
       <div className="relative flex h-full flex-col px-6 py-6 md:px-10">
         <div className="flex items-center justify-between">
-          <Monogram className="h-8 w-8 text-gilded" />
+          <Monogram className="h-10 w-10 text-gilded" />
           <button
             onClick={onClose}
             aria-label="Close menu"

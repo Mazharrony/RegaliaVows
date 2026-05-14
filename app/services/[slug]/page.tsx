@@ -69,6 +69,7 @@ const data = {
       "Guest experience design",
     ],
     investment: "From AED 250,000",
+    video: "/videos/private-event.mp4",
   },
   "corporate-and-private": {
     eyebrow: "Service V",
@@ -123,6 +124,7 @@ export default async function ServiceDetailPage({ params }: { params: Promise<{ 
   const { slug } = await params;
   const item = data[slug as Slug];
   if (!item) notFound();
+  const video = "video" in item ? (item as { video?: string }).video : undefined;
 
   return (
     <>
@@ -131,6 +133,27 @@ export default async function ServiceDetailPage({ params }: { params: Promise<{ 
         title={item.title}
         description={item.description}
       />
+
+      {video && (
+        <Section theme="ink" className="!pt-0 !pb-0">
+          <Container>
+            <Reveal>
+              <div className="relative overflow-hidden rounded-sm shadow-2xl ring-1 ring-gilded-600/20">
+                <video
+                  src={video}
+                  autoPlay
+                  muted
+                  loop
+                  playsInline
+                  preload="metadata"
+                  className="aspect-video h-full w-full object-cover"
+                />
+                <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-ink/40 via-transparent to-transparent" aria-hidden />
+              </div>
+            </Reveal>
+          </Container>
+        </Section>
+      )}
 
       <Section theme="pearl">
         <Container>

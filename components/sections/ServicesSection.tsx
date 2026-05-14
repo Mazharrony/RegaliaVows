@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { motion, useScroll, useTransform } from "framer-motion";
 import Link from "next/link";
 import { Container } from "@/components/ui/Container";
 import { Eyebrow } from "@/components/ui/Eyebrow";
@@ -53,6 +52,17 @@ const services = [
     image:
       "https://images.unsplash.com/photo-1530023367847-a683933f4172?auto=format&fit=crop&w=1400&q=70",
   },
+  {
+    tag: "V",
+    title: "Beyond the Aisle",
+    kicker: "On request",
+    description:
+      "Corporate launches, brand activations, milestone privates and hotel openings — composed for clients we know.",
+    href: "/sectors",
+    accent: "from-pearl/10 via-transparent to-transparent",
+    image:
+      "https://images.unsplash.com/photo-1540575467063-178a50c2df87?auto=format&fit=crop&w=1400&q=70",
+  },
 ];
 
 function ServiceCard({
@@ -72,7 +82,7 @@ function ServiceCard({
       href={s.href}
       data-cursor="view"
       data-cursor-label="View"
-      className={`group relative isolate block overflow-hidden rounded-card border border-pearl/10 bg-ink-50 transition-[transform,border-color] duration-700 ease-silk hover:-translate-y-1 hover:border-gilded/50 ${sizing}`}
+      className={`group relative isolate block overflow-clip rounded-card border border-pearl/10 bg-ink-50 transition-[transform,border-color] duration-700 ease-silk transform-gpu hover:-translate-y-1 hover:border-gilded/50 ${sizing}`}
     >
       {/* Background image */}
       <div
@@ -86,10 +96,11 @@ function ServiceCard({
       {/* Grain */}
       <div aria-hidden className="absolute inset-0 bg-gold-foil opacity-25 mix-blend-soft-light" />
 
-      {/* Oversized watermark numeral */}
+      {/* Oversized watermark numeral — top edge faded so the rounded corners
+          don't show a hard horizontal slice through the letterform. */}
       <span
         aria-hidden
-        className="pointer-events-none absolute -top-6 -right-2 font-display text-[14rem] italic leading-none text-gilded/10 transition-all duration-700 ease-silk group-hover:text-gilded/20 sm:-top-8 sm:text-[18rem]"
+        className="pointer-events-none absolute top-2 right-3 font-display text-[12rem] italic leading-[0.85] text-gilded/10 transition-all duration-700 ease-silk group-hover:text-gilded/20 sm:top-3 sm:right-4 sm:text-[16rem] [mask-image:linear-gradient(180deg,transparent_0%,#000_18%,#000_100%)] [-webkit-mask-image:linear-gradient(180deg,transparent_0%,#000_18%,#000_100%)]"
       >
         {s.tag}
       </span>
@@ -134,14 +145,11 @@ function ServiceCard({
 }
 
 export function ServicesSection() {
-  const wrapperRef = useRef<HTMLDivElement>(null);
+  const wrapperRef = useRef<HTMLElement>(null);
   const trackRef = useRef<HTMLDivElement>(null);
-  const viewportRef = useRef<HTMLDivElement>(null);
   const [isDesktop, setIsDesktop] = useState(false);
-  const [distance, setDistance] = useState(0);
 
-  // Detect viewport: only run the pinned horizontal-scroll effect on lg+.
-  // (Tablet / sm desktop fall through to a clean 2-column grid for legibility.)
+  // Detect viewport: only pin & translate on lg+.
   useEffect(() => {
     const mq = window.matchMedia("(min-width: 1024px)");
     const update = () => setIsDesktop(mq.matches);
@@ -150,34 +158,68 @@ export function ServicesSection() {
     return () => mq.removeEventListener("change", update);
   }, []);
 
-  // Measure how far the track must travel so the last card aligns to the right edge.
+  // GSAP ScrollTrigger handles pinning + horizontal translate. This is
+  // resilient to Lenis smooth-scroll, recalculates on resize/image-load, and
+  // doesn't depend on `position: sticky` working in every layout context.
   useEffect(() => {
     if (!isDesktop) return;
-    const measure = () => {
-      const track = trackRef.current;
-      const vp = viewportRef.current;
-      if (!track || !vp) return;
-      const d = Math.max(0, track.scrollWidth - vp.clientWidth);
-      setDistance(d);
-    };
-    measure();
-    const ro = new ResizeObserver(measure);
-    if (trackRef.current) ro.observe(trackRef.current);
-    if (viewportRef.current) ro.observe(viewportRef.current);
-    window.addEventListener("resize", measure);
+    const wrapper = wrapperRef.current;
+    const track = trackRef.current;
+    if (!wrapper || !track) return;
+
+    let killed = false;
+    let cleanupFn: (() => void) | undefined;
+
+    (async () => {
+      const [gsapMod, stMod] = await Promise.all([
+        import("gsap"),
+        import("gsap/ScrollTrigger"),
+      ]);
+      if (killed) return;
+      const gsap = gsapMod.gsap ?? gsapMod.default;
+      const ScrollTrigger = stMod.ScrollTrigger ?? stMod.default;
+      gsap.registerPlugin(ScrollTrigger);
+
+      const getDistance = () =>
+        Math.max(0, track.scrollWidth - window.innerWidth);
+
+      const tween = gsap.to(track, {
+        x: () => -getDistance(),
+        ease: "none",
+        scrollTrigger: {
+          trigger: wrapper,
+          start: "top top",
+          end: () => "+=" + getDistance(),
+          scrub: 0.5,
+          pin: true,
+          pinSpacing: true,
+          anticipatePin: 1,
+          invalidateOnRefresh: true,
+        },
+      });
+
+      // Re-measure once images / fonts settle so the end-position is correct.
+      const refresh = () => ScrollTrigger.refresh();
+      const t1 = window.setTimeout(refresh, 300);
+      const t2 = window.setTimeout(refresh, 1200);
+      window.addEventListener("load", refresh);
+
+      cleanupFn = () => {
+        window.clearTimeout(t1);
+        window.clearTimeout(t2);
+        window.removeEventListener("load", refresh);
+        tween.scrollTrigger?.kill();
+        tween.kill();
+      };
+    })();
+
     return () => {
-      ro.disconnect();
-      window.removeEventListener("resize", measure);
+      killed = true;
+      cleanupFn?.();
     };
   }, [isDesktop]);
 
-  const { scrollYProgress } = useScroll({
-    target: wrapperRef,
-    offset: ["start start", "end end"],
-  });
-  const x = useTransform(scrollYProgress, [0, 1], [0, -distance]);
-
-  // Mobile / tablet < md: native horizontal snap-scroll, no pin.
+  // Mobile / tablet < lg: native horizontal snap-scroll, no pin.
   if (!isDesktop) {
     return (
       <section
@@ -223,19 +265,16 @@ export function ServicesSection() {
     );
   }
 
-  // Desktop: pinned horizontal scroll with measured distance.
-  // Wrapper height = viewport + travel distance (so 1px scroll == 1px translate).
-  const wrapperHeight = `calc(100vh + ${distance}px)`;
-
+  // Desktop: GSAP pins the section and translates the track horizontally.
+  // No explicit wrapper height needed — ScrollTrigger inserts a pin-spacer.
   return (
     <section
       id="services"
       data-theme="dark"
       ref={wrapperRef}
       className="relative bg-ink text-pearl"
-      style={{ height: wrapperHeight, minHeight: "100vh" }}
     >
-      <div className="sticky top-0 flex h-screen flex-col justify-center overflow-hidden pt-24 pb-16">
+      <div className="flex h-screen flex-col justify-center overflow-hidden pt-24 pb-16">
         <Container className="mb-10 md:mb-12">
           <div className="grid items-end gap-8 md:grid-cols-2">
             <Reveal>
@@ -255,16 +294,15 @@ export function ServicesSection() {
           </div>
         </Container>
 
-        <div ref={viewportRef} className="relative w-full overflow-hidden">
-          <motion.div
+        <div className="relative w-full overflow-hidden">
+          <div
             ref={trackRef}
-            style={{ x }}
             className="flex gap-8 px-8 md:gap-10 md:px-12 lg:gap-12 lg:px-16 will-change-transform"
           >
             {services.map((s) => (
               <ServiceCard key={s.title} s={s} variant="desktop" />
             ))}
-          </motion.div>
+          </div>
         </div>
 
         <div className="pointer-events-none absolute bottom-6 left-1/2 -translate-x-1/2 text-eyebrow uppercase tracking-widest2 text-pearl/40">

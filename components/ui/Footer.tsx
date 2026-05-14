@@ -14,20 +14,29 @@ const cols = [
     ],
   },
   {
-    title: "Services",
+    title: "Weddings",
     links: [
-      { href: "/services/weddings", label: "Weddings" },
-      { href: "/services/proposals", label: "Proposals" },
+      { href: "/services/weddings", label: "Bespoke Weddings" },
+      { href: "/services/proposals", label: "Cinematic Proposals" },
       { href: "/services/destination-weddings", label: "Destination" },
       { href: "/services/private-events", label: "Private Events" },
-      { href: "/services/corporate-and-private", label: "Corporate & Private" },
       { href: "/services/honeymoons", label: "Honeymoons" },
+    ],
+  },
+  {
+    title: "Also Offered",
+    links: [
+      { href: "/sectors/corporate", label: "Corporate Events" },
+      { href: "/sectors/brand-experiential", label: "Brand & Experiential" },
+      { href: "/sectors/private-social", label: "Private & Social" },
+      { href: "/sectors/hospitality", label: "Hospitality Launches" },
+      { href: "/sectors", label: "All Sectors" },
     ],
   },
   {
     title: "Discover",
     links: [
-      { href: "/portfolio", label: "Real Weddings" },
+      { href: "/case-studies", label: "Case Studies" },
       { href: "/venues", label: "Venues" },
       { href: "/contact", label: "Enquire" },
     ],
@@ -39,7 +48,7 @@ export function Footer() {
     <footer className="relative isolate overflow-hidden border-t border-pearl/5 bg-ink py-20 text-pearl">
       <div className="pointer-events-none absolute inset-0 bg-gold-foil opacity-30" aria-hidden />
       <Container className="relative">
-        <div className="grid gap-16 lg:grid-cols-[1.4fr_1fr_1fr_1fr]">
+        <div className="grid gap-16 lg:grid-cols-[1.4fr_1fr_1fr_1fr_1fr]">
           <div>
             <div className="flex items-center gap-3">
               <Monogram className="h-10 w-10 text-gilded" />

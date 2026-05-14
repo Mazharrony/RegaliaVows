@@ -13,7 +13,7 @@ export const metadata: Metadata = {
 
 const values = [
   ["12", "Weddings per year, no more."],
-  ["38", "Languages spoken across our team."],
+  ["6", "Other commissions \u2014 brand, corporate, private."],
   ["27", "Countries staged in."],
   ["100%", "Of celebrations led by a founding director."],
 ];

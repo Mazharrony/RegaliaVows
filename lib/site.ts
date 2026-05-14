@@ -1,8 +1,8 @@
 export const site = {
   name: "Regalia Vows",
-  tagline: "Weddings, composed.",
+  tagline: "Weddings, composed — and the occasions that follow.",
   description:
-    "Regalia Vows composes once-in-a-lifetime weddings, proposals and private celebrations from Dubai, staged across the Emirates and the world.",
+    "Regalia Vows composes once-in-a-lifetime weddings and proposals from Dubai, staged across the Emirates and the world. On request, the same hand designs the corporate launches, private galas, brand activations and hospitality openings our clients ask for next.",
   url: "https://regaliavows.com",
   locale: "en-AE",
   city: "Dubai",

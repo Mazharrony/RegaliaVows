@@ -66,7 +66,7 @@ export function FeaturedWork() {
               className={`${w.span} group relative`}
             >
               <Link
-                href={`/portfolio/${w.slug}`}
+                href={`/case-studies/${w.slug}`}
                 data-cursor="view"
                 data-cursor-label="Open"
                 className="block h-full"
@@ -106,7 +106,7 @@ export function FeaturedWork() {
 
         <div className="mt-16 flex justify-center">
           <Link
-            href="/portfolio"
+            href="/case-studies"
             data-cursor="link"
             className="group inline-flex items-center gap-4 font-tight text-eyebrow uppercase tracking-widest2 text-ink hover:text-gilded-600"
           >
