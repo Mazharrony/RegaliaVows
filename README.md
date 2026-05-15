@@ -6,7 +6,7 @@ Luxury wedding planning, Dubai. Cinematic, editorial Next.js 15 site for a priva
 
 - **Next.js 15** (App Router) + **React 19** + **TypeScript** (strict)
 - **Tailwind CSS 3.4** with a custom luxury design system (Ink / Pearl / Champagne / Gilded)
-- **Framer Motion** + **GSAP / ScrollTrigger** + **Lenis** for cinematic scroll & micro-motion
+- **Framer Motion** + **GSAP / ScrollTrigger** for cinematic scroll & micro-motion
 - **react-hook-form** + **zod** for the multi-step bespoke and corporate enquiry forms
 - **sonner** for elegant toasts; **lucide-react** for line iconography
 
@@ -68,7 +68,7 @@ The site ships with **no fabricated client work, press coverage, testimonials or
 ```
 app/                  App Router pages and the /api/enquiry route handler
 components/
-  motion/             Cursor, LenisProvider, Magnetic, Reveal, SplitText
+  motion/             Cursor, Magnetic, Reveal, SplitText
   sections/           Page-level composed sections (HomeHero, Manifesto, …)
     enquiry/          Shared primitives (Field, RadioGroup, Stepper) for the two enquiry forms
   ui/                 Section, Container, Button, Eyebrow, Nav, Footer, EmptyState, Monogram

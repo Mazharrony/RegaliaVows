@@ -3,7 +3,6 @@ import "./globals.css";
 import { display, sans, tight } from "@/lib/fonts";
 import { site } from "@/lib/site";
 import { cn } from "@/lib/cn";
-import { LenisProvider } from "@/components/motion/LenisProvider";
 import { Nav } from "@/components/ui/Nav";
 import { Footer } from "@/components/ui/Footer";
 import { Toaster } from "sonner";
@@ -59,11 +58,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       className={cn(display.variable, sans.variable, tight.variable, "bg-ink text-pearl")}
     >
       <body className="font-sans antialiased selection:bg-gilded/30">
-        <LenisProvider>
-          <Nav />
-          <main id="main">{children}</main>
-          <Footer />
-        </LenisProvider>
+        <Nav />
+        <main id="main">{children}</main>
+        <Footer />
         <Toaster
           theme="dark"
           position="bottom-right"

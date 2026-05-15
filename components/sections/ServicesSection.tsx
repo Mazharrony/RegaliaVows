@@ -159,7 +159,7 @@ export function ServicesSection() {
   }, []);
 
   // GSAP ScrollTrigger handles pinning + horizontal translate. This is
-  // resilient to Lenis smooth-scroll, recalculates on resize/image-load, and
+  // resilient to native smooth-scroll, recalculates on resize/image-load, and
   // doesn't depend on `position: sticky` working in every layout context.
   useEffect(() => {
     if (!isDesktop) return;
