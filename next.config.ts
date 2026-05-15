@@ -22,6 +22,11 @@ const nextConfig: NextConfig = {
         destination: "/case-studies/:slug",
         permanent: true,
       },
+      {
+        source: "/favicon.ico",
+        destination: "/icon.svg",
+        permanent: false,
+      },
     ];
   },
   // Prevent webpack's persistent cache from trying to gzip large video blobs

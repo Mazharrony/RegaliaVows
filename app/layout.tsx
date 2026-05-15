@@ -55,9 +55,13 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html
       lang="en"
+      suppressHydrationWarning
       className={cn(display.variable, sans.variable, tight.variable, "bg-ink text-pearl")}
     >
-      <body className="font-sans antialiased selection:bg-gilded/30">
+      <body
+        suppressHydrationWarning
+        className="font-sans antialiased selection:bg-gilded/30"
+      >
         <Nav />
         <main id="main">{children}</main>
         <Footer />
