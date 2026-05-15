@@ -55,9 +55,13 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html
       lang="en"
+      translate="no"
       suppressHydrationWarning
-      className={cn(display.variable, sans.variable, tight.variable, "bg-cream text-ink")}
+      className={cn(display.variable, sans.variable, tight.variable, "notranslate bg-cream text-ink")}
     >
+      <head>
+        <meta name="google" content="notranslate" />
+      </head>
       <body
         suppressHydrationWarning
         className="font-sans antialiased selection:bg-gilded/30"

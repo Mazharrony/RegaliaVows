@@ -14,9 +14,9 @@ export const site = {
     address: "14 66 Street, Al Souq Al Kabeer, Al Fahidi Plaza, Dubai, UAE",
   },
   social: {
-    instagram: "https://instagram.com/regaliavows",
-    pinterest: "https://pinterest.com/regaliavows",
-    vimeo: "https://vimeo.com/regaliavows",
+    instagram: "https://www.instagram.com/regaliavows_dubai",
+    facebook: "https://www.facebook.com/share/1CZoZr1ZPT/",
+    threads: "https://www.threads.com/@regaliavows_dubai",
   },
 } as const;
 

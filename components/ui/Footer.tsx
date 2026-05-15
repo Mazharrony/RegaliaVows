@@ -123,11 +123,11 @@ export function Footer() {
             <Link href={site.social.instagram} target="_blank" className="hover:text-gilded">
               Instagram
             </Link>
-            <Link href={site.social.pinterest} target="_blank" className="hover:text-gilded">
-              Pinterest
+            <Link href={site.social.facebook} target="_blank" className="hover:text-gilded">
+              Facebook
             </Link>
-            <Link href={site.social.vimeo} target="_blank" className="hover:text-gilded">
-              Vimeo
+            <Link href={site.social.threads} target="_blank" className="hover:text-gilded">
+              Threads
             </Link>
             <Link href="/legal/privacy" className="hover:text-gilded">Privacy</Link>
             <Link href="/legal/terms" className="hover:text-gilded">Terms</Link>
