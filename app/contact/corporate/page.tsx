@@ -21,7 +21,7 @@ export default function CorporateContactPage() {
         description="For brand launches, galas, conferences, incentive programmes and private commissions. Treated with the same discretion as our weddings — and replied to personally by a founder."
       />
 
-      <Section theme="pearl" className="!pt-0">
+      <Section theme="pearl">
         <Container size="narrow">
           <div className="flex justify-end">
             <Link

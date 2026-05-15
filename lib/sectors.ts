@@ -39,7 +39,7 @@ export const sectors: readonly Sector[] = [
       "F&B programme & guest journey choreography",
       "Permits, security, VIP protocol & press handling",
     ],
-    investment: "From AED 400,000 · per-event basis",
+    investment: "On request",
     image:
       "https://images.unsplash.com/photo-1540575467063-178a50c2df87?auto=format&fit=crop&w=1600&q=75",
     accent: "from-[#1a1a2a] via-[#3a3a5a] to-[#c9a96a]",
@@ -61,7 +61,7 @@ export const sectors: readonly Sector[] = [
       "Talent booking & cultural partnerships",
       "Photo, film & social capture direction",
     ],
-    investment: "From AED 300,000",
+    investment: "On request",
     image:
       "https://images.unsplash.com/photo-1492684223066-81342ee5ff30?auto=format&fit=crop&w=1600&q=75",
     accent: "from-[#2a1d18] via-[#5c3a2a] to-[#c9a96a]",
@@ -83,7 +83,7 @@ export const sectors: readonly Sector[] = [
       "Guest concierge & multilingual hosting",
       "Cinematography & private archive",
     ],
-    investment: "From AED 200,000",
+    investment: "On request",
     image:
       "https://images.unsplash.com/photo-1530023367847-a683933f4172?auto=format&fit=crop&w=1600&q=75",
     accent: "from-[#2a1a14] via-[#7a4a2a] to-[#c9a96a]",
@@ -105,7 +105,7 @@ export const sectors: readonly Sector[] = [
       "Media, talent & influencer concierge",
       "Editorial photo & film direction",
     ],
-    investment: "From AED 500,000",
+    investment: "On request",
     image:
       "https://images.unsplash.com/photo-1564501049412-61c2a3083791?auto=format&fit=crop&w=1600&q=75",
     accent: "from-[#0e1a1a] via-[#3a5a4a] to-[#e8c9c2]",

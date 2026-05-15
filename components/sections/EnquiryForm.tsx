@@ -5,9 +5,17 @@ import { useForm, type Path } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { AnimatePresence, motion } from "framer-motion";
 import { toast } from "sonner";
-import { ArrowLeft, ArrowRight, Check } from "lucide-react";
 import { enquirySchema, type EnquiryInput } from "@/lib/schemas";
-import { cn } from "@/lib/cn";
+import {
+  Field,
+  Honeypot,
+  RadioGroup,
+  StepperNav,
+  StepperProgress,
+  SuccessPanel,
+  cn,
+  inputClass,
+} from "./enquiry/primitives";
 
 const steps: { title: string; eyebrow: string; fields: (keyof EnquiryInput)[] }[] = [
   { eyebrow: "Step I", title: "The Couple", fields: ["partnerOneName", "partnerTwoName"] },
@@ -74,61 +82,22 @@ export function EnquiryForm() {
 
   if (done) {
     return (
-      <motion.div
-        initial={{ opacity: 0, y: 16 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-        className="mt-12 rounded-card border border-gilded-600/30 bg-pearl-50 p-12 text-center md:p-20"
-      >
-        <span className="grid h-16 w-16 place-items-center rounded-full bg-gilded text-ink mx-auto">
-          <Check size={22} strokeWidth={1.5} />
-        </span>
-        <h3 className="display mt-8 text-display-md italic text-ink">
-          Your letter has been received.
-        </h3>
-        <p className="mx-auto mt-6 max-w-lg text-base leading-relaxed text-ink/85">
-          One of the founders will reply personally within two working days,
-          from a private inbox. In the meantime, a glass of something cold —
-          you have done the hardest part.
-        </p>
-        <p className="mt-10 font-display text-2xl italic text-gilded-600">
-          — Regalia Vows
-        </p>
-      </motion.div>
+      <SuccessPanel
+        title="Your letter has been received."
+        body="One of the founders will reply personally within two working days, from a private inbox. In the meantime, a glass of something cold — you have done the hardest part."
+      />
     );
   }
 
-  const progress = ((step + 1) / steps.length) * 100;
-
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="mt-16" noValidate>
-      {/* Honeypot */}
-      <input
-        type="text"
-        tabIndex={-1}
-        autoComplete="off"
-        aria-hidden
-        className="absolute left-[-9999px] h-0 w-0"
-        {...register("website")}
-      />
+      <Honeypot register={register} name="website" />
 
-      <div className="mb-12">
-        <div className="flex items-center justify-between">
-          <p className="eyebrow !text-gilded-800">
-            {steps[step].eyebrow} of IV
-          </p>
-          <p className="font-tight text-xs uppercase tracking-widest2 text-ink/85">
-            {Math.round(progress)}%
-          </p>
-        </div>
-        <div className="mt-3 h-px w-full bg-ink/10">
-          <motion.div
-            className="h-full bg-gilded-600"
-            animate={{ width: `${progress}%` }}
-            transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
-          />
-        </div>
-      </div>
+      <StepperProgress
+        eyebrow={steps[step].eyebrow}
+        stepIndex={step}
+        total={steps.length}
+      />
 
       <AnimatePresence mode="wait">
         <motion.div
@@ -147,15 +116,15 @@ export function EnquiryForm() {
               <div className="grid gap-10 md:grid-cols-2">
                 <Field label="Your name" error={errors.partnerOneName?.message}>
                   <input
-                    className={input}
-                    placeholder="Liyana"
+                    className={inputClass}
+                    placeholder="Your first name"
                     {...register("partnerOneName")}
                   />
                 </Field>
                 <Field label="Your partner's name" error={errors.partnerTwoName?.message}>
                   <input
-                    className={input}
-                    placeholder="Idris"
+                    className={inputClass}
+                    placeholder="Their first name"
                     {...register("partnerTwoName")}
                   />
                 </Field>
@@ -165,7 +134,7 @@ export function EnquiryForm() {
             {step === 1 && (
               <>
                 <Field label="The kind of commission" error={errors.service?.message}>
-                  <RadioGroup
+                  <RadioGroup<EnquiryInput>
                     name="service"
                     options={[
                       { value: "weddings", label: "Bespoke Wedding" },
@@ -183,7 +152,7 @@ export function EnquiryForm() {
                 >
                   <textarea
                     rows={6}
-                    className={cn(input, "resize-none")}
+                    className={cn(inputClass, "resize-none")}
                     placeholder="A morning on a private island, an evening of black-tie under a chandelier of orchids…"
                     {...register("vision")}
                   />
@@ -196,21 +165,21 @@ export function EnquiryForm() {
                 <div className="grid gap-10 md:grid-cols-2">
                   <Field label="Approximate date" error={errors.date?.message}>
                     <input
-                      className={input}
+                      className={inputClass}
                       placeholder="November 2026"
                       {...register("date")}
                     />
                   </Field>
                   <Field label="Location or region" error={errors.location?.message}>
                     <input
-                      className={input}
+                      className={inputClass}
                       placeholder="Dubai · Lake Como · Undecided"
                       {...register("location")}
                     />
                   </Field>
                 </div>
                 <Field label="Expected guests" error={errors.guests?.message}>
-                  <RadioGroup
+                  <RadioGroup<EnquiryInput>
                     name="guests"
                     options={[
                       { value: "intimate", label: "Intimate · up to 30" },
@@ -228,7 +197,7 @@ export function EnquiryForm() {
             {step === 3 && (
               <>
                 <Field label="Investment range (AED)" error={errors.investment?.message}>
-                  <RadioGroup
+                  <RadioGroup<EnquiryInput>
                     name="investment"
                     options={[
                       { value: "250-500", label: "250K — 500K" },
@@ -243,7 +212,7 @@ export function EnquiryForm() {
                 <div className="grid gap-10 md:grid-cols-2">
                   <Field label="Email" error={errors.email?.message}>
                     <input
-                      className={input}
+                      className={inputClass}
                       type="email"
                       placeholder="you@private.com"
                       {...register("email")}
@@ -251,7 +220,7 @@ export function EnquiryForm() {
                   </Field>
                   <Field label="Phone (optional)" error={errors.phone?.message}>
                     <input
-                      className={input}
+                      className={inputClass}
                       type="tel"
                       placeholder="+971 …"
                       {...register("phone")}
@@ -260,8 +229,8 @@ export function EnquiryForm() {
                 </div>
                 <Field label="How did you find us? (optional)">
                   <input
-                    className={input}
-                    placeholder="Referral, Vogue Arabia, Instagram…"
+                    className={inputClass}
+                    placeholder="Referral · publication · social"
                     {...register("referral")}
                   />
                 </Field>
@@ -271,104 +240,14 @@ export function EnquiryForm() {
         </motion.div>
       </AnimatePresence>
 
-      <div className="mt-16 flex items-center justify-between gap-4">
-        <button
-          type="button"
-          onClick={back}
-          disabled={step === 0}
-          data-cursor="link"
-          className="group inline-flex items-center gap-3 font-tight text-eyebrow uppercase tracking-widest2 text-ink/85 transition-colors hover:text-ink disabled:pointer-events-none disabled:opacity-40"
-        >
-          <ArrowLeft size={16} strokeWidth={1.5} />
-          Back
-        </button>
-
-        {step < steps.length - 1 ? (
-          <button
-            type="button"
-            onClick={next}
-            data-cursor="link"
-            className="group inline-flex items-center gap-3 bg-ink px-8 py-4 font-tight text-eyebrow uppercase tracking-widest2 text-pearl transition-all hover:bg-gilded-600 hover:text-ink"
-          >
-            Continue
-            <ArrowRight
-              size={16}
-              strokeWidth={1.5}
-              className="transition-transform duration-500 group-hover:translate-x-1"
-            />
-          </button>
-        ) : (
-          <button
-            type="submit"
-            disabled={submitting}
-            data-cursor="link"
-            className="group inline-flex items-center gap-3 bg-gilded px-8 py-4 font-tight text-eyebrow uppercase tracking-widest2 text-ink shadow-gilded transition-all hover:bg-gilded-100 disabled:opacity-60"
-          >
-            {submitting ? "Sending…" : "Send Enquiry"}
-            <ArrowRight
-              size={16}
-              strokeWidth={1.5}
-              className="transition-transform duration-500 group-hover:translate-x-1"
-            />
-          </button>
-        )}
-      </div>
+      <StepperNav
+        canBack={step > 0}
+        isLast={step === steps.length - 1}
+        onBack={back}
+        onNext={next}
+        submitting={submitting}
+        submitLabel="Send Enquiry"
+      />
     </form>
-  );
-}
-
-const input =
-  "w-full border-b border-ink/20 bg-transparent py-4 font-display text-2xl italic text-ink placeholder:text-ink/30 focus:border-gilded-600 focus:outline-none transition-colors";
-
-function Field({
-  label,
-  children,
-  error,
-}: {
-  label: string;
-  children: React.ReactNode;
-  error?: string;
-}) {
-  return (
-    <label className="block">
-      <span className="eyebrow !text-gilded-800">{label}</span>
-      <span className="mt-3 block">{children}</span>
-      {error && (
-        <span className="mt-2 block text-xs italic text-red-700">{error}</span>
-      )}
-    </label>
-  );
-}
-
-function RadioGroup({
-  name,
-  options,
-  register,
-}: {
-  name: keyof EnquiryInput;
-  options: { value: string; label: string }[];
-  register: ReturnType<typeof useForm<EnquiryInput>>["register"];
-}) {
-  return (
-    <div className="grid gap-3 md:grid-cols-2">
-      {options.map((o) => (
-        <label
-          key={o.value}
-          data-cursor="link"
-          className="group flex cursor-pointer items-center gap-4 border border-ink/15 px-5 py-4 transition-all hover:border-gilded-600 hover:bg-ink/[0.03] has-[:checked]:border-gilded-600 has-[:checked]:bg-gilded/10"
-        >
-          <input
-            type="radio"
-            value={o.value}
-            className="peer sr-only"
-            {...register(name)}
-          />
-          <span className="relative grid h-4 w-4 place-items-center rounded-full border border-ink/40 transition-all peer-checked:border-gilded-600">
-            <span className="h-2 w-2 rounded-full bg-gilded-600 opacity-0 transition-opacity peer-checked:opacity-100 group-has-[:checked]:opacity-100" />
-          </span>
-          <span className="font-display text-lg italic text-ink">{o.label}</span>
-        </label>
-      ))}
-    </div>
   );
 }

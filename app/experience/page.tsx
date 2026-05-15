@@ -6,7 +6,7 @@ import { CtaSection } from "@/components/sections/CtaSection";
 export const metadata: Metadata = {
   title: "Experience — The Process",
   description:
-    "Seven acts from first conversation to morning after. A cinematic process honed across more than three hundred weddings.",
+    "Seven slow, deliberate acts — from the first conversation to the morning after.",
 };
 
 export default function ExperiencePage() {

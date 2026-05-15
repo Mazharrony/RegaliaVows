@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { PageHero } from "@/components/sections/PageHero";
 import { Section } from "@/components/ui/Section";
 import { Container } from "@/components/ui/Container";
@@ -288,7 +289,7 @@ export default function VenuesPage() {
             information and our own production notes. Every venue is reviewed
             in detail — access, acoustics, light, kitchen — before it appears
             on a couple&apos;s shortlist. The same book is opened for
-            <a href="/services/corporate-and-private" className="text-gilded-600 hover:text-gilded-800"> corporate &amp; private commissions</a>.
+            <Link href="/services/corporate-and-private" className="text-gilded-600 hover:text-gilded-800"> corporate &amp; private commissions</Link>.
           </p>
         </Container>
       </Section>

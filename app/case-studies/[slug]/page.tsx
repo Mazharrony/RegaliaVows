@@ -22,37 +22,9 @@ export async function generateMetadata({
   if (!w) return {};
   return {
     title: `${w.title} — ${w.place}`,
-    description: `A ${w.style.toLowerCase()} composed by Regalia Vows at ${w.place}.`,
+    description: `${w.style} composed by Regalia Vows at ${w.place}.`,
   };
 }
-
-const briefCopy: Record<string, { brief: string; arc: string }> = {
-  weddings: {
-    brief:
-      "Two families, three languages, one sentence we wanted every guest to leave with — we have never felt this held.",
-    arc: "Regalia Vows composed a three-day arc — a private welcome dinner, a sunset ceremony in a flower-walled courtyard, and a twelve-course reception scored by a live ensemble.",
-  },
-  corporate: {
-    brief:
-      "Reveal a flagship to a room of clients, press and partners — and have every one of them remember a single image when they leave.",
-    arc: "Regalia Vows composed the evening around a single scenographic moment — a slow architectural reveal, a curated walk, a seated dinner choreographed to the second.",
-  },
-  "brand-experiential": {
-    brief:
-      "Bring an editorial story into a physical room for forty-eight hours — and let the press write themselves.",
-    arc: "An immersive installation, scented and scored, with a guest list curated like a dinner. Press, talent and clients moved through five chapters across two nights.",
-  },
-  "private-social": {
-    brief:
-      "A milestone the host has been quietly imagining for a decade — held by people who already know how the family hosts.",
-    arc: "A private cocktail in a sculpture courtyard, a seated dinner in a transformed ballroom, an after-hours room scored by a single resident DJ.",
-  },
-  hospitality: {
-    brief:
-      "Open the house the way it wants to be remembered — by the guests, by the press, and by the team who built it.",
-    arc: "Regalia Vows composed the opening across three rooms — a media morning, a partners' aperitivo, and a guest-of-honour dinner staged inside the property's most photographed suite.",
-  },
-};
 
 export default async function CaseStudyPage({
   params,
@@ -63,18 +35,27 @@ export default async function CaseStudyPage({
   const w = getWorkItem(slug);
   if (!w) notFound();
 
-  const copy = briefCopy[w.sector];
   const peers = work.filter((x) => x.sector === w.sector && x.slug !== w.slug);
-  const next = peers[0] ?? work[(work.findIndex((x) => x.slug === w.slug) + 1) % work.length];
+  const next =
+    peers[0] ??
+    work[(work.findIndex((x) => x.slug === w.slug) + 1) % work.length];
+
+  const gallerySpans = [
+    "col-span-12 aspect-[16/10] md:col-span-8",
+    "col-span-12 aspect-[3/4] md:col-span-4",
+    "col-span-12 aspect-[3/4] md:col-span-4",
+    "col-span-12 aspect-[16/10] md:col-span-8",
+  ];
 
   return (
     <>
       <PageHero
         eyebrow={`${w.place} · ${w.year}`}
         title={`${w.title}.`}
-        description={`A ${w.style.toLowerCase()} composed by Regalia Vows.`}
+        description={w.style}
       />
 
+      {/* Hero plate */}
       <Section theme="ink" className="!py-0">
         <div className="relative aspect-[21/9] w-full overflow-hidden">
           <div
@@ -89,59 +70,92 @@ export default async function CaseStudyPage({
         </div>
       </Section>
 
+      {/* Brief + arc */}
       <Section theme="ink">
         <Container size="narrow">
           <Reveal>
             <Eyebrow>The Brief</Eyebrow>
             <p className="mt-8 font-display text-3xl italic leading-snug text-pearl md:text-4xl">
-              &ldquo;{copy.brief}&rdquo;
+              &ldquo;{w.brief}&rdquo;
             </p>
             <p className="mt-10 text-base leading-relaxed text-pearl/85">
-              {copy.arc}
+              {w.arc}
             </p>
           </Reveal>
         </Container>
       </Section>
 
-      <Section theme="ink" className="!py-0">
+      {/* Facts row */}
+      <Section theme="ink" className="!pt-0">
         <Container size="wide">
-          {(() => {
-            const gallery = [
-              "https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=1600&q=75",
-              "https://images.unsplash.com/photo-1511795409834-ef04bbd61622?auto=format&fit=crop&w=1200&q=75",
-              "https://images.unsplash.com/photo-1525772764200-be829a350797?auto=format&fit=crop&w=1200&q=75",
-              "https://images.unsplash.com/photo-1464366400600-7168b8af9bc3?auto=format&fit=crop&w=1600&q=75",
-            ];
-            const spans = [
-              "col-span-12 aspect-[16/10] md:col-span-8",
-              "col-span-12 aspect-[3/4] md:col-span-4",
-              "col-span-12 aspect-[3/4] md:col-span-4",
-              "col-span-12 aspect-[16/10] md:col-span-8",
-            ];
-            return (
-              <div className="grid grid-cols-12 gap-6">
-                {gallery.map((src, idx) => (
-                  <div
-                    key={idx}
-                    className={`relative overflow-hidden rounded-card ${spans[idx]}`}
-                  >
-                    <div
-                      aria-hidden
-                      className="absolute inset-0 bg-cover bg-center"
-                      style={{ backgroundImage: `url(${src})` }}
-                    />
-                    <div
-                      className={`absolute inset-0 bg-gradient-to-br ${w.palette} opacity-25 mix-blend-soft-light`}
-                    />
-                    <div className="absolute inset-0 bg-[linear-gradient(180deg,transparent_55%,rgba(0,0,0,0.5)_100%)]" />
-                  </div>
-                ))}
-              </div>
-            );
-          })()}
+          <Reveal>
+            <dl className="grid grid-cols-2 gap-y-8 border-t border-pearl/10 pt-12 md:grid-cols-5">
+              {w.facts.map((f) => (
+                <div key={f.label}>
+                  <dt className="eyebrow !text-pearl/55">{f.label}</dt>
+                  <dd className="mt-3 font-display text-xl italic text-pearl">
+                    {f.value}
+                  </dd>
+                </div>
+              ))}
+            </dl>
+          </Reveal>
         </Container>
       </Section>
 
+      {/* Chapters */}
+      <Section theme="ink">
+        <Container size="narrow">
+          <Reveal>
+            <Eyebrow>The Arc</Eyebrow>
+          </Reveal>
+          <div className="mt-12 space-y-16">
+            {w.chapters.map((c, idx) => (
+              <Reveal key={c.title} delay={idx * 0.05}>
+                <div className="grid gap-6 md:grid-cols-[auto_1fr] md:gap-12">
+                  <span className="font-display text-3xl italic text-gilded md:text-4xl">
+                    {String(idx + 1).padStart(2, "0")}
+                  </span>
+                  <div>
+                    <h3 className="font-display text-2xl italic text-pearl md:text-3xl">
+                      {c.title}
+                    </h3>
+                    <p className="mt-5 text-base leading-relaxed text-pearl/85">
+                      {c.body}
+                    </p>
+                  </div>
+                </div>
+              </Reveal>
+            ))}
+          </div>
+        </Container>
+      </Section>
+
+      {/* Gallery mosaic */}
+      <Section theme="ink" className="!py-0">
+        <Container size="wide">
+          <div className="grid grid-cols-12 gap-6">
+            {w.gallery.slice(0, 4).map((src, idx) => (
+              <div
+                key={`${src}-${idx}`}
+                className={`relative overflow-hidden rounded-card ${gallerySpans[idx] ?? gallerySpans[0]}`}
+              >
+                <div
+                  aria-hidden
+                  className="absolute inset-0 bg-cover bg-center"
+                  style={{ backgroundImage: `url(${src})` }}
+                />
+                <div
+                  className={`absolute inset-0 bg-gradient-to-br ${w.palette} opacity-25 mix-blend-soft-light`}
+                />
+                <div className="absolute inset-0 bg-[linear-gradient(180deg,transparent_55%,rgba(0,0,0,0.5)_100%)]" />
+              </div>
+            ))}
+          </div>
+        </Container>
+      </Section>
+
+      {/* Next */}
       <Section theme="ink">
         <Container size="narrow" className="text-center">
           <Eyebrow className="!justify-center">Next Composition</Eyebrow>
@@ -153,6 +167,9 @@ export default async function CaseStudyPage({
           >
             {next.title} →
           </Link>
+          <p className="mt-6 text-sm text-pearl/60">
+            {next.place} · {next.year}
+          </p>
         </Container>
       </Section>
     </>

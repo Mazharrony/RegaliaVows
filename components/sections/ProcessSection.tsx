@@ -31,7 +31,7 @@ export function ProcessSection() {
           <Reveal delay={0.1}>
             <p className="max-w-md text-base leading-relaxed text-pearl/80 md:ml-auto">
               From the first conversation to the morning after — a slow,
-              cinematic process honed across more than three hundred weddings.
+              cinematic process, rehearsed in private.
             </p>
           </Reveal>
         </div>

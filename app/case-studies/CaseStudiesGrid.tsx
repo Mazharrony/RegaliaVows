@@ -5,8 +5,10 @@ import { useMemo, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { Section } from "@/components/ui/Section";
 import { Container } from "@/components/ui/Container";
+import { EmptyState } from "@/components/ui/EmptyState";
 import { Reveal } from "@/components/motion/Reveal";
 import { work, sectorFilters, type WorkSector } from "@/lib/work";
+import { site } from "@/lib/site";
 import { cn } from "@/lib/cn";
 
 type Filter = WorkSector | "all";
@@ -44,9 +46,16 @@ export function CaseStudiesGrid({ initial = "weddings" as Filter }: { initial?: 
         </div>
 
         {items.length === 0 ? (
-          <p className="py-24 text-center font-display text-2xl italic text-pearl/60">
-            No commissions in this sector yet.
-          </p>
+          <EmptyState
+            eyebrow="Forthcoming"
+            title="By private viewing, on request."
+            body="Our portfolio is held in confidence for the couples and houses we work with. A selection of commissions is shared, with permission, after an introductory conversation."
+            cta={{
+              label: `Write to ${site.contact.email}`,
+              href: `mailto:${site.contact.email}`,
+              external: true,
+            }}
+          />
         ) : (
           <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
             {items.map((w, i) => (

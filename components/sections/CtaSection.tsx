@@ -26,7 +26,7 @@ export function CtaSection() {
 
         <SplitText
           as="h2"
-          text="Six weddings remain in our calendar this season."
+          text="Begin the conversation."
           className="display mx-auto mt-10 max-w-[18ch] text-display-lg italic"
           stagger={0.06}
         />

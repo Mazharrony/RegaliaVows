@@ -6,36 +6,22 @@ import { Eyebrow } from "@/components/ui/Eyebrow";
 import { Button } from "@/components/ui/Button";
 import { SplitText } from "@/components/motion/SplitText";
 
-// Local cinematic hero clips. Each entry provides a desktop and mobile source;
-// the <video> uses <source media> to pick the right one per viewport.
+// Cinematic hero reel. Plays the two self-hosted clips first, then continues
+// into royalty-free Mixkit wedding cinematics, then wraps back to the start.
+// Never loops a single clip — always cycles through the full reel.
+// Mixkit source: https://mixkit.co/free-stock-video/wedding/
 type Clip = { desktop: string; mobile: string; poster?: string };
 
-const LOCAL_REEL: Clip[] = [
-  {
-    desktop: "/videos/hero-1-desktop.mp4",
-    mobile: "/videos/hero-1-mobile.mp4",
-  },
-  {
-    desktop: "/videos/hero-2-desktop.mp4",
-    mobile: "/videos/hero-2-mobile.mp4",
-  },
-];
+const mixkit = (slug: string): Clip => ({
+  desktop: `https://assets.mixkit.co/videos/preview/mixkit-${slug}-large.mp4`,
+  mobile: `https://assets.mixkit.co/videos/preview/mixkit-${slug}-small.mp4`,
+});
 
-// Royalty-free stock wedding cinematics (Mixkit CDN). Used only when every
-// local clip fails to load — so the hero never falls back to a blank frame.
-const STOCK_REEL: Clip[] = [
-  {
-    desktop:
-      "https://assets.mixkit.co/videos/preview/mixkit-couple-of-newlyweds-walking-towards-each-other-in-a-39880-large.mp4",
-    mobile:
-      "https://assets.mixkit.co/videos/preview/mixkit-couple-of-newlyweds-walking-towards-each-other-in-a-39880-small.mp4",
-  },
-  {
-    desktop:
-      "https://assets.mixkit.co/videos/preview/mixkit-bride-and-groom-leaving-the-church-after-the-ceremony-39885-large.mp4",
-    mobile:
-      "https://assets.mixkit.co/videos/preview/mixkit-bride-and-groom-leaving-the-church-after-the-ceremony-39885-small.mp4",
-  },
+const REEL: Clip[] = [
+  { desktop: "/videos/hero-1-desktop.mp4", mobile: "/videos/hero-1-mobile.mp4" },
+  { desktop: "/videos/hero-2-desktop.mp4", mobile: "/videos/hero-2-mobile.mp4" },
+  mixkit("couple-of-newlyweds-walking-towards-each-other-in-a-39880"),
+  mixkit("bride-and-groom-leaving-the-church-after-the-ceremony-39885"),
 ];
 
 // Ultimate fallback when even stock video fails or prefers-reduced-motion is on.
@@ -44,18 +30,31 @@ const POSTER =
 
 export function HomeHero() {
   const [reduce, setReduce] = useState(false);
-  const [useStock, setUseStock] = useState(false);
   const [videoFailed, setVideoFailed] = useState(false);
   const [clipIndex, setClipIndex] = useState(0);
+  const [isMobile, setIsMobile] = useState(false);
+  const consecutiveErrorsRef = useRef(0);
   const videoRef = useRef<HTMLVideoElement>(null);
 
-  const clips: Clip[] = useStock ? STOCK_REEL : LOCAL_REEL;
+  const clips: Clip[] = REEL;
   const current = clips[clipIndex % clips.length];
+  const src = isMobile ? current.mobile : current.desktop;
 
   useEffect(() => {
     const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
     setReduce(mq.matches);
     const onChange = () => setReduce(mq.matches);
+    mq.addEventListener("change", onChange);
+    return () => mq.removeEventListener("change", onChange);
+  }, []);
+
+  // Track viewport so each clip uses a single, definite `src` instead of
+  // relying on <source media> selection, which is unreliable inside <video>
+  // and can leave the element stuck on the previous frame when advancing.
+  useEffect(() => {
+    const mq = window.matchMedia("(max-width: 767px)");
+    setIsMobile(mq.matches);
+    const onChange = () => setIsMobile(mq.matches);
     mq.addEventListener("change", onChange);
     return () => mq.removeEventListener("change", onChange);
   }, []);
@@ -69,7 +68,7 @@ export function HomeHero() {
     if (v.readyState >= 2) tryPlay();
     else v.addEventListener("loadeddata", tryPlay, { once: true });
     return () => v.removeEventListener("loadeddata", tryPlay);
-  }, [reduce, videoFailed, clipIndex, useStock]);
+  }, [reduce, videoFailed, clipIndex]);
 
   // Force the video to never stay paused. If anything (browser UI, tab switch,
   // long-press menu, iOS low-power mode, scroll-out) pauses it, immediately
@@ -119,10 +118,13 @@ export function HomeHero() {
       window.clearInterval(tick);
       io?.disconnect();
     };
-  }, [reduce, videoFailed, clipIndex, useStock]);
+  }, [reduce, videoFailed, clipIndex]);
 
   const useVideo = !reduce && !videoFailed;
-  const advance = () => setClipIndex((i) => (i + 1) % clips.length);
+  const advance = () => {
+    consecutiveErrorsRef.current = 0;
+    setClipIndex((i) => (i + 1) % clips.length);
+  };
 
   return (
     <section className="relative isolate min-h-[100svh] w-full overflow-hidden bg-ink text-pearl">
@@ -137,12 +139,13 @@ export function HomeHero() {
 
         {useVideo && (
           <video
-            key={`${useStock ? "stock" : "local"}-${clipIndex}`}
+            key={`reel-${clipIndex}-${isMobile ? "m" : "d"}`}
             ref={videoRef}
+            src={src}
             className="absolute inset-0 h-full w-full object-cover pointer-events-none select-none"
             autoPlay
             muted
-            loop={clips.length === 1}
+            loop={false}
             playsInline
             preload="auto"
             poster={POSTER}
@@ -151,7 +154,6 @@ export function HomeHero() {
             controls={false}
             disablePictureInPicture
             disableRemotePlayback
-            // @ts-expect-error - non-standard but widely supported attribute
             controlsList="nodownload nofullscreen noremoteplayback noplaybackrate"
             onContextMenu={(e) => e.preventDefault()}
             onLoadedMetadata={(e) => {
@@ -163,24 +165,19 @@ export function HomeHero() {
               v.setAttribute("x5-playsinline", "true");
               v.setAttribute("playsinline", "true");
             }}
-            onEnded={clips.length > 1 ? advance : undefined}
+            onEnded={advance}
             onError={() => {
-              // Cycle within the current reel first; if every clip in the
-              // local reel has failed, switch to the stock wedding fallback;
-              // if even stock fails, give up and let the poster image show.
-              if (clipIndex < clips.length - 1) {
-                advance();
-              } else if (!useStock) {
-                setUseStock(true);
-                setClipIndex(0);
-              } else {
+              // Skip any broken clip and try the next one. If every clip in
+              // the reel has failed in succession, give up and let the poster
+              // image show instead of looping errors forever.
+              consecutiveErrorsRef.current += 1;
+              if (consecutiveErrorsRef.current >= clips.length) {
                 setVideoFailed(true);
+              } else {
+                setClipIndex((i) => (i + 1) % clips.length);
               }
             }}
-          >
-            <source media="(max-width: 767px)" src={current.mobile} type="video/mp4" />
-            <source media="(min-width: 768px)" src={current.desktop} type="video/mp4" />
-          </video>
+          />
         )}
 
         {/* Cinematic darkening so the headline always reads cleanly over footage */}
@@ -197,7 +194,7 @@ export function HomeHero() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.4, duration: 1, ease: [0.16, 1, 0.3, 1] }}
           >
-            <Eyebrow>Regalia Vows · Dubai · Est. 2014</Eyebrow>
+            <Eyebrow>Regalia Vows · Dubai</Eyebrow>
           </motion.div>
 
           <SplitText

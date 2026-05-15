@@ -21,7 +21,7 @@ export default function ContactPage() {
         description="A four-step note to Regalia Vows. Your details remain entirely confidential and reach only the founders."
       />
 
-      <Section theme="pearl" className="!pt-0">
+      <Section theme="pearl">
         <Container size="narrow">
           <div className="flex justify-end">
             <Link
