@@ -1,12 +1,20 @@
 import type { Metadata, Viewport } from "next";
+import dynamic from "next/dynamic";
 import "./globals.css";
 import { display, sans, tight } from "@/lib/fonts";
 import { site } from "@/lib/site";
 import { cn } from "@/lib/cn";
 import { Nav } from "@/components/ui/Nav";
 import { Footer } from "@/components/ui/Footer";
-import { Toaster } from "sonner";
 import { jsonLd, localBusinessLd, organizationLd, websiteLd } from "@/lib/seo";
+
+// Toast notifications are only used by enquiry forms (post-hydration, well
+// below the fold). Loading sonner lazily keeps it out of the initial JS
+// payload and off the critical hydration path.
+const Toaster = dynamic(
+  () => import("sonner").then((m) => m.Toaster),
+  { ssr: false }
+);
 
 export const metadata: Metadata = {
   metadataBase: new URL(site.url),

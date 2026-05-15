@@ -26,8 +26,11 @@ const REEL: Clip[] = [
 ];
 
 // Ultimate fallback when even stock video fails or prefers-reduced-motion is on.
+// Also serves as the LCP image on slow connections (priority + low quality
+// keeps mobile payload under ~50KB without visible degradation through the
+// dark cinematic overlay).
 const POSTER =
-  "https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=2000&q=75";
+  "https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=1600&q=55";
 
 export function HomeHero() {
   const [reduce, setReduce] = useState(false);
@@ -139,7 +142,7 @@ export function HomeHero() {
           alt=""
           priority
           sizes="100vw"
-          quality={70}
+          quality={55}
         />
 
         {useVideo && (

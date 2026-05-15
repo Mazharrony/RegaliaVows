@@ -136,7 +136,7 @@
   }
 
   .display {
-    @apply font-display font-light;
+    @apply font-display font-normal;
   }
 
   /* Vibrant flowing gold text — apply to any element to make it shimmer */
