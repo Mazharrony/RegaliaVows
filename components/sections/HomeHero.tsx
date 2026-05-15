@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 import { Eyebrow } from "@/components/ui/Eyebrow";
 import { Button } from "@/components/ui/Button";
 import { SplitText } from "@/components/motion/SplitText";
+import { BgImage } from "@/components/ui/BgImage";
 
 // Cinematic hero reel. Plays the two self-hosted clips first, then continues
 // into royalty-free Mixkit wedding cinematics, then wraps back to the start.
@@ -130,11 +131,15 @@ export function HomeHero() {
     <section data-theme="dark" className="relative isolate min-h-[100svh] w-full overflow-hidden bg-ink text-pearl">
       <div className="absolute inset-0 pointer-events-none select-none">
         {/* Poster image — sits behind the video and remains visible if the
-            video fails to load on any viewport, ensuring no blank hero. */}
-        <div
-          aria-hidden
-          className="absolute inset-0 bg-cover bg-center"
-          style={{ backgroundImage: `url(${POSTER})` }}
+            video fails to load on any viewport, ensuring no blank hero.
+            Marked priority so it serves as the LCP image when video is
+            unavailable or while it is still buffering. */}
+        <BgImage
+          src={POSTER}
+          alt=""
+          priority
+          sizes="100vw"
+          quality={70}
         />
 
         {useVideo && (

@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { Container } from "@/components/ui/Container";
+import { BgImage } from "@/components/ui/BgImage";
 import { Eyebrow } from "@/components/ui/Eyebrow";
 import { Reveal } from "@/components/motion/Reveal";
 import { ArrowUpRight } from "lucide-react";
@@ -86,10 +87,11 @@ function ServiceCard({
       className={`dark-panel group relative isolate block overflow-clip rounded-card border border-pearl/10 bg-ink-50 transition-[transform,border-color] duration-700 ease-silk transform-gpu hover:-translate-y-1 hover:border-gilded/50 ${sizing}`}
     >
       {/* Background image */}
-      <div
-        aria-hidden
-        className="absolute inset-0 bg-cover bg-center opacity-55 transition-all duration-[1200ms] ease-silk group-hover:scale-[1.06] group-hover:opacity-70"
-        style={{ backgroundImage: `url(${s.image})` }}
+      <BgImage
+        src={s.image}
+        alt={`${s.title} — Regalia Vows`}
+        sizes="(max-width: 768px) 100vw, (max-width: 1280px) 50vw, 33vw"
+        className="opacity-55 transition-all duration-[1200ms] ease-silk group-hover:scale-[1.06] group-hover:opacity-70"
       />
       {/* Color wash + dark vignette */}
       <div className={`absolute inset-0 bg-gradient-to-br ${s.accent} mix-blend-overlay opacity-90`} />

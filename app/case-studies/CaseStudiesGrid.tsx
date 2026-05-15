@@ -5,6 +5,7 @@ import { useMemo, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { Section } from "@/components/ui/Section";
 import { Container } from "@/components/ui/Container";
+import { BgImage } from "@/components/ui/BgImage";
 import { EmptyState } from "@/components/ui/EmptyState";
 import { Reveal } from "@/components/motion/Reveal";
 import { work, sectorFilters, type WorkSector } from "@/lib/work";
@@ -66,10 +67,11 @@ export function CaseStudiesGrid({ initial = "weddings" as Filter }: { initial?: 
                   data-cursor-label="Open"
                   className="group relative block aspect-[4/5] overflow-hidden rounded-card border border-pearl/10 transition-colors duration-700 ease-silk hover:border-gilded/50"
                 >
-                  <div
-                    aria-hidden
-                    className="absolute inset-0 bg-cover bg-center transition-transform duration-[1200ms] ease-silk group-hover:scale-110"
-                    style={{ backgroundImage: `url(${w.image})` }}
+                  <BgImage
+                    src={w.image}
+                    alt={`${w.title} — ${w.style}, ${w.place}`}
+                    sizes="(max-width: 768px) 100vw, (max-width: 1280px) 50vw, 33vw"
+                    className="transition-transform duration-[1200ms] ease-silk group-hover:scale-110"
                   />
                   <div
                     className={`absolute inset-0 bg-gradient-to-br ${w.palette} opacity-30 mix-blend-soft-light`}

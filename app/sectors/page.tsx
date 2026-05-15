@@ -3,6 +3,7 @@ import Link from "next/link";
 import { PageHero } from "@/components/sections/PageHero";
 import { Section } from "@/components/ui/Section";
 import { Container } from "@/components/ui/Container";
+import { BgImage } from "@/components/ui/BgImage";
 import { Eyebrow } from "@/components/ui/Eyebrow";
 import { Button } from "@/components/ui/Button";
 import { Reveal } from "@/components/motion/Reveal";
@@ -76,11 +77,12 @@ export default function SectorsPage() {
                   data-cursor-label="View"
                   className={`group block ${i % 2 === 1 ? "md:mt-16" : ""}`}
                 >
-                  <div className="relative overflow-hidden rounded-card border border-ink/10">
-                    <div
-                      aria-hidden
-                      className="aspect-[4/5] w-full bg-cover bg-center transition-transform duration-[1400ms] ease-silk group-hover:scale-105"
-                      style={{ backgroundImage: `url(${s.image})` }}
+                  <div className="relative aspect-[4/5] overflow-hidden rounded-card border border-ink/10">
+                    <BgImage
+                      src={s.image}
+                      alt={`${s.title} — Regalia Vows sector`}
+                      sizes="(max-width: 768px) 100vw, 50vw"
+                      className="transition-transform duration-[1400ms] ease-silk group-hover:scale-105"
                     />
                     <div
                       className={`pointer-events-none absolute inset-0 bg-gradient-to-br ${s.accent} opacity-25 mix-blend-soft-light`}

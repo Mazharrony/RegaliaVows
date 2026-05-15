@@ -4,6 +4,7 @@ import Link from "next/link";
 import { PageHero } from "@/components/sections/PageHero";
 import { Section } from "@/components/ui/Section";
 import { Container } from "@/components/ui/Container";
+import { BgImage } from "@/components/ui/BgImage";
 import { Eyebrow } from "@/components/ui/Eyebrow";
 import { Button } from "@/components/ui/Button";
 import { Reveal } from "@/components/motion/Reveal";
@@ -14,6 +15,8 @@ import {
 } from "@/components/sections/DetailBlocks";
 import { sectors, getSector } from "@/lib/sectors";
 import { work } from "@/lib/work";
+import { site } from "@/lib/site";
+import { breadcrumbLd, jsonLd, serviceLd } from "@/lib/seo";
 
 export function generateStaticParams() {
   return sectors.map((s) => ({ slug: s.slug }));
@@ -27,9 +30,24 @@ export async function generateMetadata({
   const { slug } = await params;
   const s = getSector(slug);
   if (!s) return {};
+  const title = s.title.replace(/\.$/, "");
   return {
-    title: s.title.replace(/\.$/, ""),
+    title,
     description: s.description,
+    alternates: { canonical: `/sectors/${slug}` },
+    openGraph: {
+      type: "website",
+      url: `${site.url}/sectors/${slug}`,
+      title: `${title} \u00B7 ${site.name}`,
+      description: s.description,
+      images: [s.image],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: `${title} \u00B7 ${site.name}`,
+      description: s.description,
+      images: [s.image],
+    },
   };
 }
 
@@ -44,8 +62,24 @@ export default async function SectorDetailPage({
 
   const examples = work.filter((w) => w.sector === s.slug).slice(0, 3);
 
+  const title = s.title.replace(/\.$/, "");
+  const ldService = serviceLd({
+    name: title,
+    description: s.description,
+    url: `/sectors/${s.slug}`,
+    image: s.image,
+    serviceType: title,
+  });
+  const ldBreadcrumb = breadcrumbLd([
+    { name: "Home", url: "/" },
+    { name: "Sectors", url: "/sectors" },
+    { name: title, url: `/sectors/${s.slug}` },
+  ]);
+
   return (
     <>
+      <script type="application/ld+json" dangerouslySetInnerHTML={jsonLd(ldService)} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={jsonLd(ldBreadcrumb)} />
       <PageHero
         eyebrow={s.eyebrow}
         title={s.title}
@@ -55,11 +89,12 @@ export default async function SectorDetailPage({
       <Section theme="pearl" className="!pt-0 !pb-0">
         <Container>
           <Reveal>
-            <div className="relative overflow-hidden rounded-card border border-pearl/10">
-              <div
-                aria-hidden
-                className="aspect-[21/9] w-full bg-cover bg-center"
-                style={{ backgroundImage: `url(${s.image})` }}
+            <div className="relative aspect-[21/9] overflow-hidden rounded-card border border-pearl/10">
+              <BgImage
+                src={s.image}
+                alt={`${title} at Regalia Vows`}
+                priority
+                sizes="100vw"
               />
               <div
                 className={`absolute inset-0 bg-gradient-to-br ${s.accent} opacity-30 mix-blend-soft-light`}
@@ -170,10 +205,11 @@ export default async function SectorDetailPage({
                     data-cursor-label="Open"
                     className="group relative block aspect-[4/5] overflow-hidden rounded-card border border-pearl/10 transition-colors duration-700 ease-silk hover:border-gilded/50"
                   >
-                    <div
-                      aria-hidden
-                      className="absolute inset-0 bg-cover bg-center transition-transform duration-[1200ms] ease-silk group-hover:scale-110"
-                      style={{ backgroundImage: `url(${w.image})` }}
+                    <BgImage
+                      src={w.image}
+                      alt={`${w.title} — ${w.style}, ${w.place}`}
+                      sizes="(max-width: 768px) 100vw, (max-width: 1280px) 50vw, 33vw"
+                      className="transition-transform duration-[1200ms] ease-silk group-hover:scale-110"
                     />
                     <div
                       className={`absolute inset-0 bg-gradient-to-br ${w.palette} opacity-30 mix-blend-soft-light`}

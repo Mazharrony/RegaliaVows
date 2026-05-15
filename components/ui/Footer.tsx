@@ -129,6 +129,9 @@ export function Footer() {
             <Link href={site.social.threads} target="_blank" className="hover:text-gilded">
               Threads
             </Link>
+            <Link href={site.social.x} target="_blank" className="hover:text-gilded">
+              X
+            </Link>
             <Link href="/legal/privacy" className="hover:text-gilded">Privacy</Link>
             <Link href="/legal/terms" className="hover:text-gilded">Terms</Link>
           </div>

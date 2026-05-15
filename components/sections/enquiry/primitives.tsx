@@ -135,7 +135,7 @@ export function StepperNav({
           type="button"
           onClick={onNext}
           data-cursor="link"
-          className="dark-panel group inline-flex items-center gap-3 bg-ink px-8 py-4 font-tight text-eyebrow uppercase tracking-widest2 text-pearl transition-all hover:bg-gilded-600 hover:text-ink"
+          className="group inline-flex items-center gap-3 bg-gilded px-8 py-4 font-tight text-eyebrow uppercase tracking-widest2 text-ink shadow-gilded transition-all hover:bg-gilded-100"
         >
           Continue
           <ArrowRight

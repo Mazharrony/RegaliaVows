@@ -25,3 +25,9 @@ dist
 .turbo
 *.tsbuildinfo
 next-env.d.ts.bak
+
+# dev runtime artefacts
+app/dev.log
+app/dev.err.log
+app/pid.txt
+*.bak

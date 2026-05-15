@@ -7,11 +7,15 @@ import {
   SignaturesGrid,
   ProcessTimeline,
 } from "@/components/sections/DetailBlocks";
+import { FaqBlock } from "@/components/sections/FaqBlock";
 import { Section } from "@/components/ui/Section";
 import { Container } from "@/components/ui/Container";
+import { BgImage } from "@/components/ui/BgImage";
 import { Eyebrow } from "@/components/ui/Eyebrow";
 import { Button } from "@/components/ui/Button";
 import { Reveal } from "@/components/motion/Reveal";
+import { site } from "@/lib/site";
+import { breadcrumbLd, faqPageLd, jsonLd, serviceLd, type FaqItem } from "@/lib/seo";
 
 type ServiceEntry = {
   eyebrow: string;
@@ -26,6 +30,7 @@ type ServiceEntry = {
   investment: string;
   video?: string;
   contactHref?: string;
+  faqs?: readonly FaqItem[];
 };
 
 const data: Record<string, ServiceEntry> = {
@@ -61,6 +66,28 @@ const data: Record<string, ServiceEntry> = {
       "Optional honeymoon planning (see Service VI)",
     ],
     investment: "From AED 750,000 · Production from AED 1.8M",
+    faqs: [
+      {
+        q: "What does a Regalia Vows wedding commission cost?",
+        a: "Bespoke weddings begin at AED 750,000 for design and direction; full production typically opens from AED 1.8M. Every commission is custom-priced after the first studio meeting and the treatment that follows.",
+      },
+      {
+        q: "How far in advance should we book?",
+        a: "Twelve to eighteen months is our usual lead time. We accept a limited number of commissions per season so that one senior director can carry each file end-to-end.",
+      },
+      {
+        q: "Do you plan multi-cultural and inter-faith weddings in Dubai?",
+        a: "Yes. We have composed Hindu, Christian, Catholic, Muslim, Sikh, Persian and inter-faith ceremonies in the UAE — designed with elders and clergy rather than templated.",
+      },
+      {
+        q: "Where in the UAE do you stage weddings?",
+        a: "Palaces, private islands, desert estates and rooftop ballrooms across Dubai, Abu Dhabi, Ras Al Khaimah and the wider GCC. Venue scouting and negotiation are included as standard.",
+      },
+      {
+        q: "What is delivered at the end of the commission?",
+        a: "Every wedding closes with a leather-bound archival monograph — film stills, the calligraphed timeline, the speeches and the menu cards — with one copy for each family.",
+      },
+    ],
   },
   proposals: {
     eyebrow: "Service II",
@@ -93,6 +120,24 @@ const data: Record<string, ServiceEntry> = {
       "Post-moment celebration handoff",
     ],
     investment: "From AED 95,000",
+    faqs: [
+      {
+        q: "How much does a cinematic proposal in Dubai cost?",
+        a: "Regalia Vows proposals begin at AED 95,000. The figure covers concept treatment, secret logistics, location securing, film and stills crew, florals, lighting, score and the post-moment celebration handoff.",
+      },
+      {
+        q: "How long does it take to plan a proposal?",
+        a: "Four to twelve weeks of build is typical — long enough to secure permits, rehearse vendor entrances and plan a weather window, short enough that secrecy holds.",
+      },
+      {
+        q: "Can you secure private rooftops, helicopters or desert locations?",
+        a: "Yes. Skyline takeovers, helicopter approaches, private yachts and desert plateaus are held under our standing permits, with all suppliers signed under NDA before the location is named.",
+      },
+      {
+        q: "What is delivered after the moment?",
+        a: "Within forty-eight hours of the proposal, a private film and a stills gallery are in your hands. The second team activates immediately with jeweller, sommelier, chef and waiting family.",
+      },
+    ],
   },
   "destination-weddings": {
     eyebrow: "Service III",
@@ -126,6 +171,24 @@ const data: Record<string, ServiceEntry> = {
       "Optional honeymoon planning (see Service VI)",
     ],
     investment: "From AED 1.2M · plus travel & venue",
+    faqs: [
+      {
+        q: "Where have you staged destination weddings?",
+        a: "Recent commissions have married in Como, Marrakech, Hampi, Tuscany, the Amalfi coast and the Hatta cliffs. We open passports together — the country, the season and the family logic are settled in the first meeting.",
+      },
+      {
+        q: "What is the investment for a destination wedding?",
+        a: "From AED 1.2M for design, direction and on-ground production, plus travel and venue costs paid directly to suppliers. Each commission is custom-scoped after the recce.",
+      },
+      {
+        q: "Do you handle guest visas, transfers and legal paperwork?",
+        a: "Yes. Visas, immigration letters, hotel blocks, group transfers, dietary briefs and a printed guest folio for every traveller are included, alongside civil paperwork and parish or elders’ liaison managed in the local language.",
+      },
+      {
+        q: "How long are you on the ground at the destination?",
+        a: "Director and producer embed for ten to twenty days before the wedding. By the time the couple’s flight lands, the wedding is already in rehearsal.",
+      },
+    ],
   },
   "private-events": {
     eyebrow: "Service IV",
@@ -159,6 +222,20 @@ const data: Record<string, ServiceEntry> = {
     ],
     investment: "From AED 250,000",
     video: "/videos/private-event.mp4",
+    faqs: [
+      {
+        q: "What kinds of private events do you compose?",
+        a: "Engagements, vow renewals, anniversary galas, milestone birthdays and the after-party that becomes the legend. One night, one director, one signature.",
+      },
+      {
+        q: "What is the minimum investment?",
+        a: "Private events begin at AED 250,000, custom-scoped after a first meeting at the studio or in your home.",
+      },
+      {
+        q: "How much notice do you need?",
+        a: "Six to ten weeks of build is typical once the treatment is approved, with a single senior producer carrying the file from first meeting to dawn the morning after.",
+      },
+    ],
   },
   "corporate-and-private": {
     eyebrow: "Service V",
@@ -192,6 +269,24 @@ const data: Record<string, ServiceEntry> = {
     ],
     investment: "From AED 400,000 · per-event basis",
     contactHref: "/contact/corporate",
+    faqs: [
+      {
+        q: "Do you work on brand launches and corporate galas as well as weddings?",
+        a: "Yes — brand launches, AGMs, sovereign-backed conferences, family-office commissions and editorial-grade galas. The same craft we bring to a wedding, applied to commercial briefs.",
+      },
+      {
+        q: "How is confidentiality handled?",
+        a: "Most corporate commissions are never published. NDAs are signed before the brief is opened, and suppliers sign before they hear the location or principal.",
+      },
+      {
+        q: "Where do you stage corporate events in the UAE?",
+        a: "Ballrooms, ADNEC, DWTC, Dubai Opera and private estates. Permits, security, royal-protocol-trained ushers and managed press pens are handled in-house.",
+      },
+      {
+        q: "What does the investment start at?",
+        a: "Corporate and private commissions begin from AED 400,000 on a per-event basis, with a fully-costed budget delivered inside the bound treatment within ten working days.",
+      },
+    ],
   },
   honeymoons: {
     eyebrow: "Service VI",
@@ -224,6 +319,20 @@ const data: Record<string, ServiceEntry> = {
       "Surprise moments & vow-renewal staging on location",
     ],
     investment: "From AED 120,000 · plus travel & accommodation",
+    faqs: [
+      {
+        q: "How are Regalia Vows honeymoons different from a travel agent’s itinerary?",
+        a: "They are composed the way we compose a wedding — narrative, rhythm and private moments staged in advance. The week after the vows is when the marriage is actually founded; the itinerary is written by a director, not an OTA.",
+      },
+      {
+        q: "What does a honeymoon commission cost?",
+        a: "From AED 120,000 for itinerary design, residency curation and concierge, plus travel and accommodation paid directly to suppliers.",
+      },
+      {
+        q: "Do you book single-stop residencies or multi-country itineraries?",
+        a: "Both. Villas, châteaux, over-water suites and lighthouse rentals — many off-market, all walked by us before they are offered. Chef, sommelier, photographer and guides are staffed in destination ahead of arrival.",
+      },
+    ],
   },
 };
 
@@ -241,7 +350,25 @@ export async function generateMetadata({
   const { slug } = await params;
   const item = data[slug];
   if (!item) return {};
-  return { title: item.title.replace(/\.$/, ""), description: item.description };
+  const title = item.title.replace(/\.$/, "");
+  return {
+    title,
+    description: item.description,
+    alternates: { canonical: `/services/${slug}` },
+    openGraph: {
+      type: "website",
+      url: `${site.url}/services/${slug}`,
+      title: `${title} \u00B7 ${site.name}`,
+      description: item.description,
+      images: [item.image],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: `${title} \u00B7 ${site.name}`,
+      description: item.description,
+      images: [item.image],
+    },
+  };
 }
 
 export default async function ServiceDetailPage({ params }: { params: Promise<{ slug: string }> }) {
@@ -255,8 +382,28 @@ export default async function ServiceDetailPage({ params }: { params: Promise<{ 
     .slice(0, 3)
     .map((s) => ({ slug: s, ...data[s] }));
 
+  const title = item.title.replace(/\.$/, "");
+  const ldService = serviceLd({
+    name: title,
+    description: item.description,
+    url: `/services/${slug}`,
+    image: item.image,
+    serviceType: title,
+  });
+  const ldBreadcrumb = breadcrumbLd([
+    { name: "Home", url: "/" },
+    { name: "Services", url: "/services" },
+    { name: title, url: `/services/${slug}` },
+  ]);
+  const ldFaq = item.faqs && item.faqs.length > 0 ? faqPageLd(item.faqs) : null;
+
   return (
     <>
+      <script type="application/ld+json" dangerouslySetInnerHTML={jsonLd(ldService)} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={jsonLd(ldBreadcrumb)} />
+      {ldFaq && (
+        <script type="application/ld+json" dangerouslySetInnerHTML={jsonLd(ldFaq)} />
+      )}
       <PageHero
         eyebrow={item.eyebrow}
         title={item.title}
@@ -278,11 +425,14 @@ export default async function ServiceDetailPage({ params }: { params: Promise<{ 
                   className="aspect-video h-full w-full object-cover"
                 />
               ) : (
-                <div
-                  aria-hidden
-                  className="aspect-[21/9] w-full bg-cover bg-center"
-                  style={{ backgroundImage: `url(${item.image})` }}
-                />
+                <div className="relative aspect-[21/9] w-full">
+                  <BgImage
+                    src={item.image}
+                    alt={`${title} at Regalia Vows`}
+                    priority
+                    sizes="100vw"
+                  />
+                </div>
               )}
               <div
                 className="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,transparent_45%,rgba(11,11,13,0.5)_100%)]"
@@ -357,6 +507,14 @@ export default async function ServiceDetailPage({ params }: { params: Promise<{ 
           </div>
         </Container>
       </Section>
+
+      {item.faqs && item.faqs.length > 0 && (
+        <FaqBlock
+          eyebrow="Frequently asked"
+          heading={`Before you brief us on ${item.shortTitle.toLowerCase()}.`}
+          items={item.faqs}
+        />
+      )}
 
       {otherServices.length > 0 && (
         <Section theme="pearl" className="bg-cream-100">

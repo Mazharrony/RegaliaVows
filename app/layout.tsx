@@ -6,6 +6,7 @@ import { cn } from "@/lib/cn";
 import { Nav } from "@/components/ui/Nav";
 import { Footer } from "@/components/ui/Footer";
 import { Toaster } from "sonner";
+import { jsonLd, localBusinessLd, organizationLd, websiteLd } from "@/lib/seo";
 
 export const metadata: Metadata = {
   metadataBase: new URL(site.url),
@@ -41,8 +42,25 @@ export const metadata: Metadata = {
     title: `${site.name} — ${site.tagline}`,
     description: site.description,
   },
-  alternates: { canonical: site.url },
-  robots: { index: true, follow: true },
+  alternates: { canonical: "/" },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+      "max-video-preview": -1,
+    },
+  },
+  verification: {
+    google: process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION,
+    other: process.env.NEXT_PUBLIC_BING_SITE_VERIFICATION
+      ? { "msvalidate.01": process.env.NEXT_PUBLIC_BING_SITE_VERIFICATION }
+      : undefined,
+  },
+  category: "Wedding planning",
 };
 
 export const viewport: Viewport = {
@@ -82,26 +100,15 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         />
         <script
           type="application/ld+json"
-          dangerouslySetInnerHTML={{
-            __html: JSON.stringify({
-              "@context": "https://schema.org",
-              "@type": "LocalBusiness",
-              name: site.name,
-              description: site.description,
-              url: site.url,
-              telephone: site.contact.phone,
-              email: site.contact.email,
-              address: {
-                "@type": "PostalAddress",
-                streetAddress: site.contact.address,
-                addressLocality: site.city,
-                addressCountry: site.country,
-              },
-              areaServed: "Worldwide",
-              priceRange: "$$$$",
-              sameAs: Object.values(site.social),
-            }),
-          }}
+          dangerouslySetInnerHTML={jsonLd(organizationLd())}
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={jsonLd(localBusinessLd())}
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={jsonLd(websiteLd())}
         />
       </body>
     </html>

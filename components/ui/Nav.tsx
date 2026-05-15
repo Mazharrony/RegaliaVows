@@ -17,7 +17,6 @@ const nav = [
   { href: "/experience", label: "Experience" },
   { href: "/case-studies", label: "Portfolio" },
   { href: "/venues", label: "Venues" },
-  { href: "/journal", label: "Journal" },
 ];
 
 export function Nav() {

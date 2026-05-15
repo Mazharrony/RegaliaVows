@@ -4,9 +4,12 @@ import Link from "next/link";
 import { PageHero } from "@/components/sections/PageHero";
 import { Section } from "@/components/ui/Section";
 import { Container } from "@/components/ui/Container";
+import { BgImage } from "@/components/ui/BgImage";
 import { Eyebrow } from "@/components/ui/Eyebrow";
 import { Reveal } from "@/components/motion/Reveal";
 import { work, getWorkItem } from "@/lib/work";
+import { site } from "@/lib/site";
+import { breadcrumbLd, jsonLd } from "@/lib/seo";
 
 export function generateStaticParams() {
   return work.map((w) => ({ slug: w.slug }));
@@ -20,9 +23,25 @@ export async function generateMetadata({
   const { slug } = await params;
   const w = getWorkItem(slug);
   if (!w) return {};
+  const title = `${w.title} — ${w.place}`;
+  const description = `${w.style} composed by Regalia Vows at ${w.place}.`;
   return {
-    title: `${w.title} — ${w.place}`,
-    description: `${w.style} composed by Regalia Vows at ${w.place}.`,
+    title,
+    description,
+    alternates: { canonical: `/case-studies/${slug}` },
+    openGraph: {
+      type: "article",
+      url: `${site.url}/case-studies/${slug}`,
+      title: `${title} · ${site.name}`,
+      description,
+      images: [w.image],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: `${title} · ${site.name}`,
+      description,
+      images: [w.image],
+    },
   };
 }
 
@@ -47,8 +66,28 @@ export default async function CaseStudyPage({
     "col-span-12 aspect-[16/10] md:col-span-8",
   ];
 
+  const ldWork = {
+    "@context": "https://schema.org",
+    "@type": "CreativeWork",
+    name: `${w.title} \u2014 ${w.place}`,
+    description: w.brief,
+    image: [w.image, ...w.gallery],
+    url: `${site.url}/case-studies/${w.slug}`,
+    dateCreated: String(w.year),
+    locationCreated: { "@type": "Place", name: w.place },
+    creator: { "@id": `${site.url}/#organization` },
+    keywords: [w.sector, w.style, w.place].join(", "),
+  };
+  const ldBreadcrumb = breadcrumbLd([
+    { name: "Home", url: "/" },
+    { name: "Case Studies", url: "/case-studies" },
+    { name: `${w.title} \u2014 ${w.place}`, url: `/case-studies/${w.slug}` },
+  ]);
+
   return (
     <>
+      <script type="application/ld+json" dangerouslySetInnerHTML={jsonLd(ldWork)} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={jsonLd(ldBreadcrumb)} />
       <PageHero
         eyebrow={`${w.place} · ${w.year}`}
         title={`${w.title}.`}
@@ -58,10 +97,11 @@ export default async function CaseStudyPage({
       {/* Hero plate */}
       <Section theme="pearl" className="!py-0">
         <div className="relative aspect-[21/9] w-full overflow-hidden">
-          <div
-            aria-hidden
-            className="absolute inset-0 bg-cover bg-center"
-            style={{ backgroundImage: `url(${w.image})` }}
+          <BgImage
+            src={w.image}
+            alt={`${w.title} — ${w.style}, ${w.place}`}
+            priority
+            sizes="100vw"
           />
           <div
             className={`absolute inset-0 bg-gradient-to-br ${w.palette} opacity-30 mix-blend-soft-light`}
@@ -140,10 +180,10 @@ export default async function CaseStudyPage({
                 key={`${src}-${idx}`}
                 className={`relative overflow-hidden rounded-card ${gallerySpans[idx] ?? gallerySpans[0]}`}
               >
-                <div
-                  aria-hidden
-                  className="absolute inset-0 bg-cover bg-center"
-                  style={{ backgroundImage: `url(${src})` }}
+                <BgImage
+                  src={src}
+                  alt={`${w.title} — moment ${idx + 1}`}
+                  sizes="(max-width: 768px) 100vw, 60vw"
                 />
                 <div
                   className={`absolute inset-0 bg-gradient-to-br ${w.palette} opacity-25 mix-blend-soft-light`}

@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
 import { Container } from "@/components/ui/Container";
+import { BgImage } from "@/components/ui/BgImage";
 import { Section } from "@/components/ui/Section";
 import { Eyebrow } from "@/components/ui/Eyebrow";
 import { Reveal } from "@/components/motion/Reveal";
@@ -54,10 +55,11 @@ export function FeaturedWork() {
                     data-cursor-label="Open"
                     className="group relative block h-full w-full overflow-hidden rounded-card border border-ink/10 transition-colors duration-700 ease-silk hover:border-gilded/50"
                   >
-                    <div
-                      aria-hidden
-                      className="absolute inset-0 bg-cover bg-center transition-transform duration-[1200ms] ease-silk group-hover:scale-[1.06]"
-                      style={{ backgroundImage: `url(${w.image})` }}
+                    <BgImage
+                      src={w.image}
+                      alt={`${w.title} — ${w.style}, ${w.place}`}
+                      sizes="(max-width: 768px) 100vw, (max-width: 1280px) 50vw, 40vw"
+                      className="transition-transform duration-[1200ms] ease-silk group-hover:scale-[1.06]"
                     />
                     <div
                       className={`absolute inset-0 bg-gradient-to-br ${w.palette} opacity-30 mix-blend-soft-light`}
