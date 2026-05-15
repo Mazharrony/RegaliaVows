@@ -6,7 +6,7 @@ import { Section } from "@/components/ui/Section";
 
 export default function Error({ reset }: { error: Error; reset: () => void }) {
   return (
-    <Section theme="ink" className="!pt-44 min-h-[70vh]">
+    <Section theme="pearl" className="!pt-44 min-h-[70vh]">
       <Container size="narrow" className="text-center">
         <p className="eyebrow !justify-center">A moment, please</p>
         <h1 className="display mt-10 text-display-lg italic text-pearl">

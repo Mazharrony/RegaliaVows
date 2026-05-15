@@ -4,7 +4,7 @@ type Theme = "ink" | "pearl";
 
 export function Section({
   id,
-  theme = "ink",
+  theme = "pearl",
   className,
   children,
   bleed = false,
@@ -22,7 +22,7 @@ export function Section({
       data-theme={isLight ? "light" : "dark"}
       className={cn(
         "relative isolate overflow-hidden",
-        isLight ? "bg-pearl text-ink" : "bg-ink text-pearl",
+        isLight ? "bg-cream text-ink" : "bg-ink text-pearl",
         bleed ? "py-0" : "py-24 md:py-36 lg:py-44",
         className
       )}

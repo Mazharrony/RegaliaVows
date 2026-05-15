@@ -127,7 +127,7 @@ export function HomeHero() {
   };
 
   return (
-    <section className="relative isolate min-h-[100svh] w-full overflow-hidden bg-ink text-pearl">
+    <section data-theme="dark" className="relative isolate min-h-[100svh] w-full overflow-hidden bg-ink text-pearl">
       <div className="absolute inset-0 pointer-events-none select-none">
         {/* Poster image — sits behind the video and remains visible if the
             video fails to load on any viewport, ensuring no blank hero. */}
@@ -188,7 +188,7 @@ export function HomeHero() {
       </div>
 
       <div className="relative z-10 flex min-h-[100svh] flex-col">
-        <div className="mx-auto flex w-full max-w-[1600px] flex-1 flex-col justify-end px-6 pb-24 pt-40 md:px-10 md:pb-32">
+        <div className="mx-auto flex w-full max-w-[1600px] flex-1 flex-col justify-end px-5 pb-16 pt-28 sm:px-6 sm:pb-20 md:px-10 md:pb-32 md:pt-40">
           <motion.div
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
@@ -200,7 +200,7 @@ export function HomeHero() {
           <SplitText
             as="h1"
             text="Weddings, composed."
-            className="display mt-8 max-w-[14ch] text-display-xl italic text-pearl"
+            className="display mt-6 max-w-[14ch] text-display-xl italic text-pearl md:mt-8"
             stagger={0.12}
           />
 
@@ -208,11 +208,11 @@ export function HomeHero() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 1.4, duration: 1, ease: [0.16, 1, 0.3, 1] }}
-            className="mt-10 max-w-xl font-tight text-base leading-relaxed text-pearl/85 md:text-lg"
+            className="mt-6 max-w-xl font-tight text-sm leading-relaxed text-pearl/85 sm:text-base md:mt-10 md:text-lg"
           >
             Regalia Vows is for couples who treat their wedding as a work of art.
             Conceived in Dubai, staged the world over.
-            <span className="mt-3 block text-pearl/55">
+            <span className="mt-3 hidden text-pearl/55 md:block">
               And, on request, the corporate, brand and private occasions our clients ask us to compose next.
             </span>
           </motion.p>
@@ -221,13 +221,13 @@ export function HomeHero() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 1.7, duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
-            className="mt-12 flex flex-wrap items-center gap-4"
+            className="mt-8 flex flex-col items-stretch gap-3 sm:flex-row sm:flex-wrap sm:items-center sm:gap-4 md:mt-12"
           >
             <Button href="/contact" variant="gilded" size="lg" withArrow>
               Begin the Conversation
             </Button>
             <Button href="/case-studies" variant="outline" size="lg" withArrow>
-              View Regalia Vows&apos; Work
+              View Our Work
             </Button>
           </motion.div>
         </div>
@@ -236,10 +236,10 @@ export function HomeHero() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 2.2, duration: 1 }}
-          className="relative mx-auto mb-8 flex w-full max-w-[1600px] items-end justify-between px-6 md:px-10"
+          className="relative mx-auto mb-6 flex w-full max-w-[1600px] items-end justify-between px-5 sm:mb-8 sm:px-6 md:px-10"
         >
           <span className="eyebrow opacity-70">Scroll to enter</span>
-          <span className="eyebrow opacity-70">{new Date().getFullYear()} · Volume I</span>
+          <span className="eyebrow hidden opacity-70 sm:inline">{new Date().getFullYear()} · Volume I</span>
         </motion.div>
       </div>
     </section>

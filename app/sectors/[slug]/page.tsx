@@ -7,6 +7,11 @@ import { Container } from "@/components/ui/Container";
 import { Eyebrow } from "@/components/ui/Eyebrow";
 import { Button } from "@/components/ui/Button";
 import { Reveal } from "@/components/motion/Reveal";
+import {
+  PhilosophyBlock,
+  SignaturesGrid,
+  ProcessTimeline,
+} from "@/components/sections/DetailBlocks";
 import { sectors, getSector } from "@/lib/sectors";
 import { work } from "@/lib/work";
 
@@ -47,7 +52,7 @@ export default async function SectorDetailPage({
         description={s.description}
       />
 
-      <Section theme="ink" className="!pt-0 !pb-0">
+      <Section theme="pearl" className="!pt-0 !pb-0">
         <Container>
           <Reveal>
             <div className="relative overflow-hidden rounded-card border border-pearl/10">
@@ -64,6 +69,22 @@ export default async function SectorDetailPage({
           </Reveal>
         </Container>
       </Section>
+
+      <PhilosophyBlock
+        heading={`Why ${s.shortTitle.toLowerCase()}.`}
+        body={s.philosophy}
+      />
+
+      <SignaturesGrid
+        heading="The signatures."
+        intro="Four hallmarks that separate a Regalia Vows commission in this sector from the agency template."
+        items={s.signatures}
+      />
+
+      <ProcessTimeline
+        heading="From brief to handover."
+        steps={s.process}
+      />
 
       <Section theme="pearl">
         <Container>
@@ -120,7 +141,7 @@ export default async function SectorDetailPage({
       </Section>
 
       {examples.length > 0 && (
-        <Section theme="ink">
+        <Section theme="pearl">
           <Container>
             <div className="grid items-end gap-10 md:grid-cols-2">
               <Reveal>
@@ -133,7 +154,7 @@ export default async function SectorDetailPage({
                 <Link
                   href={`/case-studies?sector=${s.slug}`}
                   data-cursor="link"
-                  className="font-tight text-eyebrow uppercase tracking-widest2 text-pearl/80 hover:text-gilded md:ml-auto"
+                  className="font-tight text-eyebrow uppercase tracking-widest2 text-ink/75 hover:text-gilded md:ml-auto"
                 >
                   See all {s.shortTitle.toLowerCase()} →
                 </Link>
@@ -158,10 +179,10 @@ export default async function SectorDetailPage({
                       className={`absolute inset-0 bg-gradient-to-br ${w.palette} opacity-30 mix-blend-soft-light`}
                     />
                     <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(0,0,0,0.15)_0%,rgba(0,0,0,0.55)_60%,rgba(0,0,0,0.9)_100%)]" />
-                    <div className="relative flex h-full flex-col justify-between p-8 text-pearl">
+                    <div className="dark-panel relative flex h-full flex-col justify-between p-8 text-pearl">
                       <span className="eyebrow !text-pearl/85">{w.style}</span>
                       <div>
-                        <h3 className="font-display text-3xl italic md:text-4xl">
+                        <h3 className="font-display text-3xl italic text-white md:text-4xl">
                           {w.title}
                         </h3>
                         <p className="mt-2 text-sm text-pearl/85">{w.place}</p>

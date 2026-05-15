@@ -46,7 +46,7 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#111216",
+  themeColor: "#FAF6EE",
   width: "device-width",
   initialScale: 1,
 };
@@ -56,7 +56,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html
       lang="en"
       suppressHydrationWarning
-      className={cn(display.variable, sans.variable, tight.variable, "bg-ink text-pearl")}
+      className={cn(display.variable, sans.variable, tight.variable, "bg-cream text-ink")}
     >
       <body
         suppressHydrationWarning
@@ -66,13 +66,13 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <main id="main">{children}</main>
         <Footer />
         <Toaster
-          theme="dark"
+          theme="light"
           position="bottom-right"
           toastOptions={{
             style: {
-              background: "#181922",
-              color: "#FFFFFF",
-              border: "1px solid rgba(230,207,153,0.35)",
+              background: "#FFFDF7",
+              color: "#0B0B0D",
+              border: "1px solid rgba(214,161,64,0.35)",
             },
           }}
         />

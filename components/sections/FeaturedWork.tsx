@@ -63,13 +63,13 @@ export function FeaturedWork() {
                       className={`absolute inset-0 bg-gradient-to-br ${w.palette} opacity-30 mix-blend-soft-light`}
                     />
                     <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(0,0,0,0.05)_0%,rgba(0,0,0,0.5)_65%,rgba(0,0,0,0.85)_100%)]" />
-                    <div className="relative flex h-full flex-col justify-between p-8 text-pearl md:p-10">
+                    <div className="dark-panel relative flex h-full flex-col justify-between p-8 text-pearl md:p-10">
                       <div className="flex items-center justify-between">
                         <span className="eyebrow !text-pearl/85">{w.style}</span>
                         <span className="eyebrow !text-pearl/85">{w.year}</span>
                       </div>
                       <div>
-                        <h3 className="font-display text-3xl italic md:text-5xl">
+                        <h3 className="font-display text-3xl italic text-white md:text-5xl">
                           {w.title}
                         </h3>
                         <p className="mt-2 text-sm text-pearl/85">{w.place}</p>

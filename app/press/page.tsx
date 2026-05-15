@@ -18,7 +18,7 @@ export default function PressPage() {
         eyebrow="Press & Editorial"
         title="Regalia Vows, in print."
       />
-      <Section theme="ink" className="!pt-0">
+      <Section theme="pearl" className="!pt-0">
         <Container>
           <EmptyState
             eyebrow="Forthcoming"

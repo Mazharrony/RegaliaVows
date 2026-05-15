@@ -24,7 +24,7 @@ const pillars = [
 
 export function ManifestoSection() {
   return (
-    <Section id="manifesto" theme="ink" className="grain">
+    <Section id="manifesto" theme="pearl" className="grain">
       <Container>
         <div className="grid items-start gap-16 lg:grid-cols-[1fr_1.4fr]">
           <Reveal>

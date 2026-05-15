@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/Button";
 
 export default function NotFound() {
   return (
-    <Section theme="ink" className="!pt-44 min-h-[80vh]">
+    <Section theme="pearl" className="!pt-44 min-h-[80vh]">
       <Container size="narrow" className="text-center">
         <p className="eyebrow !justify-center">404 · Lost in Regalia Vows</p>
         <h1 className="display mt-10 text-display-xl italic text-pearl">

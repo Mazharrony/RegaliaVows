@@ -3,13 +3,13 @@ import { Monogram } from "@/components/ui/Monogram";
 export default function Loading() {
   return (
     <div
-      className="fixed inset-0 z-[120] grid place-items-center overflow-hidden bg-ink"
+      className="fixed inset-0 z-[120] grid place-items-center overflow-hidden bg-cream"
       role="status"
       aria-label="Please wait"
     >
       {/* Soft gold-foil ambience */}
       <div className="pointer-events-none absolute inset-0 bg-gold-foil opacity-40" />
-      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(60%_50%_at_50%_50%,rgba(0,0,0,0)_0%,#0B0B0D_85%)]" />
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(60%_50%_at_50%_50%,rgba(250,246,238,0)_0%,#EFE7D2_85%)]" />
 
       <div className="relative flex flex-col items-center">
         {/* Concentric rings — slow, opposing rotation */}

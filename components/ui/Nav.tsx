@@ -8,6 +8,7 @@ import { cn } from "@/lib/cn";
 import { site } from "@/lib/site";
 import { Button } from "./Button";
 import { Monogram } from "./Monogram";
+import { CrownMark } from "./CrownMark";
 
 const nav = [
   { href: "/about", label: "Story" },
@@ -42,10 +43,11 @@ export function Nav() {
   return (
     <>
       <header
+        data-theme={scrolled ? "light" : "dark"}
         className={cn(
           "fixed inset-x-0 top-0 z-50 transition-all duration-700 ease-silk",
           scrolled
-            ? "bg-ink/60 backdrop-blur-lg border-b border-pearl/5"
+            ? "bg-cream/85 backdrop-blur-lg border-b border-ink/10"
             : "bg-transparent"
         )}
       >
@@ -57,7 +59,12 @@ export function Nav() {
             data-cursor="link"
           >
             <Monogram className="h-11 w-11 text-gilded transition-transform duration-700 ease-silk group-hover:scale-105 md:h-12 md:w-12" />
-            <span className="hidden font-display text-lg italic text-pearl/95 md:block">
+            <span
+              className={cn(
+                "hidden font-display text-lg italic md:block",
+                scrolled ? "text-ink/95" : "text-pearl/95"
+              )}
+            >
               {site.name}
             </span>
           </Link>
@@ -67,7 +74,10 @@ export function Nav() {
               <Link
                 key={item.href}
                 href={item.href}
-                className="group relative font-tight text-eyebrow uppercase tracking-widest2 text-pearl/80 transition-colors hover:text-gilded"
+                className={cn(
+                  "group relative font-tight text-eyebrow uppercase tracking-widest2 transition-colors hover:text-gilded",
+                  scrolled ? "text-ink/80" : "text-pearl/80"
+                )}
                 data-cursor="link"
               >
                 <span>{item.label}</span>
@@ -83,7 +93,12 @@ export function Nav() {
             <button
               onClick={() => setOpen(true)}
               aria-label="Open menu"
-              className="grid h-11 w-11 place-items-center rounded-full border border-pearl/15 text-pearl transition-colors hover:border-gilded hover:text-gilded lg:hidden"
+              className={cn(
+                "grid h-11 w-11 place-items-center rounded-full border transition-colors hover:border-gilded hover:text-gilded lg:hidden",
+                scrolled
+                  ? "border-ink/15 text-ink"
+                  : "border-pearl/15 text-pearl"
+              )}
               data-cursor="link"
             >
               <Menu size={18} strokeWidth={1.5} />
@@ -106,40 +121,58 @@ function MobileMenu({ onClose }: { onClose: () => void }) {
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       transition={{ duration: 0.4 }}
-      className="fixed inset-0 z-[60] bg-ink"
+      className="fixed inset-0 z-[60] bg-cream"
     >
-      <div className="absolute inset-0 bg-gold-foil opacity-30" aria-hidden />
-      <div className="relative flex h-full flex-col px-6 py-6 md:px-10">
+      <div className="absolute inset-0 bg-gold-foil opacity-25" aria-hidden />
+      {/* Regal crown watermark behind the menu */}
+      <CrownMark className="absolute right-[-8%] top-[18%] h-[420px] w-[420px] opacity-[0.07]" />
+
+      <div className="relative flex h-full flex-col px-6 py-5 sm:px-8 sm:py-6">
         <div className="flex items-center justify-between">
-          <Monogram className="h-10 w-10 text-gilded" />
+          <Monogram className="h-9 w-9 text-gilded" />
           <button
             onClick={onClose}
             aria-label="Close menu"
-            className="grid h-11 w-11 place-items-center rounded-full border border-pearl/15 text-pearl"
+            className="grid h-11 w-11 place-items-center rounded-full border border-ink/15 text-ink transition-colors hover:border-gilded hover:text-gilded"
             data-cursor="link"
           >
             <X size={18} strokeWidth={1.5} />
           </button>
         </div>
-        <nav className="mt-16 flex flex-col gap-6">
+
+        <span className="mt-8 inline-flex items-center gap-3 text-eyebrow font-tight uppercase tracking-widest2 text-gilded-600">
+          <span className="h-px w-8 bg-gilded/60" />
+          Menu
+        </span>
+
+        <nav className="mt-6 flex flex-1 flex-col divide-y divide-ink/10 sm:mt-8">
           {nav.map((item, i) => (
             <motion.div
               key={item.href}
-              initial={{ opacity: 0, y: 24 }}
+              initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.1 + i * 0.06, duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+              transition={{ delay: 0.08 + i * 0.045, duration: 0.55, ease: [0.16, 1, 0.3, 1] }}
             >
               <Link
                 href={item.href}
                 onClick={onClose}
-                className="font-display text-5xl italic text-pearl hover:text-gilded"
+                className="group flex items-baseline justify-between py-3.5 sm:py-4"
               >
-                {item.label}
+                <span className="flex items-baseline gap-4">
+                  <span className="font-tight text-[10px] uppercase tracking-widest2 text-ink/40">
+                    {String(i + 1).padStart(2, "0")}
+                  </span>
+                  <span className="font-display text-[2rem] italic leading-none text-ink transition-colors group-hover:text-gilded sm:text-4xl">
+                    {item.label}
+                  </span>
+                </span>
+                <span className="h-px w-6 bg-ink/20 transition-all duration-500 ease-silk group-hover:w-12 group-hover:bg-gilded" />
               </Link>
             </motion.div>
           ))}
         </nav>
-        <div className="mt-auto">
+
+        <div className="mt-4 pb-2 sm:mt-6">
           <Button href="/contact" variant="gilded" size="lg" withArrow className="w-full">
             Begin Enquiry
           </Button>

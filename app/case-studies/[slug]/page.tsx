@@ -56,7 +56,7 @@ export default async function CaseStudyPage({
       />
 
       {/* Hero plate */}
-      <Section theme="ink" className="!py-0">
+      <Section theme="pearl" className="!py-0">
         <div className="relative aspect-[21/9] w-full overflow-hidden">
           <div
             aria-hidden
@@ -71,7 +71,7 @@ export default async function CaseStudyPage({
       </Section>
 
       {/* Brief + arc */}
-      <Section theme="ink">
+      <Section theme="pearl">
         <Container size="narrow">
           <Reveal>
             <Eyebrow>The Brief</Eyebrow>
@@ -86,7 +86,7 @@ export default async function CaseStudyPage({
       </Section>
 
       {/* Facts row */}
-      <Section theme="ink" className="!pt-0">
+      <Section theme="pearl" className="!pt-0">
         <Container size="wide">
           <Reveal>
             <dl className="grid grid-cols-2 gap-y-8 border-t border-pearl/10 pt-12 md:grid-cols-5">
@@ -104,7 +104,7 @@ export default async function CaseStudyPage({
       </Section>
 
       {/* Chapters */}
-      <Section theme="ink">
+      <Section theme="pearl">
         <Container size="narrow">
           <Reveal>
             <Eyebrow>The Arc</Eyebrow>
@@ -132,7 +132,7 @@ export default async function CaseStudyPage({
       </Section>
 
       {/* Gallery mosaic */}
-      <Section theme="ink" className="!py-0">
+      <Section theme="pearl" className="!py-0">
         <Container size="wide">
           <div className="grid grid-cols-12 gap-6">
             {w.gallery.slice(0, 4).map((src, idx) => (
@@ -156,7 +156,7 @@ export default async function CaseStudyPage({
       </Section>
 
       {/* Next */}
-      <Section theme="ink">
+      <Section theme="pearl">
         <Container size="narrow" className="text-center">
           <Eyebrow className="!justify-center">Next Composition</Eyebrow>
           <Link

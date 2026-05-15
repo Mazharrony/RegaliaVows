@@ -45,7 +45,7 @@ const cols = [
 
 export function Footer() {
   return (
-    <footer className="relative isolate overflow-hidden border-t border-pearl/5 bg-ink py-20 text-pearl">
+    <footer className="relative isolate overflow-hidden border-t border-ink/10 bg-cream-100 py-20 text-ink">
       <div className="pointer-events-none absolute inset-0 bg-gold-foil opacity-30" aria-hidden />
       <Container className="relative">
         <div className="grid gap-16 lg:grid-cols-[1.4fr_1fr_1fr_1fr_1fr]">
@@ -60,11 +60,42 @@ export function Footer() {
             <p className="mt-6 max-w-sm text-sm leading-relaxed text-pearl/80">
               {site.description}
             </p>
+
+            <dl className="mt-8 space-y-3 text-sm text-pearl/85">
+              <div>
+                <dt className="text-eyebrow uppercase tracking-widest2 text-gilded-800">Studio</dt>
+                <dd className="mt-1 max-w-xs text-ink/80">{site.contact.address}</dd>
+              </div>
+              <div>
+                <dt className="text-eyebrow uppercase tracking-widest2 text-gilded-800">Email</dt>
+                <dd className="mt-1">
+                  <a
+                    href={`mailto:${site.contact.email}`}
+                    data-cursor="link"
+                    className="text-ink/80 transition-colors hover:text-gilded-600"
+                  >
+                    {site.contact.email}
+                  </a>
+                </dd>
+              </div>
+              <div>
+                <dt className="text-eyebrow uppercase tracking-widest2 text-gilded-800">Telephone</dt>
+                <dd className="mt-1">
+                  <a
+                    href={`tel:${site.contact.phone.replace(/\s/g, "")}`}
+                    data-cursor="link"
+                    className="text-ink/80 transition-colors hover:text-gilded-600"
+                  >
+                    {site.contact.phone}
+                  </a>
+                </dd>
+              </div>
+            </dl>
           </div>
 
           {cols.map((col) => (
             <div key={col.title}>
-              <h4 className="text-eyebrow uppercase tracking-widest2 text-gold">{col.title}</h4>
+              <h4 className="text-eyebrow uppercase tracking-widest2 text-gilded-800">{col.title}</h4>
               <ul className="mt-6 space-y-3">
                 {col.links.map((l) => (
                   <li key={l.href}>

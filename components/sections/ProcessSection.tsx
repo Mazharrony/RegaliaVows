@@ -19,7 +19,7 @@ const acts = [
 
 export function ProcessSection() {
   return (
-    <Section id="process" theme="ink" className="grain">
+    <Section id="process" theme="pearl" className="grain">
       <Container>
         <div className="grid items-end gap-10 md:grid-cols-2">
           <Reveal>

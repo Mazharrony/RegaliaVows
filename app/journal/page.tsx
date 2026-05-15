@@ -18,7 +18,7 @@ export default function JournalPage() {
         title="Notes from Regalia Vows."
       />
 
-      <Section theme="ink" className="!pt-0">
+      <Section theme="pearl" className="!pt-0">
         <Container>
           <EmptyState
             eyebrow="Forthcoming"

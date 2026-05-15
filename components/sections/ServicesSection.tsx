@@ -82,7 +82,8 @@ function ServiceCard({
       href={s.href}
       data-cursor="view"
       data-cursor-label="View"
-      className={`group relative isolate block overflow-clip rounded-card border border-pearl/10 bg-ink-50 transition-[transform,border-color] duration-700 ease-silk transform-gpu hover:-translate-y-1 hover:border-gilded/50 ${sizing}`}
+      data-theme="dark"
+      className={`dark-panel group relative isolate block overflow-clip rounded-card border border-pearl/10 bg-ink-50 transition-[transform,border-color] duration-700 ease-silk transform-gpu hover:-translate-y-1 hover:border-gilded/50 ${sizing}`}
     >
       {/* Background image */}
       <div
@@ -126,7 +127,7 @@ function ServiceCard({
         </div>
 
         <div>
-          <h3 className="font-display text-3xl italic leading-[1.05] sm:text-4xl md:text-[2.5rem] lg:text-5xl xl:text-[3.25rem]">
+          <h3 className="font-display text-3xl italic leading-[1.05] bg-gold-shimmer bg-[length:200%_200%] bg-clip-text text-transparent animate-[gold-pan_6s_ease-in-out_infinite] sm:text-4xl md:text-[2.5rem] lg:text-5xl xl:text-[3.25rem]">
             {s.title}
           </h3>
           <p className="mt-4 max-w-xs text-sm leading-relaxed text-pearl/85 sm:mt-5">
@@ -224,8 +225,8 @@ export function ServicesSection() {
     return (
       <section
         id="services"
-        data-theme="dark"
-        className="relative bg-ink py-20 text-pearl sm:py-24"
+        data-theme="light"
+        className="relative bg-cream py-20 text-ink sm:py-24"
       >
         <Container className="mb-10">
           <div className="space-y-8">
@@ -256,10 +257,10 @@ export function ServicesSection() {
           <span aria-hidden className="flex-none w-2" />
         </div>
 
-        <div className="mt-6 flex items-center justify-center gap-2 text-eyebrow uppercase tracking-widest2 text-pearl/50">
-          <span className="h-px w-6 bg-pearl/30" />
+        <div className="mt-6 flex items-center justify-center gap-2 text-eyebrow uppercase tracking-widest2 text-ink/55">
+          <span className="h-px w-6 bg-ink/25" />
           Swipe
-          <span className="h-px w-6 bg-pearl/30" />
+          <span className="h-px w-6 bg-ink/25" />
         </div>
       </section>
     );
@@ -270,9 +271,9 @@ export function ServicesSection() {
   return (
     <section
       id="services"
-      data-theme="dark"
+      data-theme="light"
       ref={wrapperRef}
-      className="relative bg-ink text-pearl"
+      className="relative bg-cream text-ink"
     >
       <div className="flex h-screen flex-col justify-center overflow-hidden pt-24 pb-16">
         <Container className="mb-10 md:mb-12">

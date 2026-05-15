@@ -8,10 +8,10 @@ export const site = {
   city: "Dubai",
   country: "United Arab Emirates",
   contact: {
-    email: "concierge@regaliavows.com",
-    phone: "+971 4 000 0000",
-    whatsapp: "+971 50 000 0000",
-    address: "DIFC, Gate Avenue, Dubai, UAE",
+    email: "Info@Regaliavows.com",
+    phone: "+971 56 264 6341",
+    whatsapp: "+971 56 264 6341",
+    address: "14 66 Street, Al Souq Al Kabeer, Al Fahidi Plaza, Dubai, UAE",
   },
   social: {
     instagram: "https://instagram.com/regaliavows",

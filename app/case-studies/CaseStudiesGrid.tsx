@@ -24,7 +24,7 @@ export function CaseStudiesGrid({ initial = "weddings" as Filter }: { initial?: 
   }, [filter]);
 
   return (
-    <Section theme="ink" className="!pt-0">
+    <Section theme="pearl" className="!pt-0">
       <Container size="wide">
         <div className="mb-12 flex flex-wrap items-center gap-3">
           {sectorFilters.map((f) => (
@@ -75,13 +75,13 @@ export function CaseStudiesGrid({ initial = "weddings" as Filter }: { initial?: 
                     className={`absolute inset-0 bg-gradient-to-br ${w.palette} opacity-30 mix-blend-soft-light`}
                   />
                   <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(0,0,0,0.15)_0%,rgba(0,0,0,0.55)_60%,rgba(0,0,0,0.9)_100%)]" />
-                  <div className="relative flex h-full flex-col justify-between p-8 text-pearl">
+                  <div className="dark-panel relative flex h-full flex-col justify-between p-8 text-pearl">
                     <div className="flex items-center justify-between">
                       <span className="eyebrow !text-pearl/85">{w.style}</span>
                       <span className="eyebrow !text-pearl/85">{w.year}</span>
                     </div>
                     <div>
-                      <h3 className="font-display text-4xl italic md:text-5xl">
+                      <h3 className="font-display text-4xl italic text-white md:text-5xl">
                         {w.title}
                       </h3>
                       <p className="mt-2 text-sm text-pearl/85">{w.place}</p>

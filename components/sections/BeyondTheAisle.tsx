@@ -10,7 +10,7 @@ import { ArrowUpRight } from "lucide-react";
 // without competing with the wedding-led tone of the rest of the home page.
 export function BeyondTheAisle() {
   return (
-    <Section theme="ink" className="!py-32 md:!py-40">
+    <Section theme="pearl" className="!py-32 md:!py-40">
       <Container>
         <div className="grid items-end gap-10 md:grid-cols-2">
           <Reveal>
@@ -30,28 +30,28 @@ export function BeyondTheAisle() {
           </Reveal>
         </div>
 
-        <ul className="mt-20 grid grid-cols-1 gap-px overflow-hidden rounded-card border border-pearl/10 bg-pearl/10 md:grid-cols-2 lg:grid-cols-4">
+        <ul className="mt-20 grid grid-cols-1 gap-px overflow-hidden rounded-card border border-ink/10 bg-ink/5 md:grid-cols-2 lg:grid-cols-4">
           {sectors.map((s, i) => (
             <Reveal key={s.slug} delay={i * 0.06} as="li">
               <Link
                 href={`/sectors/${s.slug}`}
                 data-cursor="view"
                 data-cursor-label="View"
-                className="group relative flex h-full flex-col justify-between gap-10 bg-ink p-8 transition-colors duration-700 ease-silk hover:bg-[#13131a] md:p-10"
+                className="group relative flex h-full flex-col justify-between gap-10 bg-cream-50 p-8 transition-colors duration-700 ease-silk hover:bg-cream-100 md:p-10"
               >
                 <div className="flex items-start justify-between">
-                  <span className="font-display text-xl italic text-gilded/70">
+                  <span className="font-display text-xl italic text-gilded-600">
                     {s.number}
                   </span>
-                  <span className="grid h-9 w-9 place-items-center rounded-full border border-pearl/15 text-pearl/60 transition-all duration-500 ease-silk group-hover:rotate-45 group-hover:border-gilded group-hover:text-gilded">
+                  <span className="grid h-9 w-9 place-items-center rounded-full border border-ink/15 text-ink/60 transition-all duration-500 ease-silk group-hover:rotate-45 group-hover:border-gilded group-hover:text-gilded">
                     <ArrowUpRight size={14} strokeWidth={1.5} />
                   </span>
                 </div>
                 <div>
-                  <h3 className="font-display text-2xl italic text-pearl/85 transition-colors duration-500 ease-silk group-hover:text-gilded md:text-3xl">
+                  <h3 className="font-display text-2xl italic text-ink/90 transition-colors duration-500 ease-silk group-hover:text-gilded md:text-3xl">
                     {s.shortTitle}
                   </h3>
-                  <p className="mt-3 text-sm leading-relaxed text-pearl/50">
+                  <p className="mt-3 text-sm leading-relaxed text-ink/65">
                     {s.oneLiner}
                   </p>
                 </div>

@@ -22,6 +22,13 @@ const config: Config = {
           100: "#FAFAFA",
           200: "#F0EFEC",
         },
+        cream: {
+          DEFAULT: "#FAF6EE",
+          50: "#FFFDF7",
+          100: "#F7F2E7",
+          200: "#EFE7D2",
+          300: "#E5D9B8",
+        },
         champagne: "#F0D08C",
         gilded: {
           DEFAULT: "#D6A140",
@@ -33,6 +40,9 @@ const config: Config = {
         },
         rose: { veil: "#E8C9C2" },
         verdant: { olive: "#5C6A4A" },
+        // Aliases used throughout components — keep them resolving.
+        gold: "#D6A140",
+        "gold-flow": "#D6A140",
       },
       fontFamily: {
         display: ["var(--font-display)", "Cormorant Garamond", "serif"],
