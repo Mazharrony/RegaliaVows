@@ -93,16 +93,6 @@ export function HomeHero() {
           </motion.div>
 
           {/* Chapter mark — small, refined, sits like a pre-headline kicker. */}
-          <motion.div
-            initial={{ opacity: 0, y: 12 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.6, duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
-            className="mt-8 flex items-center gap-3 text-eyebrow uppercase tracking-widest2 text-pearl/90 drop-shadow-[0_1px_6px_rgba(0,0,0,0.5)] md:mt-12"
-          >
-            <span aria-hidden className="h-px w-8 bg-gilded/60" />
-            <span>The Composition</span>
-          </motion.div>
-
           <motion.h1
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
