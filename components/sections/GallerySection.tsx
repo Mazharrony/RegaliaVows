@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { Container } from "@/components/ui/Container";
 import type { GalleryImage } from "@/lib/gallery";
@@ -10,6 +10,17 @@ const PAGE_SIZE = 12;
 export function GallerySection({ images }: { images: GalleryImage[] }) {
   const [active, setActive] = useState<number | null>(null);
   const [page, setPage] = useState(0);
+  const scrollOnNextRender = useRef(false);
+
+  // Scroll to section top AFTER React has re-rendered the new page
+  useEffect(() => {
+    if (!scrollOnNextRender.current) return;
+    scrollOnNextRender.current = false;
+    const el = document.getElementById("gallery-section");
+    if (!el) return;
+    const top = el.getBoundingClientRect().top + window.scrollY - 80; // 80px nav clearance
+    window.scrollTo({ top: Math.max(0, top), behavior: "smooth" });
+  }, [page]);
 
   const totalPages = Math.ceil(images.length / PAGE_SIZE);
   const pageImages = images.slice(page * PAGE_SIZE, page * PAGE_SIZE + PAGE_SIZE);
@@ -47,9 +58,8 @@ export function GallerySection({ images }: { images: GalleryImage[] }) {
   }, [active, close, next, prev]);
 
   const goToPage = (p: number) => {
+    scrollOnNextRender.current = true;
     setPage(p);
-    // Scroll to gallery top smoothly
-    document.getElementById("gallery-section")?.scrollIntoView({ behavior: "smooth", block: "start" });
   };
 
   if (!images.length) return null;
