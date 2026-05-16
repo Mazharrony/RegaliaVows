@@ -90,9 +90,6 @@ export function HomeHero() {
               aria-hidden
               className="hidden h-px flex-1 origin-left bg-gradient-to-r from-gilded/70 via-gilded-100/40 to-transparent sm:block"
             />
-            <span className="eyebrow !text-gilded/80 hidden drop-shadow-[0_1px_6px_rgba(0,0,0,0.5)] sm:inline">
-              N° 01 — MMXXVI
-            </span>
           </motion.div>
 
           {/* Chapter mark — small, refined, sits like a pre-headline kicker. */}
