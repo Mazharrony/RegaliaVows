@@ -2,6 +2,12 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   reactStrictMode: true,
+  // Prevent Vercel from bundling public/gallery images into the case-studies
+  // serverless function. The images are served as static assets, not via the
+  // Node.js function, so they must be excluded from output file tracing.
+  outputFileTracingExcludes: {
+    "/case-studies": ["./public/gallery/**/*"],
+  },
   // Use a custom distDir locally to dodge a Windows file-lock on `.next/trace`
   // when the dev server is killed abruptly. Vercel/CI must use the default
   // `.next` so its post-build steps can find routes-manifest.json.
