@@ -97,7 +97,7 @@ export function HomeHero() {
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.6, duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
-            className="mt-8 flex items-center gap-3 text-eyebrow uppercase tracking-widest2 text-pearl/70 drop-shadow-[0_1px_6px_rgba(0,0,0,0.5)] md:mt-12"
+            className="mt-8 flex items-center gap-3 text-eyebrow uppercase tracking-widest2 text-pearl/90 drop-shadow-[0_1px_6px_rgba(0,0,0,0.5)] md:mt-12"
           >
             <span aria-hidden className="h-px w-8 bg-gilded/60" />
             <span>The Composition</span>
@@ -135,11 +135,11 @@ export function HomeHero() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 1.4, duration: 1, ease: [0.16, 1, 0.3, 1] }}
-            className="mt-6 max-w-xl font-tight text-sm leading-relaxed text-pearl/90 drop-shadow-[0_1px_8px_rgba(0,0,0,0.45)] sm:text-base md:mt-8 md:text-lg"
+            className="mt-6 max-w-xl font-tight text-sm leading-relaxed text-pearl drop-shadow-[0_1px_8px_rgba(0,0,0,0.45)] sm:text-base md:mt-8 md:text-lg"
           >
             Regalia Vows is for couples who treat their wedding as a work of art.
             Conceived in Dubai, staged the world over.
-            <span className="mt-3 hidden text-pearl/70 md:block">
+            <span className="mt-3 hidden text-pearl/85 md:block">
               And, on request, the corporate, brand and private occasions our clients ask us to compose next.
             </span>
           </motion.p>
