@@ -3,7 +3,6 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { cn } from "@/lib/cn";
 import { site } from "@/lib/site";
 import { Monogram } from "./Monogram";
 import { CrownMark } from "./CrownMark";
@@ -18,17 +17,7 @@ const nav = [
 ];
 
 export function Nav() {
-  const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
-
-  useEffect(() => {
-    function onScroll() {
-      setScrolled(window.scrollY > 24);
-    }
-    onScroll();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
 
   useEffect(() => {
     document.documentElement.style.overflow = open ? "hidden" : "";
@@ -39,15 +28,7 @@ export function Nav() {
 
   return (
     <>
-      <header
-        data-theme={scrolled ? "light" : "dark"}
-        className={cn(
-          "fixed inset-x-0 top-0 z-50 transition-all duration-700 ease-silk",
-          scrolled
-            ? "bg-transparent lg:bg-cream/80 lg:backdrop-blur-md lg:border-b lg:border-ink/5"
-            : "bg-transparent"
-        )}
-      >
+      <header className="fixed inset-x-0 top-0 z-50 bg-transparent">
         <div className="mx-auto flex h-14 max-w-[1600px] items-center justify-between px-5 sm:h-16 md:px-8">
           <Link
             href="/"
@@ -63,10 +44,7 @@ export function Nav() {
               <Link
                 key={item.href}
                 href={item.href}
-                className={cn(
-                  "group relative font-tight text-[11px] uppercase tracking-widest2 transition-colors hover:text-gilded",
-                  scrolled ? "text-ink/75" : "text-pearl/85"
-                )}
+                className="group relative font-tight text-[11px] uppercase tracking-widest2 text-pearl/85 transition-colors hover:text-gilded"
                 data-cursor="link"
               >
                 <span>{item.label}</span>
@@ -78,10 +56,7 @@ export function Nav() {
           <div className="flex items-center gap-2">
             <Link
               href="/contact"
-              className={cn(
-                "hidden lg:inline-flex items-center font-tight text-[11px] uppercase tracking-widest2 transition-colors hover:text-gilded",
-                scrolled ? "text-ink/85" : "text-pearl/90"
-              )}
+              className="hidden lg:inline-flex items-center font-tight text-[11px] uppercase tracking-widest2 text-pearl/90 transition-colors hover:text-gilded"
               data-cursor="link"
             >
               <span>Enquire</span>
@@ -91,10 +66,7 @@ export function Nav() {
               onClick={() => setOpen(true)}
               aria-label="Open menu"
               aria-expanded={open}
-              className={cn(
-                "group relative -mr-1 grid h-10 w-10 place-items-center transition-colors hover:text-gilded lg:hidden",
-                scrolled ? "text-ink" : "text-pearl"
-              )}
+              className="group relative -mr-1 grid h-10 w-10 place-items-center text-pearl transition-colors hover:text-gilded lg:hidden"
               data-cursor="link"
             >
               <span aria-hidden className="relative block h-[7px] w-[20px]">
