@@ -36,4 +36,6 @@ app/pid.txt
 
 public/videos/*.mp4
 !public/videos/private-event.mp4
+!public/videos/hero.mp4
+!public/videos/hero-mobile.mp4
 

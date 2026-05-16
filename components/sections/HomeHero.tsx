@@ -1,40 +1,23 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
 import { Eyebrow } from "@/components/ui/Eyebrow";
 import { Button } from "@/components/ui/Button";
 import { SplitText } from "@/components/motion/SplitText";
 import { BgImage } from "@/components/ui/BgImage";
 
-// Cinematic hero — looping YouTube embed sized to fully cover the viewport.
-// The iframe is centred and scaled so 16:9 footage crops cleanly to fill any
-// aspect ratio without letterboxing. Falls back to a poster image when the
-// user prefers reduced motion.
-const YT_ID = "O0mje5u0Vr8";
-const YT_PARAMS = [
-  "autoplay=1",
-  "mute=1",
-  "loop=1",
-  `playlist=${YT_ID}`,
-  "controls=0",
-  "modestbranding=1",
-  "showinfo=0",
-  "rel=0",
-  "iv_load_policy=3",
-  "playsinline=1",
-  "disablekb=1",
-  "fs=0",
-].join("&");
-const YT_SRC = `https://www.youtube-nocookie.com/embed/${YT_ID}?${YT_PARAMS}`;
-
-// Ultimate fallback when prefers-reduced-motion is on or the embed is blocked.
-// Also serves as the LCP image on slow connections.
-const POSTER =
-  "https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=1600&q=55";
+// Cinematic hero — self-hosted, muted, looping mp4 sized via object-cover.
+// Two encodes (1080p desktop / 720p mobile) are served straight from the
+// repo's public/videos directory through the edge CDN, giving us an instant
+// first frame from the poster image and no third-party branding or spinners.
+const POSTER = "/videos/hero-poster.jpg";
+const SRC_DESKTOP = "/videos/hero.mp4";
+const SRC_MOBILE = "/videos/hero-mobile.mp4";
 
 export function HomeHero() {
   const [reduce, setReduce] = useState(false);
+  const videoRef = useRef<HTMLVideoElement | null>(null);
 
   useEffect(() => {
     const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
@@ -44,32 +27,43 @@ export function HomeHero() {
     return () => mq.removeEventListener("change", onChange);
   }, []);
 
-  const useVideo = !reduce;
+  // iOS occasionally refuses the first autoplay; nudge it once metadata lands.
+  useEffect(() => {
+    const v = videoRef.current;
+    if (!v || reduce) return;
+    const tryPlay = () => {
+      const p = v.play();
+      if (p && typeof p.catch === "function") p.catch(() => {});
+    };
+    tryPlay();
+    v.addEventListener("loadedmetadata", tryPlay);
+    return () => v.removeEventListener("loadedmetadata", tryPlay);
+  }, [reduce]);
 
   return (
     <section className="relative isolate min-h-[100svh] w-full overflow-hidden bg-cream text-ink">
       <div className="absolute inset-0 pointer-events-none select-none">
-        {/* Poster image — sits behind the iframe and remains visible if the
-            embed is blocked or while it is still buffering. */}
-        <BgImage
-          src={POSTER}
-          alt=""
-          priority
-          sizes="100vw"
-          quality={55}
-        />
+        {/* Poster — paints instantly as the LCP element and remains as the
+            fallback layer beneath the video while it streams in. */}
+        <BgImage src={POSTER} alt="" priority sizes="100vw" quality={70} />
 
-        {useVideo && (
-          <iframe
-            src={YT_SRC}
-            title="Regalia Vows cinematic reel"
-            className="pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 h-[max(100vh,56.25vw)] w-[max(100vw,177.78vh)] border-0"
-            allow="autoplay; encrypted-media; picture-in-picture"
-            allowFullScreen={false}
-            loading="eager"
+        {!reduce && (
+          <video
+            ref={videoRef}
+            className="absolute inset-0 h-full w-full object-cover"
+            autoPlay
+            muted
+            loop
+            playsInline
+            preload="auto"
+            poster={POSTER}
             aria-hidden="true"
             tabIndex={-1}
-          />
+            disableRemotePlayback
+          >
+            <source src={SRC_MOBILE} type="video/mp4" media="(max-width: 767px)" />
+            <source src={SRC_DESKTOP} type="video/mp4" />
+          </video>
         )}
 
         {/* Directional scrims — darken only where text sits (bottom band +
