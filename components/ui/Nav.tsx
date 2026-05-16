@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { ArrowUpRight, Instagram, Mail, Phone } from "lucide-react";
+import { ArrowUpRight, Instagram, Mail, Phone, X } from "lucide-react";
 import { cn } from "@/lib/cn";
 import { site } from "@/lib/site";
 import { Monogram } from "./Monogram";
@@ -113,24 +113,28 @@ export function Nav() {
         </div>
       </header>
 
-      <AnimatePresence>
-        {open && <MobileDrawer key="drawer" onClose={() => setOpen(false)} />}
-      </AnimatePresence>
+      <AnimatePresence>{open && <MobileMenu onClose={() => setOpen(false)} />}</AnimatePresence>
     </>
   );
 }
 
-const panelEase = [0.16, 1, 0.3, 1] as const;
+const EASE = [0.16, 1, 0.3, 1] as const;
 
-function MobileDrawer({ onClose }: { onClose: () => void }) {
+function MobileMenu({ onClose }: { onClose: () => void }) {
+  // Close on Escape.
   useEffect(() => {
-    const onKey = (e: KeyboardEvent) => e.key === "Escape" && onClose();
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") onClose();
+    };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
   }, [onClose]);
 
+  const telHref = `tel:${site.contact.phone.replace(/\s+/g, "")}`;
+  const mailHref = `mailto:${site.contact.email}`;
+
   return (
-    <div className="fixed inset-0 z-[60] lg:hidden" role="dialog" aria-modal="true" aria-label="Site menu">
+    <div className="fixed inset-0 z-[60]" role="dialog" aria-modal="true" aria-label="Menu">
       {/* Backdrop */}
       <motion.button
         type="button"
@@ -139,31 +143,43 @@ function MobileDrawer({ onClose }: { onClose: () => void }) {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
-        transition={{ duration: 0.45, ease: panelEase }}
+        transition={{ duration: 0.4, ease: EASE }}
         className="absolute inset-0 bg-ink/70 backdrop-blur-md"
       />
 
-      {/* Drawer panel */}
+      {/* Drawer */}
       <motion.aside
         initial={{ x: "100%" }}
         animate={{ x: 0 }}
         exit={{ x: "100%" }}
-        transition={{ duration: 0.7, ease: panelEase }}
-        className="absolute inset-y-0 right-0 flex w-[92vw] max-w-[460px] flex-col overflow-hidden bg-cream text-ink shadow-[ -20px_0_60px_-20px_rgba(0,0,0,0.6)]"
+        transition={{ duration: 0.7, ease: EASE }}
+        className="absolute right-0 top-0 flex h-full w-[92vw] max-w-[460px] flex-col overflow-hidden bg-cream text-ink shadow-[-30px_0_60px_-20px_rgba(0,0,0,0.45)]"
       >
         {/* Decorative layers */}
-        <div aria-hidden className="pointer-events-none absolute inset-0 bg-gold-foil opacity-30" />
+        <div aria-hidden className="pointer-events-none absolute inset-0 bg-gold-foil opacity-[0.18]" />
         <div
           aria-hidden
-          className="pointer-events-none absolute -right-24 -top-24 h-[420px] w-[420px] rounded-full opacity-40 blur-3xl"
-          style={{ background: "radial-gradient(closest-side, rgba(214,161,64,0.35), transparent 70%)" }}
+          className="pointer-events-none absolute inset-0"
+          style={{
+            background:
+              "radial-gradient(circle at 85% -10%, rgba(214,161,64,0.35) 0%, rgba(214,161,64,0) 55%)",
+          }}
         />
-        <CrownMark className="pointer-events-none absolute -right-16 top-32 h-[360px] w-[360px] opacity-[0.06]" />
-        <div aria-hidden className="pointer-events-none absolute inset-y-0 left-0 w-px bg-gradient-to-b from-transparent via-gilded/60 to-transparent" />
+        <CrownMark
+          aria-hidden
+          className="pointer-events-none absolute -right-16 top-24 h-[420px] w-[420px] text-gilded opacity-[0.08]"
+        />
+        <span aria-hidden className="pointer-events-none absolute inset-y-0 left-0 w-px bg-gradient-to-b from-transparent via-gilded/40 to-transparent" />
 
-        <div className="relative flex h-full flex-col px-6 pb-6 pt-5 sm:px-8 sm:pt-6">
-          {/* Top bar */}
-          <div className="flex items-center justify-between">
+        {/* Body */}
+        <div className="relative z-10 flex h-full flex-col px-6 pb-7 pt-5 sm:px-8">
+          {/* Masthead */}
+          <motion.div
+            initial={{ opacity: 0, y: -8 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.15, duration: 0.6, ease: EASE }}
+            className="flex items-center justify-between"
+          >
             <Link href="/" onClick={onClose} className="flex items-center gap-3">
               <Monogram className="h-9 w-9 text-gilded" />
               <span className="font-display text-base italic text-ink/90">{site.name}</span>
@@ -171,42 +187,38 @@ function MobileDrawer({ onClose }: { onClose: () => void }) {
             <button
               onClick={onClose}
               aria-label="Close menu"
-              className="group grid h-11 w-11 place-items-center rounded-full border border-ink/15 text-ink transition-all duration-500 ease-silk hover:border-gilded hover:text-gilded"
+              className="grid h-11 w-11 place-items-center rounded-full border border-ink/15 text-ink transition-colors hover:border-gilded hover:text-gilded"
+              data-cursor="link"
             >
-              <svg viewBox="0 0 24 24" className="h-[18px] w-[18px] transition-transform duration-500 ease-silk group-hover:rotate-90" fill="none" aria-hidden>
-                <path d="M6 6l12 12" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
-                <path d="M18 6L6 18" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
-              </svg>
+              <X className="h-[18px] w-[18px]" strokeWidth={1.6} />
             </button>
-          </div>
-
-          {/* Masthead */}
-          <motion.div
-            initial={{ opacity: 0, y: 8 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.25, duration: 0.7, ease: panelEase }}
-            className="mt-9 flex items-center gap-3"
-          >
-            <span className="h-px w-10 bg-gilded/70" />
-            <span className="font-tight text-eyebrow uppercase tracking-widest2 text-gilded-600">
-              Menu · N° 01
-            </span>
           </motion.div>
 
+          {/* Section label */}
+          <motion.span
+            initial={{ opacity: 0, x: -8 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: 0.25, duration: 0.6, ease: EASE }}
+            className="mt-10 inline-flex items-center gap-3 font-tight text-eyebrow uppercase tracking-widest2 text-gilded"
+          >
+            <span aria-hidden className="h-px w-8 bg-gilded/60" />
+            Navigate
+          </motion.span>
+
           {/* Nav items */}
-          <nav className="mt-5 flex flex-col">
+          <nav className="mt-6 flex flex-1 flex-col">
             {nav.map((item, i) => (
               <motion.div
                 key={item.href}
-                initial={{ opacity: 0, y: 18 }}
+                initial={{ opacity: 0, y: 14 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.32 + i * 0.07, duration: 0.7, ease: panelEase }}
+                transition={{ delay: 0.3 + i * 0.06, duration: 0.6, ease: EASE }}
                 className="border-b border-ink/10 last:border-b-0"
               >
                 <Link
                   href={item.href}
                   onClick={onClose}
-                  className="group flex items-baseline justify-between py-3.5 sm:py-4"
+                  className="group flex items-center justify-between py-4 sm:py-[18px]"
                 >
                   <span className="flex items-baseline gap-4">
                     <span className="font-tight text-[10px] uppercase tracking-widest2 text-ink/40">
@@ -216,14 +228,13 @@ function MobileDrawer({ onClose }: { onClose: () => void }) {
                       {item.label}
                       <span
                         aria-hidden
-                        className="absolute -bottom-1 left-0 block h-px w-0 bg-gilded transition-all duration-700 ease-silk group-hover:w-full"
+                        className="pointer-events-none absolute -bottom-1 left-0 h-px w-0 bg-gilded transition-all duration-500 ease-silk group-hover:w-full"
                       />
                     </span>
                   </span>
                   <ArrowUpRight
-                    size={18}
-                    strokeWidth={1.4}
-                    className="text-ink/40 transition-all duration-500 ease-silk group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:text-gilded"
+                    className="h-4 w-4 text-ink/30 transition-all duration-500 ease-silk group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-gilded"
+                    strokeWidth={1.5}
                   />
                 </Link>
               </motion.div>
@@ -234,53 +245,62 @@ function MobileDrawer({ onClose }: { onClose: () => void }) {
           <motion.div
             initial={{ opacity: 0, y: 14 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.7, duration: 0.7, ease: panelEase }}
-            className="mt-7 flex flex-col gap-2 text-sm font-tight text-ink/70 sm:mt-8"
+            transition={{ delay: 0.7, duration: 0.6, ease: EASE }}
+            className="mt-6 flex flex-col gap-3 border-t border-ink/10 pt-5"
           >
-            <a href={`tel:${site.contact.phone.replace(/\s+/g, "")}`} className="group inline-flex items-center gap-3 transition-colors hover:text-gilded">
-              <Phone size={14} strokeWidth={1.5} className="text-gilded" />
-              <span>{site.contact.phone}</span>
+            <a
+              href={telHref}
+              className="group flex items-center gap-3 text-sm text-ink/75 transition-colors hover:text-gilded"
+            >
+              <span className="grid h-9 w-9 place-items-center rounded-full border border-gilded/35 text-gilded transition-colors group-hover:border-gilded group-hover:bg-gilded/10">
+                <Phone className="h-4 w-4" strokeWidth={1.6} />
+              </span>
+              <span className="font-tight">{site.contact.phone}</span>
             </a>
-            <a href={`mailto:${site.contact.email}`} className="group inline-flex items-center gap-3 transition-colors hover:text-gilded">
-              <Mail size={14} strokeWidth={1.5} className="text-gilded" />
-              <span>{site.contact.email}</span>
+            <a
+              href={mailHref}
+              className="group flex items-center gap-3 text-sm text-ink/75 transition-colors hover:text-gilded"
+            >
+              <span className="grid h-9 w-9 place-items-center rounded-full border border-gilded/35 text-gilded transition-colors group-hover:border-gilded group-hover:bg-gilded/10">
+                <Mail className="h-4 w-4" strokeWidth={1.6} />
+              </span>
+              <span className="font-tight lowercase">{site.contact.email}</span>
             </a>
-            <a href={site.social.instagram} target="_blank" rel="noreferrer" className="group inline-flex items-center gap-3 transition-colors hover:text-gilded">
-              <Instagram size={14} strokeWidth={1.5} className="text-gilded" />
-              <span>@regaliavows_dubai</span>
+            <a
+              href={site.social.instagram}
+              target="_blank"
+              rel="noreferrer"
+              className="group flex items-center gap-3 text-sm text-ink/75 transition-colors hover:text-gilded"
+            >
+              <span className="grid h-9 w-9 place-items-center rounded-full border border-gilded/35 text-gilded transition-colors group-hover:border-gilded group-hover:bg-gilded/10">
+                <Instagram className="h-4 w-4" strokeWidth={1.6} />
+              </span>
+              <span className="font-tight">@regaliavows_dubai</span>
             </a>
           </motion.div>
 
-          {/* CTA */}
+          {/* CTA — pinned at drawer bottom */}
           <motion.div
-            initial={{ opacity: 0, y: 16 }}
+            initial={{ opacity: 0, y: 14 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.85, duration: 0.7, ease: panelEase }}
-            className="mt-auto pt-6"
+            transition={{ delay: 0.8, duration: 0.6, ease: EASE }}
+            className="mt-6"
           >
             <Link
               href="/contact"
               onClick={onClose}
-              className="group relative inline-flex w-full items-center justify-between gap-3 overflow-hidden rounded-full px-7 py-4 font-tight text-eyebrow uppercase tracking-widest2 text-ink shadow-[0_18px_45px_-22px_rgba(176,127,42,0.65)]"
-              style={{
-                backgroundImage:
-                  "linear-gradient(120deg, #b07f2a 0%, #d6a140 30%, #f0d08c 50%, #d6a140 70%, #b07f2a 100%)",
-                backgroundSize: "200% 100%",
-              }}
+              className="group relative inline-flex w-full items-center justify-center gap-2 overflow-hidden rounded-full bg-[linear-gradient(110deg,#b07f2a_0%,#d6a140_30%,#f0d08c_50%,#d6a140_70%,#b07f2a_100%)] bg-[length:250%_100%] px-8 py-4 font-tight text-eyebrow uppercase tracking-widest2 text-ink shadow-[0_10px_30px_-12px_rgba(214,161,64,0.6)] transition-[background-position] duration-700 ease-silk hover:bg-[position:100%_50%]"
+              data-cursor="link"
             >
               <span className="relative z-10">Begin Enquiry</span>
-              <ArrowUpRight
-                size={16}
-                strokeWidth={1.6}
-                className="relative z-10 transition-transform duration-500 ease-silk group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
-              />
+              <ArrowUpRight className="relative z-10 h-4 w-4" strokeWidth={1.6} />
               <span
                 aria-hidden
-                className="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/40 to-transparent transition-transform duration-1000 ease-silk group-hover:translate-x-full"
+                className="absolute inset-y-0 -left-1/3 w-1/3 -skew-x-12 bg-white/30 blur-md transition-transform duration-1000 ease-silk group-hover:translate-x-[400%]"
               />
             </Link>
-            <p className="mt-3 text-center font-tight text-[10px] uppercase tracking-widest2 text-ink/50">
-              By appointment · {site.city}
+            <p className="mt-3 text-center font-tight text-[10px] uppercase tracking-widest2 text-ink/45">
+              By appointment · Dubai
             </p>
           </motion.div>
         </div>
