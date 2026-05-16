@@ -24,6 +24,12 @@
     "tailwind-merge": "^2.5.4",
     "zod": "^3.23.8"
   },
+  "browserslist": [
+    "last 2 Chrome versions",
+    "last 2 Firefox versions",
+    "last 2 Safari versions",
+    "last 2 Edge versions"
+  ],
   "devDependencies": {
     "@types/node": "^22.9.0",
     "@types/react": "^19.2.14",

@@ -55,7 +55,6 @@ export function HomeHero() {
             loop
             playsInline
             preload="auto"
-            poster={POSTER}
             aria-hidden="true"
             tabIndex={-1}
             disableRemotePlayback
