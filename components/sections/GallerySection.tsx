@@ -5,8 +5,14 @@ import { AnimatePresence, motion } from "framer-motion";
 import { Container } from "@/components/ui/Container";
 import type { GalleryImage } from "@/lib/gallery";
 
+const PAGE_SIZE = 12;
+
 export function GallerySection({ images }: { images: GalleryImage[] }) {
   const [active, setActive] = useState<number | null>(null);
+  const [page, setPage] = useState(0);
+
+  const totalPages = Math.ceil(images.length / PAGE_SIZE);
+  const pageImages = images.slice(page * PAGE_SIZE, page * PAGE_SIZE + PAGE_SIZE);
 
   const close = useCallback(() => setActive(null), []);
   const next = useCallback(
@@ -20,6 +26,10 @@ export function GallerySection({ images }: { images: GalleryImage[] }) {
       ),
     [images.length]
   );
+
+  // Map page-local index → global index for lightbox
+  const openGlobal = (localIdx: number) =>
+    setActive(page * PAGE_SIZE + localIdx);
 
   useEffect(() => {
     if (active === null) return;
@@ -36,10 +46,16 @@ export function GallerySection({ images }: { images: GalleryImage[] }) {
     };
   }, [active, close, next, prev]);
 
+  const goToPage = (p: number) => {
+    setPage(p);
+    // Scroll to gallery top smoothly
+    document.getElementById("gallery-section")?.scrollIntoView({ behavior: "smooth", block: "start" });
+  };
+
   if (!images.length) return null;
 
   return (
-    <section className="relative isolate overflow-hidden bg-cream py-24 text-ink md:py-32">
+    <section id="gallery-section" className="relative isolate overflow-hidden bg-cream py-24 text-ink md:py-32">
       {/* Subtle ambient grain behind the grid */}
       <div
         aria-hidden
@@ -61,25 +77,25 @@ export function GallerySection({ images }: { images: GalleryImage[] }) {
               Moments from the archive.
             </h2>
           </div>
-          <span
-            aria-hidden
-            className="hidden h-px w-32 flex-shrink-0 bg-gradient-to-r from-gilded to-transparent md:block"
-          />
+          {/* Page count */}
+          <span className="hidden shrink-0 text-eyebrow uppercase tracking-widest2 text-ink/40 md:block">
+            {String(page + 1).padStart(2, "0")} / {String(totalPages).padStart(2, "0")}
+          </span>
         </div>
 
-        {/*
-          Masonry via CSS columns.
-          Mobile: 1 col → smooth vertical scroll.
-          Tablet: 2 cols.
-          Desktop: 3 cols.
-          XL: 4 cols.
-        */}
-        <div className="columns-1 gap-3 sm:columns-2 sm:gap-4 lg:columns-3 xl:columns-4">
-          {images.map((img, i) => (
+        {/* Masonry grid */}
+        <motion.div
+          key={page}
+          initial={{ opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+          className="columns-1 gap-3 sm:columns-2 sm:gap-4 lg:columns-3 xl:columns-4"
+        >
+          {pageImages.map((img, i) => (
             <button
               key={img.src}
               type="button"
-              onClick={() => setActive(i)}
+              onClick={() => openGlobal(i)}
               data-cursor="link"
               className="group relative mb-3 block w-full overflow-hidden rounded-sm bg-ink/5 break-inside-avoid sm:mb-4"
             >
@@ -91,14 +107,11 @@ export function GallerySection({ images }: { images: GalleryImage[] }) {
                 decoding="async"
                 className="h-auto w-full transition-transform duration-700 ease-out group-hover:scale-[1.04]"
               />
-              {/* Hover overlay */}
               <span className="pointer-events-none absolute inset-0 bg-gradient-to-t from-ink/45 via-transparent to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
-              {/* Gold ring on hover */}
               <span
                 aria-hidden
                 className="pointer-events-none absolute inset-0 ring-1 ring-inset ring-gilded/0 transition-all duration-500 group-hover:ring-gilded/55 rounded-sm"
               />
-              {/* Expand icon */}
               <span className="absolute bottom-3 right-3 flex h-8 w-8 items-center justify-center rounded-full bg-ink/60 text-pearl opacity-0 backdrop-blur-sm transition-all duration-500 group-hover:opacity-100">
                 <svg
                   width="14"
@@ -114,7 +127,64 @@ export function GallerySection({ images }: { images: GalleryImage[] }) {
               </span>
             </button>
           ))}
-        </div>
+        </motion.div>
+
+        {/* ── Pagination ─────────────────────────────────────────── */}
+        {totalPages > 1 && (
+          <div className="mt-14 flex items-center justify-center gap-2 md:mt-16">
+            {/* Prev */}
+            <button
+              type="button"
+              onClick={() => goToPage(page - 1)}
+              disabled={page === 0}
+              aria-label="Previous page"
+              className="flex h-10 w-10 items-center justify-center rounded-full border border-ink/15 text-ink/60 transition-colors hover:border-gilded hover:text-gilded disabled:pointer-events-none disabled:opacity-25"
+            >
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden>
+                <path d="M15 6l-6 6 6 6" />
+              </svg>
+            </button>
+
+            {/* Page numbers */}
+            {Array.from({ length: totalPages }, (_, i) => (
+              <button
+                key={i}
+                type="button"
+                onClick={() => goToPage(i)}
+                aria-label={`Page ${i + 1}`}
+                aria-current={i === page ? "page" : undefined}
+                className={`flex h-10 min-w-[2.5rem] items-center justify-center rounded-full px-3 text-sm font-medium transition-all duration-300 ${
+                  i === page
+                    ? "text-ink shadow-[0_8px_24px_-8px_rgba(214,161,64,0.6)]"
+                    : "border border-ink/15 text-ink/60 hover:border-gilded hover:text-gilded"
+                }`}
+                style={
+                  i === page
+                    ? {
+                        backgroundImage:
+                          "linear-gradient(100deg,#c8902f 0%,#e6b651 20%,#f7dc97 45%,#f0c668 70%,#d6a140 100%)",
+                      }
+                    : undefined
+                }
+              >
+                {i + 1}
+              </button>
+            ))}
+
+            {/* Next */}
+            <button
+              type="button"
+              onClick={() => goToPage(page + 1)}
+              disabled={page === totalPages - 1}
+              aria-label="Next page"
+              className="flex h-10 w-10 items-center justify-center rounded-full border border-ink/15 text-ink/60 transition-colors hover:border-gilded hover:text-gilded disabled:pointer-events-none disabled:opacity-25"
+            >
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden>
+                <path d="M9 6l6 6-6 6" />
+              </svg>
+            </button>
+          </div>
+        )}
       </Container>
 
       {/* ── Lightbox ─────────────────────────────────────────────── */}
