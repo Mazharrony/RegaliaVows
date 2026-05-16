@@ -4,7 +4,6 @@ import { useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
 import { Eyebrow } from "@/components/ui/Eyebrow";
 import { Button } from "@/components/ui/Button";
-import { SplitText } from "@/components/motion/SplitText";
 import { BgImage } from "@/components/ui/BgImage";
 
 // Cinematic hero — self-hosted, muted, looping mp4 sized via object-cover.
@@ -107,12 +106,24 @@ export function HomeHero() {
             <span>The Composition</span>
           </motion.div>
 
-          <SplitText
-            as="h1"
-            text="Weddings, composed."
-            className="text-gold mt-4 max-w-[14ch] text-display-xl italic leading-[0.95] tracking-tight md:mt-6"
-            stagger={0.12}
-          />
+          <motion.h1
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.75, duration: 1.1, ease: [0.16, 1, 0.3, 1] }}
+            className="mt-4 max-w-[14ch] text-display-xl italic leading-[0.95] tracking-tight md:mt-6"
+            style={{
+              backgroundImage:
+                "linear-gradient(100deg,#c8902f 0%,#e6b651 16%,#f7dc97 30%,#fff6d4 46%,#ffe9a8 58%,#f0c668 74%,#d6a140 92%,#c8902f 100%)",
+              backgroundSize: "250% 100%",
+              WebkitBackgroundClip: "text",
+              backgroundClip: "text",
+              WebkitTextFillColor: "transparent",
+              color: "transparent",
+              animation: "gold-pan 4.5s linear infinite",
+            }}
+          >
+            Weddings, composed.
+          </motion.h1>
 
           {/* Hairline divider — sweeps in beneath the headline like a margin rule. */}
           <motion.span
