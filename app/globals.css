@@ -188,13 +188,14 @@
   .text-gold * {
     background-image: linear-gradient(
       100deg,
-      #b07f2a 0%,
-      #d6a140 18%,
-      #f0d08c 32%,
-      #fff4c8 46%,
-      #f0d08c 60%,
-      #d6a140 78%,
-      #b07f2a 100%
+      #c8902f 0%,
+      #e6b651 16%,
+      #f7dc97 30%,
+      #fff6d4 46%,
+      #ffe9a8 58%,
+      #f0c668 74%,
+      #d6a140 92%,
+      #c8902f 100%
     );
     background-size: 250% 100%;
     background-position: 0% 50%;
@@ -203,7 +204,6 @@
     -webkit-text-fill-color: transparent;
     color: transparent;
     animation: gold-pan 4.5s linear infinite;
-    text-shadow: 0 0 22px rgba(240, 208, 140, 0.25);
   }
 
   /* Same flowing gold, but as a background (use on dividers, dots, fills) */
