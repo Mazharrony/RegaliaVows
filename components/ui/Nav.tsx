@@ -28,7 +28,7 @@ export function Nav() {
 
   return (
     <>
-      <header className="fixed inset-x-0 top-0 z-50 bg-transparent">
+      <header className="fixed inset-x-0 top-0 z-50 bg-transparent lg:bg-cream/90 lg:backdrop-blur-md lg:border-b lg:border-ink/10">
         <div className="mx-auto flex h-14 max-w-[1600px] items-center justify-between px-5 sm:h-16 md:px-8">
           <Link
             href="/"
@@ -44,7 +44,7 @@ export function Nav() {
               <Link
                 key={item.href}
                 href={item.href}
-                className="group relative font-tight text-[11px] uppercase tracking-widest2 text-pearl/85 transition-colors hover:text-gilded"
+                className="group relative font-tight text-[11px] uppercase tracking-widest2 text-ink/75 transition-colors hover:text-gilded"
                 data-cursor="link"
               >
                 <span>{item.label}</span>
@@ -56,7 +56,7 @@ export function Nav() {
           <div className="flex items-center gap-2">
             <Link
               href="/contact"
-              className="hidden lg:inline-flex items-center font-tight text-[11px] uppercase tracking-widest2 text-pearl/90 transition-colors hover:text-gilded"
+              className="hidden lg:inline-flex items-center font-tight text-[11px] uppercase tracking-widest2 text-ink/85 transition-colors hover:text-gilded"
               data-cursor="link"
             >
               <span>Enquire</span>
