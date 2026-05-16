@@ -213,7 +213,7 @@ export function Footer() {
 
           {cols.map((col) => (
             <div key={col.title}>
-              <h4 className="text-eyebrow uppercase tracking-widest2 text-gilded-800">{col.title}</h4>
+              <p className="text-eyebrow uppercase tracking-widest2 text-gilded-800">{col.title}</p>
               <ul className="mt-6 space-y-3">
                 {col.links.map((l) => (
                   <li key={l.href}>
