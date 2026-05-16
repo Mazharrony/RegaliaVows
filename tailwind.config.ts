@@ -3,10 +3,19 @@ import type { Config } from "tailwindcss";
 const config: Config = {
   content: ["./app/**/*.{ts,tsx}", "./components/**/*.{ts,tsx}"],
   theme: {
+    screens: {
+      sm: "640px",
+      md: "768px",
+      lg: "1024px",
+      xl: "1280px",
+      "2xl": "1536px",
+      "3xl": "1920px",
+      "4xl": "2560px",
+    },
     container: {
       center: true,
-      padding: { DEFAULT: "1.25rem", md: "2rem", lg: "3rem" },
-      screens: { "2xl": "1440px" },
+      padding: { DEFAULT: "1.25rem", md: "2rem", lg: "3rem", "3xl": "4rem" },
+      screens: { "2xl": "1440px", "3xl": "1760px", "4xl": "2200px" },
     },
     extend: {
       colors: {
@@ -53,7 +62,7 @@ const config: Config = {
         "display-xl": ["clamp(3.5rem, 9vw, 9rem)", { lineHeight: "0.95", letterSpacing: "-0.02em" }],
         "display-lg": ["clamp(2.75rem, 6vw, 6rem)", { lineHeight: "0.98", letterSpacing: "-0.02em" }],
         "display-md": ["clamp(2rem, 4vw, 3.5rem)", { lineHeight: "1.02", letterSpacing: "-0.015em" }],
-        eyebrow: ["0.75rem", { lineHeight: "1", letterSpacing: "0.22em" }],
+        eyebrow: ["0.8125rem", { lineHeight: "1.1", letterSpacing: "0.22em", fontWeight: "500" }],
       },
       letterSpacing: {
         widest2: "0.28em",

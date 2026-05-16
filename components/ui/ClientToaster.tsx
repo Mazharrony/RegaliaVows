@@ -1,17 +1,20 @@
 "use client";
 
-import dynamic from "next/dynamic";
+import { useEffect, useState } from "react";
+import { Toaster } from "sonner";
 
-// Sonner is only used by enquiry forms well below the fold. Loading it lazily
-// (ssr:false) keeps it out of the initial JS payload and off the hydration
-// critical path. `ssr:false` is only legal inside a Client Component, hence
-// this thin wrapper.
-const Toaster = dynamic(
-  () => import("sonner").then((m) => m.Toaster),
-  { ssr: false }
-);
+// Keep Sonner off the SSR output without relying on next/dynamic's lazy
+// boundary, which can intermittently fail during client module resolution.
 
 export function ClientToaster() {
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  if (!mounted) return null;
+
   return (
     <Toaster
       theme="light"

@@ -1,7 +1,13 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import Link from "next/link";
+
+// useLayoutEffect on the client, useEffect on the server (avoids SSR warning).
+// We need layout-phase cleanup so GSAP's pin-spacer is removed BEFORE React
+// commits its own removeChild on the wrapped <section>.
+const useIsomorphicLayoutEffect =
+  typeof window !== "undefined" ? useLayoutEffect : useEffect;
 import { Container } from "@/components/ui/Container";
 import { BgImage } from "@/components/ui/BgImage";
 import { Eyebrow } from "@/components/ui/Eyebrow";
@@ -75,7 +81,7 @@ function ServiceCard({
 }) {
   const sizing =
     variant === "desktop"
-      ? "h-[clamp(380px,56vh,580px)] aspect-[3/4] w-auto flex-none"
+      ? "h-full max-h-[640px] aspect-[4/5] w-auto flex-none"
       : "aspect-[4/5] w-[82vw] flex-none snap-center sm:aspect-[3/4] sm:w-[60vw]";
 
   return (
@@ -84,63 +90,52 @@ function ServiceCard({
       data-cursor="view"
       data-cursor-label="View"
       data-theme="dark"
-      className={`dark-panel group relative isolate block overflow-clip rounded-card border border-pearl/10 bg-ink-50 transition-[transform,border-color] duration-700 ease-silk transform-gpu hover:-translate-y-1 hover:border-gilded/50 ${sizing}`}
+      className={`dark-panel group relative isolate block overflow-clip rounded-card border border-transparent bg-ink-50 transition-[transform,opacity] duration-700 ease-silk transform-gpu hover:-translate-y-1 [border-image:linear-gradient(to_bottom,theme(colors.gilded/80),theme(colors.gilded-100/40),theme(colors.gilded/15))_1] ${sizing}`}
     >
-      {/* Background image */}
+      {/* Background image — brighter so photography is the hero */}
       <BgImage
         src={s.image}
         alt={`${s.title} — Regalia Vows`}
         sizes="(max-width: 768px) 100vw, (max-width: 1280px) 50vw, 33vw"
-        className="opacity-55 transition-all duration-[1200ms] ease-silk group-hover:scale-[1.06] group-hover:opacity-70"
+        className="opacity-75 transition-all duration-[1200ms] ease-silk group-hover:scale-[1.04] group-hover:opacity-90"
       />
-      {/* Color wash + dark vignette */}
-      <div className={`absolute inset-0 bg-gradient-to-br ${s.accent} mix-blend-overlay opacity-90`} />
-      <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(11,11,13,0.15)_0%,rgba(11,11,13,0.55)_55%,rgba(11,11,13,0.92)_100%)]" />
-      {/* Grain */}
-      <div aria-hidden className="absolute inset-0 bg-gold-foil opacity-25 mix-blend-soft-light" />
+      {/* Subtle color wash + bottom-weighted vignette for legibility */}
+      <div className={`absolute inset-0 bg-gradient-to-br ${s.accent} mix-blend-overlay opacity-60`} />
+      <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(11,11,13,0)_30%,rgba(11,11,13,0.55)_70%,rgba(11,11,13,0.92)_100%)]" />
 
-      {/* Oversized watermark numeral — top edge faded so the rounded corners
-          don't show a hard horizontal slice through the letterform. */}
+      {/* Quiet sign-off watermark, bottom-right */}
       <span
         aria-hidden
-        className="pointer-events-none absolute top-2 right-3 font-display text-[12rem] italic leading-[0.85] text-gilded/10 transition-all duration-700 ease-silk group-hover:text-gilded/20 sm:top-3 sm:right-4 sm:text-[16rem] [mask-image:linear-gradient(180deg,transparent_0%,#000_18%,#000_100%)] [-webkit-mask-image:linear-gradient(180deg,transparent_0%,#000_18%,#000_100%)]"
+        className="pointer-events-none absolute bottom-4 right-5 font-display text-[7rem] italic leading-[0.85] text-gilded/10 transition-colors duration-700 ease-silk group-hover:text-gilded/20 sm:bottom-6 sm:right-7 sm:text-[8rem]"
       >
         {s.tag}
       </span>
 
-      {/* Corner gilded brackets */}
-      <span aria-hidden className="absolute left-6 top-6 h-5 w-5 border-l border-t border-gilded/60 transition-all duration-500 ease-silk group-hover:h-7 group-hover:w-7" />
-      <span aria-hidden className="absolute right-6 bottom-6 h-5 w-5 border-r border-b border-gilded/60 transition-all duration-500 ease-silk group-hover:h-7 group-hover:w-7" />
-
-      <div className="relative flex h-full flex-col justify-between p-7 sm:p-9 md:p-10">
-        <div className="flex items-start justify-between">
-          <div className="flex items-center gap-3">
-            <span className="font-display text-2xl italic text-gold sm:text-[1.75rem]">
-              {s.tag}
-            </span>
-            <span className="h-px w-8 bg-gold-flow opacity-80" />
-            <span className="text-eyebrow uppercase tracking-widest2 text-pearl/70">
-              {s.kicker}
-            </span>
-          </div>
-          <span className="grid h-11 w-11 place-items-center rounded-full border border-pearl/25 text-pearl backdrop-blur-sm transition-all duration-500 ease-silk group-hover:rotate-45 group-hover:border-gilded group-hover:bg-gilded group-hover:text-ink sm:h-12 sm:w-12">
-            <ArrowUpRight size={16} strokeWidth={1.5} />
+      <div className="relative flex h-full flex-col justify-between p-7 sm:p-8 md:p-9">
+        <div className="flex items-center gap-3">
+          <span className="font-display text-lg italic text-gilded sm:text-xl">
+            {s.tag}
+          </span>
+          <span className="h-px w-6 bg-gilded/60" />
+          <span className="text-eyebrow uppercase tracking-widest2 text-pearl/75">
+            {s.kicker}
           </span>
         </div>
 
         <div>
-          <h3 className="font-display text-3xl italic leading-[1.05] bg-gold-shimmer bg-[length:200%_200%] bg-clip-text text-transparent animate-[gold-pan_6s_ease-in-out_infinite] sm:text-4xl md:text-[2.5rem] lg:text-5xl xl:text-[3.25rem]">
+          <h3 className="font-display text-2xl italic leading-[1.1] text-pearl sm:text-3xl md:text-[2rem] lg:text-[2.25rem]">
             {s.title}
           </h3>
-          <p className="mt-4 max-w-xs text-sm leading-relaxed text-pearl/85 sm:mt-5">
-            {s.description}
-          </p>
-          <div className="mt-6 flex items-center gap-3 sm:mt-7">
-            <span className="h-px w-12 bg-gold-flow transition-all duration-500 ease-silk group-hover:w-24" />
-            <span className="text-eyebrow uppercase tracking-widest2 text-gilded transition-colors group-hover:text-gilded-100">
+          <span className="mt-4 inline-flex items-center gap-2 text-eyebrow uppercase tracking-widest2 text-gilded">
+            <span className="bg-gradient-to-r from-gilded via-gilded-100 to-gilded bg-clip-text text-transparent">
               Discover
             </span>
-          </div>
+            <ArrowUpRight
+              size={14}
+              strokeWidth={1.5}
+              className="transition-transform duration-500 ease-silk group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
+            />
+          </span>
         </div>
       </div>
     </Link>
@@ -150,6 +145,8 @@ function ServiceCard({
 export function ServicesSection() {
   const wrapperRef = useRef<HTMLElement>(null);
   const trackRef = useRef<HTMLDivElement>(null);
+  const progressBarRef = useRef<HTMLSpanElement>(null);
+  const indexLabelRef = useRef<HTMLSpanElement>(null);
   const [isDesktop, setIsDesktop] = useState(false);
 
   // Detect viewport: only pin & translate on lg+.
@@ -164,7 +161,9 @@ export function ServicesSection() {
   // GSAP ScrollTrigger handles pinning + horizontal translate. This is
   // resilient to native smooth-scroll, recalculates on resize/image-load, and
   // doesn't depend on `position: sticky` working in every layout context.
-  useEffect(() => {
+  // useLayoutEffect (client) ensures ctx.revert() runs in the commit's layout
+  // phase, BEFORE React tries to removeChild the pinned <section>.
+  useIsomorphicLayoutEffect(() => {
     if (!isDesktop) return;
     const wrapper = wrapperRef.current;
     const track = trackRef.current;
@@ -186,20 +185,37 @@ export function ServicesSection() {
       const getDistance = () =>
         Math.max(0, track.scrollWidth - window.innerWidth);
 
-      const tween = gsap.to(track, {
-        x: () => -getDistance(),
-        ease: "none",
-        scrollTrigger: {
-          trigger: wrapper,
-          start: "top top",
-          end: () => "+=" + getDistance(),
-          scrub: 0.5,
-          pin: true,
-          pinSpacing: true,
-          anticipatePin: 1,
-          invalidateOnRefresh: true,
-        },
-      });
+      // Scope all GSAP/ScrollTrigger work to a context bound to the wrapper.
+      // ctx.revert() on unmount will kill the tween AND remove the pin-spacer
+      // wrapper that ScrollTrigger injects, restoring the DOM to what React
+      // expects before it commits its own removeChild.
+      const ctx = gsap.context(() => {
+        gsap.to(track, {
+          x: () => -getDistance(),
+          ease: "none",
+          scrollTrigger: {
+            trigger: wrapper,
+            start: "top top",
+            end: () => "+=" + getDistance(),
+            scrub: 0.5,
+            pin: true,
+            pinSpacing: true,
+            anticipatePin: 1,
+            invalidateOnRefresh: true,
+            onUpdate: (self: { progress: number }) => {
+              const p = self.progress;
+              if (progressBarRef.current) {
+                progressBarRef.current.style.transform = `scaleX(${p})`;
+              }
+              if (indexLabelRef.current) {
+                const total = services.length;
+                const idx = Math.min(total, Math.max(1, Math.ceil(p * total) || 1));
+                indexLabelRef.current.textContent = String(idx).padStart(2, "0");
+              }
+            },
+          },
+        });
+      }, wrapper);
 
       // Re-measure once images / fonts settle so the end-position is correct.
       const refresh = () => ScrollTrigger.refresh();
@@ -211,8 +227,7 @@ export function ServicesSection() {
         window.clearTimeout(t1);
         window.clearTimeout(t2);
         window.removeEventListener("load", refresh);
-        tween.scrollTrigger?.kill();
-        tween.kill();
+        ctx.revert();
       };
     })();
 
@@ -235,13 +250,13 @@ export function ServicesSection() {
             <Reveal>
               <Eyebrow>The Services</Eyebrow>
               <h2 className="display mt-6 text-4xl italic leading-[1.05] sm:text-5xl">
-                Four chapters,
+                Five chapters,
                 <br />
                 one signature.
               </h2>
             </Reveal>
             <Reveal delay={0.1}>
-              <p className="max-w-md text-base leading-relaxed text-pearl/80">
+              <p className="max-w-md text-base leading-relaxed text-ink/75">
                 Whether twelve guests on a Hatta cliff or twelve hundred at the
                 Palace, every commission is led by a senior Regalia Vows director.
               </p>
@@ -275,32 +290,36 @@ export function ServicesSection() {
       id="services"
       data-theme="light"
       ref={wrapperRef}
-      className="relative bg-cream text-ink"
+      className="relative isolate z-10 bg-cream text-ink"
     >
-      <div className="flex h-screen flex-col justify-center overflow-hidden pt-24 pb-16">
-        <Container className="mb-10 md:mb-12">
-          <div className="grid items-end gap-8 md:grid-cols-2">
-            <Reveal>
-              <Eyebrow>The Services</Eyebrow>
-              <h2 className="display mt-5 text-4xl italic leading-[1.05] md:text-5xl lg:text-6xl">
-                Four chapters,
-                <br />
-                one signature.
-              </h2>
-            </Reveal>
-            <Reveal delay={0.1}>
-              <p className="max-w-md text-base leading-relaxed text-pearl/80 md:ml-auto">
-                Whether twelve guests on a Hatta cliff or twelve hundred at the
-                Palace, every commission is led by a senior Regalia Vows director.
-              </p>
-            </Reveal>
-          </div>
-        </Container>
+      {/* Soft top vignette for warmth */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_top,rgba(214,161,64,0.06),transparent_60%)]"
+      />
 
-        <div className="relative w-full overflow-hidden">
+      <div className="relative flex h-screen flex-col overflow-hidden pt-24 pb-4 lg:pt-28 lg:pb-5 4xl:pt-32">
+        <div className="shrink-0 px-8 md:px-12 lg:px-16">
+          <Reveal>
+            <Eyebrow>The Services</Eyebrow>
+          </Reveal>
+          <Reveal delay={0.05}>
+            <h2 className="display mt-4 text-3xl italic leading-[1.05] md:text-4xl lg:text-[2.5rem] xl:text-[2.75rem]">
+              Five chapters, one signature.
+            </h2>
+          </Reveal>
+          <Reveal delay={0.1}>
+            <p className="mt-3 max-w-md text-sm leading-relaxed text-ink/65 md:text-[15px]">
+              Every commission is led by a senior Regalia Vows director.
+            </p>
+          </Reveal>
+          <span aria-hidden className="mt-5 block h-px w-16 bg-gilded/50" />
+        </div>
+
+        <div className="relative w-full flex-1 min-h-0 overflow-hidden mt-6 lg:mt-8">
           <div
             ref={trackRef}
-            className="flex gap-8 px-8 md:gap-10 md:px-12 lg:gap-12 lg:px-16 will-change-transform"
+            className="flex h-full items-center gap-8 px-8 md:gap-10 md:px-12 lg:gap-12 lg:px-16 will-change-transform"
           >
             {services.map((s) => (
               <ServiceCard key={s.title} s={s} variant="desktop" />
@@ -308,8 +327,28 @@ export function ServicesSection() {
           </div>
         </div>
 
-        <div className="pointer-events-none absolute bottom-6 left-1/2 -translate-x-1/2 text-eyebrow uppercase tracking-widest2 text-pearl/40">
-          Scroll
+        <div className="pointer-events-none mt-8 flex shrink-0 items-center justify-between gap-6 px-8 md:px-12 lg:mt-10 lg:px-16">
+          <div className="flex items-center gap-3 text-eyebrow uppercase tracking-widest2 text-ink/55">
+            <span
+              ref={indexLabelRef}
+              aria-hidden
+              className="font-display text-base italic text-gilded not-italic-fallback"
+            >
+              01
+            </span>
+            <span className="text-ink/35">/ 0{services.length}</span>
+          </div>
+          <div className="relative h-px w-40 overflow-hidden bg-ink/10 sm:w-56 lg:w-72">
+            <span
+              ref={progressBarRef}
+              aria-hidden
+              className="absolute inset-0 origin-left bg-gilded"
+              style={{ transform: "scaleX(0)" }}
+            />
+          </div>
+          <span className="text-eyebrow uppercase tracking-widest2 text-ink/55">
+            Scroll
+          </span>
         </div>
       </div>
     </section>

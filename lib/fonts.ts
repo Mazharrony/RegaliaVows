@@ -24,9 +24,9 @@ export const sans = Inter({
 
 export const tight = Inter_Tight({
   subsets: ["latin"],
-  // Body / UI weights. 300 and 600 were unused at scale; trimming halves the
-  // payload for this family.
-  weight: ["400", "500"],
+  // Body / UI weights. Include 500 + 600 so navigation, buttons and small
+  // caps labels render with adequate stroke weight on the cream surface.
+  weight: ["400", "500", "600"],
   variable: "--font-tight",
   display: "swap",
   preload: true,

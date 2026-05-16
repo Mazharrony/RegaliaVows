@@ -2,11 +2,8 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { Menu, X } from "lucide-react";
 import { cn } from "@/lib/cn";
 import { site } from "@/lib/site";
-import { Button } from "./Button";
 import { Monogram } from "./Monogram";
 import { CrownMark } from "./CrownMark";
 
@@ -86,9 +83,13 @@ export function Nav() {
           </nav>
 
           <div className="flex items-center gap-3">
-            <Button href="/contact" variant="gilded" size="md" withArrow className="hidden md:inline-flex">
+            <Link
+              href="/contact"
+              className="hidden md:inline-flex items-center justify-center rounded-full bg-gilded px-7 py-3.5 font-tight text-eyebrow uppercase tracking-widest2 text-ink transition-colors hover:bg-gilded/90"
+              data-cursor="link"
+            >
               Begin Enquiry
-            </Button>
+            </Link>
             <button
               onClick={() => setOpen(true)}
               aria-label="Open menu"
@@ -100,30 +101,25 @@ export function Nav() {
               )}
               data-cursor="link"
             >
-              <Menu size={18} strokeWidth={1.5} />
+              <svg viewBox="0 0 24 24" className="h-[18px] w-[18px]" fill="none" aria-hidden>
+                <path d="M4 7h16" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
+                <path d="M4 12h16" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
+                <path d="M4 17h16" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
+              </svg>
             </button>
           </div>
         </div>
       </header>
 
-      <AnimatePresence>
-        {open && <MobileMenu onClose={() => setOpen(false)} />}
-      </AnimatePresence>
+      {open && <MobileMenu onClose={() => setOpen(false)} />}
     </>
   );
 }
 
 function MobileMenu({ onClose }: { onClose: () => void }) {
   return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      transition={{ duration: 0.4 }}
-      className="fixed inset-0 z-[60] bg-cream"
-    >
+    <div className="fixed inset-0 z-[60] bg-cream">
       <div className="absolute inset-0 bg-gold-foil opacity-25" aria-hidden />
-      {/* Regal crown watermark behind the menu */}
       <CrownMark className="absolute right-[-8%] top-[18%] h-[420px] w-[420px] opacity-[0.07]" />
 
       <div className="relative flex h-full flex-col px-6 py-5 sm:px-8 sm:py-6">
@@ -135,7 +131,10 @@ function MobileMenu({ onClose }: { onClose: () => void }) {
             className="grid h-11 w-11 place-items-center rounded-full border border-ink/15 text-ink transition-colors hover:border-gilded hover:text-gilded"
             data-cursor="link"
           >
-            <X size={18} strokeWidth={1.5} />
+            <svg viewBox="0 0 24 24" className="h-[18px] w-[18px]" fill="none" aria-hidden>
+              <path d="M6 6l12 12" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
+              <path d="M18 6L6 18" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
+            </svg>
           </button>
         </div>
 
@@ -146,12 +145,7 @@ function MobileMenu({ onClose }: { onClose: () => void }) {
 
         <nav className="mt-6 flex flex-1 flex-col divide-y divide-ink/10 sm:mt-8">
           {nav.map((item, i) => (
-            <motion.div
-              key={item.href}
-              initial={{ opacity: 0, y: 16 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.08 + i * 0.045, duration: 0.55, ease: [0.16, 1, 0.3, 1] }}
-            >
+            <div key={item.href} style={{ transitionDelay: `${80 + i * 45}ms` }}>
               <Link
                 href={item.href}
                 onClick={onClose}
@@ -167,16 +161,20 @@ function MobileMenu({ onClose }: { onClose: () => void }) {
                 </span>
                 <span className="h-px w-6 bg-ink/20 transition-all duration-500 ease-silk group-hover:w-12 group-hover:bg-gilded" />
               </Link>
-            </motion.div>
+            </div>
           ))}
         </nav>
 
         <div className="mt-4 pb-2 sm:mt-6">
-          <Button href="/contact" variant="gilded" size="lg" withArrow className="w-full">
+          <Link
+            href="/contact"
+            className="inline-flex w-full items-center justify-center rounded-full bg-gilded px-8 py-4 font-tight text-eyebrow uppercase tracking-widest2 text-ink transition-colors hover:bg-gilded/90"
+            data-cursor="link"
+          >
             Begin Enquiry
-          </Button>
+          </Link>
         </div>
       </div>
-    </motion.div>
+    </div>
   );
 }

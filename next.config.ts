@@ -2,6 +2,7 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   reactStrictMode: true,
+  distDir: ".next-local",
   allowedDevOrigins: ["192.168.9.40", "localhost", "127.0.0.1"],
   images: {
     formats: ["image/avif", "image/webp"],
@@ -38,17 +39,17 @@ const nextConfig: NextConfig = {
       ignored: [
         "**/node_modules/**",
         "**/.git/**",
-        "**/.next/**",
         "**/public/videos/**",
       ],
     };
     if (dev) {
-      // The project path contains spaces (`JNK APP\Mazhar Personal\...`) which
-      // breaks webpack's filesystem-cache snapshot resolver and produces
-      // `Caching failed for pack: Unable to snapshot resolve dependencies`.
-      // In-memory cache sidesteps both that warning and the earlier gzip
-      // allocation failure caused by cache-packing video assets.
-      config.cache = { type: "memory" };
+      // Path contains spaces which breaks webpack's persistent filesystem
+      // cache snapshot resolver. The in-memory cache previously used here
+      // produced intermittent `options.factory undefined` crashes for
+      // "use client" modules at the root layout (client reference manifest
+      // would resolve to an undefined factory). Disabling cache entirely
+      // in dev avoids both failure modes.
+      config.cache = false;
     }
     return config;
   },

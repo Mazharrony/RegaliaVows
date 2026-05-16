@@ -18,13 +18,53 @@
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     text-rendering: optimizeLegibility;
-    font-size: 17px;
+    font-size: 18px;
+  }
+
+  /* Scale base type on very large / TV displays so the layout doesn't
+     collapse into a small island in the middle of the screen. */
+  @media (min-width: 1920px) {
+    html, body { font-size: 19px; }
+  }
+  @media (min-width: 2560px) {
+    html, body { font-size: 21px; }
+  }
+  @media (min-width: 3200px) {
+    html, body { font-size: 24px; }
   }
 
   /* Reading-comfort default for long-form copy on the cream paper */
   p {
-    line-height: 1.75;
-    color: rgba(11, 11, 13, 0.88);
+    line-height: 1.7;
+    color: rgba(11, 11, 13, 0.92);
+    font-weight: 400;
+  }
+
+  /* Floor for faint ink alphas — anything below ~60% on the cream surface
+     reads as thin / washed out. Clamp to a legible minimum site-wide. */
+  .text-ink\/30 { color: rgba(11, 11, 13, 0.62) !important; }
+  .text-ink\/35 { color: rgba(11, 11, 13, 0.64) !important; }
+  .text-ink\/40 { color: rgba(11, 11, 13, 0.66) !important; }
+  .text-ink\/45 { color: rgba(11, 11, 13, 0.68) !important; }
+  .text-ink\/50 { color: rgba(11, 11, 13, 0.70) !important; }
+  .text-ink\/55 { color: rgba(11, 11, 13, 0.72) !important; }
+
+  /* Small uppercase labels — when authors used raw text-[10px] / text-xs the
+     glyphs disappear on the cream paper. Promote them to a legible minimum
+     with medium weight so tracked-out caps still have stroke presence. */
+  .text-\[10px\],
+  .text-\[11px\],
+  .text-\[0\.65rem\],
+  .text-\[0\.7rem\],
+  .text-\[0\.72rem\] {
+    font-size: 0.8125rem !important;
+    line-height: 1.2 !important;
+    font-weight: 500;
+  }
+  .text-xs {
+    font-size: 0.8125rem;
+    line-height: 1.45;
+    font-weight: 500;
   }
 
   /* Legibility map: existing `text-pearl/N` utilities re-mapped to dark alphas
@@ -133,34 +173,37 @@
 
   .eyebrow {
     @apply text-eyebrow uppercase tracking-widest2 text-gilded-200;
+    font-weight: 500;
   }
 
   .display {
     @apply font-display font-normal;
   }
 
-  /* Vibrant flowing gold text — apply to any element to make it shimmer */
-  .text-gold {
+  /* Vibrant flowing gold text — apply to any element to make it shimmer.
+     Descendants are also clipped so it survives word/letter splitters
+     (e.g. SplitText wraps each word in an inline-block <span>, which would
+     otherwise inherit transparent fill with no gradient to clip from). */
+  .text-gold,
+  .text-gold * {
     background-image: linear-gradient(
-      110deg,
-      #6b4a12 0%,
-      #8b6418 12%,
-      #b07f2a 28%,
-      #d6a140 44%,
-      #f0d08c 52%,
-      #d6a140 60%,
-      #b07f2a 76%,
-      #8b6418 90%,
-      #6b4a12 100%
+      100deg,
+      #b07f2a 0%,
+      #d6a140 18%,
+      #f0d08c 32%,
+      #fff4c8 46%,
+      #f0d08c 60%,
+      #d6a140 78%,
+      #b07f2a 100%
     );
-    background-size: 220% 100%;
+    background-size: 250% 100%;
     background-position: 0% 50%;
     -webkit-background-clip: text;
     background-clip: text;
     -webkit-text-fill-color: transparent;
     color: transparent;
-    animation: gold-pan 7s ease-in-out infinite;
-    text-shadow: 0 0 18px rgba(214, 161, 64, 0.18);
+    animation: gold-pan 4.5s linear infinite;
+    text-shadow: 0 0 22px rgba(240, 208, 140, 0.25);
   }
 
   /* Same flowing gold, but as a background (use on dividers, dots, fills) */

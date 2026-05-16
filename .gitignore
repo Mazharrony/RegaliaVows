@@ -31,3 +31,9 @@ app/dev.log
 app/dev.err.log
 app/pid.txt
 *.bak
+
+.next-local/
+
+public/videos/*.mp4
+!public/videos/private-event.mp4
+
