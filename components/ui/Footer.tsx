@@ -88,28 +88,19 @@ export function Footer() {
     <footer className="relative isolate overflow-hidden border-t border-ink/10 bg-cream-100 text-ink">
       <div className="pointer-events-none absolute inset-0 bg-gold-foil opacity-30" aria-hidden />
 
-      {/* ───────── Promo Bar — sits flush above footer body, fades into cream ───────── */}
-      <div className="relative isolate overflow-hidden bg-ink text-pearl">
-        {/* Ambient gold wash + grain */}
+      {/* ───────── Promo Bar — sits flush above footer body, merges into cream ───────── */}
+      <div className="relative isolate overflow-hidden border-b border-ink/10 bg-cream text-ink">
+        {/* Ambient gold wash */}
         <div
           aria-hidden
-          className="pointer-events-none absolute inset-0 opacity-80"
+          className="pointer-events-none absolute inset-0"
           style={{
             background:
-              "radial-gradient(120% 90% at 8% 50%, rgba(214,161,64,0.22) 0%, rgba(214,161,64,0) 55%), radial-gradient(80% 90% at 92% 50%, rgba(247,220,151,0.16) 0%, rgba(214,161,64,0) 60%)",
+              "radial-gradient(120% 90% at 8% 50%, rgba(214,161,64,0.18) 0%, rgba(214,161,64,0) 55%), radial-gradient(80% 90% at 92% 50%, rgba(247,220,151,0.14) 0%, rgba(214,161,64,0) 60%)",
           }}
         />
         {/* Top gold hairline */}
         <div aria-hidden className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-gilded to-transparent" />
-        {/* Bottom merge — softly fades the dark band into cream-100 below */}
-        <div
-          aria-hidden
-          className="pointer-events-none absolute inset-x-0 bottom-0 h-12"
-          style={{
-            background:
-              "linear-gradient(to bottom, rgba(17,18,22,0) 0%, rgba(247,242,231,0.35) 60%, rgba(247,242,231,1) 100%)",
-          }}
-        />
 
         <Container className="relative">
           <div className="flex flex-col items-start gap-6 py-10 md:flex-row md:items-center md:justify-between md:py-12">
@@ -120,14 +111,14 @@ export function Footer() {
                 className="hidden h-12 w-px bg-gradient-to-b from-transparent via-gilded to-transparent md:block"
               />
               <div>
-                <span className="text-eyebrow uppercase tracking-widest2 text-gilded">
+                <span className="text-eyebrow uppercase tracking-widest2 text-gilded-800">
                   An Inaugural Gesture
                 </span>
-                <p className="mt-2 font-display text-2xl italic leading-tight text-pearl sm:text-3xl md:text-[2rem]">
+                <p className="mt-2 font-display text-2xl italic leading-tight text-ink sm:text-3xl md:text-[2rem]">
                   <span
                     style={{
                       backgroundImage:
-                        "linear-gradient(100deg,#c8902f 0%,#e6b651 20%,#f7dc97 40%,#fff6d4 50%,#f0c668 70%,#d6a140 90%,#c8902f 100%)",
+                        "linear-gradient(100deg,#9b6f1f 0%,#c8902f 20%,#e6b651 40%,#f0c668 55%,#d6a140 75%,#9b6f1f 100%)",
                       backgroundSize: "200% 100%",
                       WebkitBackgroundClip: "text",
                       backgroundClip: "text",
@@ -140,7 +131,7 @@ export function Footer() {
                   </span>{" "}
                   your first booking with Regalia Vows.
                 </p>
-                <p className="mt-2 max-w-xl text-sm leading-relaxed text-pearl/70">
+                <p className="mt-2 max-w-xl text-sm leading-relaxed text-ink/65">
                   A quiet welcome for new couples and hosts — message us on WhatsApp to begin.
                 </p>
               </div>
@@ -152,7 +143,7 @@ export function Footer() {
               target="_blank"
               rel="noopener noreferrer"
               data-cursor="link"
-              className="group relative inline-flex shrink-0 items-center gap-3 overflow-hidden rounded-full px-7 py-4 text-sm font-medium uppercase tracking-widest2 text-ink shadow-[0_10px_40px_-10px_rgba(214,161,64,0.6)] transition-transform duration-500 ease-out hover:scale-[1.02]"
+              className="group relative inline-flex shrink-0 items-center gap-3 overflow-hidden rounded-full px-7 py-4 text-sm font-medium uppercase tracking-widest2 text-ink shadow-[0_14px_44px_-14px_rgba(214,161,64,0.7)] transition-transform duration-500 ease-out hover:scale-[1.02]"
               style={{
                 backgroundImage:
                   "linear-gradient(100deg,#c8902f 0%,#e6b651 16%,#f7dc97 30%,#fff6d4 46%,#ffe9a8 58%,#f0c668 74%,#d6a140 92%,#c8902f 100%)",
@@ -163,7 +154,7 @@ export function Footer() {
               {/* Shimmer sweep on hover */}
               <span
                 aria-hidden
-                className="pointer-events-none absolute inset-y-0 -left-1/3 w-1/3 -skew-x-12 bg-gradient-to-r from-transparent via-white/40 to-transparent opacity-0 transition-all duration-700 ease-out group-hover:left-full group-hover:opacity-100"
+                className="pointer-events-none absolute inset-y-0 -left-1/3 w-1/3 -skew-x-12 bg-gradient-to-r from-transparent via-white/50 to-transparent opacity-0 transition-all duration-700 ease-out group-hover:left-full group-hover:opacity-100"
               />
               <WhatsAppIcon className="h-5 w-5" />
               <span className="relative">Chat on WhatsApp</span>
