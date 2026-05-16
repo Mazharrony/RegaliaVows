@@ -329,7 +329,7 @@ export function GallerySection({ images }: { images: GalleryImage[] }) {
               </svg>
             </button>
 
-            {/* Image */}
+            {/* Image — draggable horizontally for swipe nav on touch */}
             <motion.img
               key={images[active].src}
               src={images[active].src}
@@ -338,7 +338,15 @@ export function GallerySection({ images }: { images: GalleryImage[] }) {
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.97 }}
               transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
-              className="relative z-10 max-h-[88vh] max-w-[88vw] object-contain shadow-[0_30px_80px_-20px_rgba(0,0,0,0.7)]"
+              drag="x"
+              dragConstraints={{ left: 0, right: 0 }}
+              dragElastic={0.25}
+              dragMomentum={false}
+              onDragEnd={(_, info) => {
+                if (info.offset.x < -60) next();
+                else if (info.offset.x > 60) prev();
+              }}
+              className="relative z-10 max-h-[88vh] max-w-[88vw] cursor-grab touch-none object-contain shadow-[0_30px_80px_-20px_rgba(0,0,0,0.7)] active:cursor-grabbing"
               onClick={(e) => e.stopPropagation()}
             />
 
