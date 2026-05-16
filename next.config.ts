@@ -9,6 +9,7 @@ const nextConfig: NextConfig = {
   allowedDevOrigins: ["192.168.9.40", "localhost", "127.0.0.1"],
   images: {
     formats: ["image/avif", "image/webp"],
+    qualities: [55, 70, 75, 85],
     remotePatterns: [
       { protocol: "https", hostname: "cdn.sanity.io" },
       { protocol: "https", hostname: "images.unsplash.com" },
