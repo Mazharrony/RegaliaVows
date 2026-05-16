@@ -44,36 +44,28 @@ export function Nav() {
         className={cn(
           "fixed inset-x-0 top-0 z-50 transition-all duration-700 ease-silk",
           scrolled
-            ? "bg-transparent lg:bg-cream/85 lg:backdrop-blur-lg lg:border-b lg:border-ink/10"
+            ? "bg-transparent lg:bg-cream/80 lg:backdrop-blur-md lg:border-b lg:border-ink/5"
             : "bg-transparent"
         )}
       >
-        <div className="mx-auto flex h-20 max-w-[1600px] items-center justify-between px-6 md:px-10">
+        <div className="mx-auto flex h-14 max-w-[1600px] items-center justify-between px-5 sm:h-16 md:px-8">
           <Link
             href="/"
             aria-label={site.name}
-            className="group flex items-center gap-3"
+            className="group flex items-center"
             data-cursor="link"
           >
-            <Monogram className="h-11 w-11 text-gilded transition-transform duration-700 ease-silk group-hover:scale-105 md:h-12 md:w-12" />
-            <span
-              className={cn(
-                "hidden font-display text-lg italic md:block",
-                scrolled ? "text-ink/95" : "text-pearl/95"
-              )}
-            >
-              {site.name}
-            </span>
+            <Monogram className="h-8 w-8 text-gilded transition-transform duration-700 ease-silk group-hover:scale-105 sm:h-9 sm:w-9" />
           </Link>
 
-          <nav className="hidden items-center gap-10 lg:flex">
+          <nav className="hidden items-center gap-9 lg:flex">
             {nav.map((item) => (
               <Link
                 key={item.href}
                 href={item.href}
                 className={cn(
-                  "group relative font-tight text-eyebrow uppercase tracking-widest2 transition-colors hover:text-gilded",
-                  scrolled ? "text-ink/80" : "text-pearl/80"
+                  "group relative font-tight text-[11px] uppercase tracking-widest2 transition-colors hover:text-gilded",
+                  scrolled ? "text-ink/75" : "text-pearl/85"
                 )}
                 data-cursor="link"
               >
@@ -83,30 +75,31 @@ export function Nav() {
             ))}
           </nav>
 
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2">
             <Link
               href="/contact"
-              className="hidden lg:inline-flex items-center justify-center rounded-full bg-gilded px-7 py-3.5 font-tight text-eyebrow uppercase tracking-widest2 text-ink transition-colors hover:bg-gilded/90"
+              className={cn(
+                "hidden lg:inline-flex items-center font-tight text-[11px] uppercase tracking-widest2 transition-colors hover:text-gilded",
+                scrolled ? "text-ink/85" : "text-pearl/90"
+              )}
               data-cursor="link"
             >
-              Begin Enquiry
+              <span>Enquire</span>
+              <span aria-hidden className="ml-2 inline-block h-px w-6 bg-gilded" />
             </Link>
             <button
               onClick={() => setOpen(true)}
               aria-label="Open menu"
               aria-expanded={open}
               className={cn(
-                "group relative grid h-11 w-11 place-items-center rounded-full border transition-colors hover:border-gilded hover:text-gilded lg:hidden",
-                scrolled
-                  ? "border-ink/20 text-ink"
-                  : "border-pearl/25 text-pearl"
+                "group relative -mr-1 grid h-10 w-10 place-items-center transition-colors hover:text-gilded lg:hidden",
+                scrolled ? "text-ink" : "text-pearl"
               )}
               data-cursor="link"
             >
-              <span aria-hidden className="relative block h-[10px] w-[18px]">
-                <span className="absolute left-0 top-0 h-px w-full bg-current transition-transform duration-500 ease-silk group-hover:translate-y-[1px]" />
-                <span className="absolute left-0 top-1/2 h-px w-3 -translate-y-1/2 bg-current transition-all duration-500 ease-silk group-hover:w-full" />
-                <span className="absolute bottom-0 left-0 h-px w-full bg-current transition-transform duration-500 ease-silk group-hover:-translate-y-[1px]" />
+              <span aria-hidden className="relative block h-[7px] w-[20px]">
+                <span className="absolute left-0 top-0 h-px w-full bg-current" />
+                <span className="absolute bottom-0 left-0 h-px w-3 bg-current transition-all duration-500 ease-silk group-hover:w-full" />
               </span>
             </button>
           </div>
