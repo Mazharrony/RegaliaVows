@@ -138,7 +138,7 @@ function MobileDrawer({ onClose }: { onClose: () => void }) {
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
         transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
-        className="absolute inset-0 cursor-default bg-ink/65 backdrop-blur-md"
+        className="absolute inset-0 cursor-default bg-ink/45 backdrop-blur-md"
       />
 
       {/* Drawer panel — slides in from the right */}
@@ -147,12 +147,12 @@ function MobileDrawer({ onClose }: { onClose: () => void }) {
         animate={{ x: 0 }}
         exit={{ x: "100%" }}
         transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-        className="absolute right-0 top-0 flex h-full w-[88vw] max-w-[420px] flex-col overflow-hidden bg-ink text-pearl shadow-[0_0_60px_rgba(0,0,0,0.55)]"
+        className="absolute right-0 top-0 flex h-full w-[88vw] max-w-[420px] flex-col overflow-hidden bg-cream text-ink shadow-[0_0_60px_rgba(0,0,0,0.25)]"
       >
         {/* Ambient gold wash + crown watermark + left gold edge */}
         <div
           aria-hidden
-          className="pointer-events-none absolute inset-0 bg-[radial-gradient(120%_60%_at_100%_0%,rgba(214,161,64,0.22)_0%,rgba(11,11,13,0)_55%)]"
+          className="pointer-events-none absolute inset-0 bg-[radial-gradient(120%_60%_at_100%_0%,rgba(214,161,64,0.18)_0%,rgba(250,246,238,0)_55%)]"
         />
         <div
           aria-hidden
@@ -167,12 +167,12 @@ function MobileDrawer({ onClose }: { onClose: () => void }) {
         <div className="relative flex items-center justify-between px-6 pt-5 sm:px-8 sm:pt-6">
           <Link href="/" onClick={onClose} aria-label={site.name} className="flex items-center gap-3">
             <Monogram className="h-9 w-9 text-gilded" />
-            <span className="font-display text-base italic text-pearl/90">{site.name}</span>
+            <span className="font-display text-base italic text-ink/90">{site.name}</span>
           </Link>
           <button
             onClick={onClose}
             aria-label="Close menu"
-            className="grid h-11 w-11 place-items-center rounded-full border border-pearl/15 text-pearl transition-colors hover:border-gilded hover:text-gilded"
+            className="grid h-11 w-11 place-items-center rounded-full border border-ink/15 text-ink transition-colors hover:border-gilded hover:text-gilded"
             data-cursor="link"
           >
             <svg viewBox="0 0 24 24" className="h-[18px] w-[18px]" fill="none" aria-hidden>
@@ -202,7 +202,7 @@ function MobileDrawer({ onClose }: { onClose: () => void }) {
                 initial={{ opacity: 0, x: 24 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ delay: 0.3 + i * 0.06, duration: 0.55, ease: [0.16, 1, 0.3, 1] }}
-                className="border-b border-pearl/10 last:border-b-0"
+                className="border-b border-ink/10 last:border-b-0"
               >
                 <Link
                   href={item.href}
@@ -211,16 +211,16 @@ function MobileDrawer({ onClose }: { onClose: () => void }) {
                   data-cursor="link"
                 >
                   <span className="flex items-baseline gap-4">
-                    <span className="font-tight text-[10px] uppercase tracking-widest2 text-pearl/35">
+                    <span className="font-tight text-[10px] uppercase tracking-widest2 text-ink/40">
                       {String(i + 1).padStart(2, "0")}
                     </span>
-                    <span className="font-display text-[2rem] italic leading-none text-pearl transition-colors group-hover:text-gilded sm:text-[2.25rem]">
+                    <span className="font-display text-[2rem] italic leading-none text-ink transition-colors group-hover:text-gilded sm:text-[2.25rem]">
                       {item.label}
                     </span>
                   </span>
                   <span
                     aria-hidden
-                    className="h-px w-5 bg-pearl/20 transition-all duration-500 ease-silk group-hover:w-10 group-hover:bg-gilded"
+                    className="h-px w-5 bg-ink/20 transition-all duration-500 ease-silk group-hover:w-10 group-hover:bg-gilded"
                   />
                 </Link>
               </motion.li>
@@ -233,7 +233,7 @@ function MobileDrawer({ onClose }: { onClose: () => void }) {
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.55, duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-          className="relative mt-4 border-t border-pearl/10 bg-ink/40 px-6 pb-[max(1.25rem,env(safe-area-inset-bottom))] pt-5 sm:px-8 sm:pt-6"
+          className="relative mt-4 border-t border-ink/10 bg-cream/70 px-6 pb-[max(1.25rem,env(safe-area-inset-bottom))] pt-5 sm:px-8 sm:pt-6"
         >
           <Link
             href="/contact"
@@ -243,7 +243,7 @@ function MobileDrawer({ onClose }: { onClose: () => void }) {
           >
             <span
               aria-hidden
-              className="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-pearl/35 to-transparent transition-transform duration-700 ease-silk group-hover:translate-x-full"
+              className="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-cream/60 to-transparent transition-transform duration-700 ease-silk group-hover:translate-x-full"
             />
             <span className="relative">Begin Enquiry</span>
             <svg viewBox="0 0 24 24" className="relative ml-2 h-3.5 w-3.5" fill="none" aria-hidden>
@@ -252,11 +252,11 @@ function MobileDrawer({ onClose }: { onClose: () => void }) {
             </svg>
           </Link>
 
-          <div className="mt-4 flex items-center justify-between text-eyebrow uppercase tracking-widest2 text-pearl/55">
+          <div className="mt-4 flex items-center justify-between text-eyebrow uppercase tracking-widest2 text-ink/55">
             <a href={`mailto:${site.contact.email}`} className="transition-colors hover:text-gilded" data-cursor="link">
               {site.contact.email}
             </a>
-            <span className="text-pearl/35">N° 01 · MMXXVI</span>
+            <span className="text-ink/40">N° 01 · MMXXVI</span>
           </div>
         </motion.div>
       </motion.aside>
