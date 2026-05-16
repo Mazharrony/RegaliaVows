@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { Suspense } from "react";
 import { PageHero } from "@/components/sections/PageHero";
 import { CaseStudiesGrid } from "./CaseStudiesGrid";
+import { GallerySection } from "@/components/sections/GallerySection";
+import { getGalleryImages } from "@/lib/gallery";
 
 export const metadata: Metadata = {
   title: "Case Studies",
@@ -10,6 +12,7 @@ export const metadata: Metadata = {
 };
 
 export default function CaseStudiesPage() {
+  const images = getGalleryImages();
   return (
     <>
       <PageHero
@@ -20,6 +23,7 @@ export default function CaseStudiesPage() {
       <Suspense fallback={null}>
         <CaseStudiesGrid />
       </Suspense>
+      <GallerySection images={images} />
     </>
   );
 }
