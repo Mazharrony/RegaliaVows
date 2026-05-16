@@ -110,7 +110,7 @@ export function HomeHero() {
           <SplitText
             as="h1"
             text="Weddings, composed."
-            className="display text-gold mt-4 max-w-[14ch] text-display-xl italic leading-[0.95] tracking-tight md:mt-6 [filter:drop-shadow(0_2px_18px_rgba(0,0,0,0.55))_drop-shadow(0_0_28px_rgba(240,200,120,0.35))]"
+            className="text-gold mt-4 max-w-[14ch] text-display-xl italic leading-[0.95] tracking-tight md:mt-6"
             stagger={0.12}
           />
 
