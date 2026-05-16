@@ -131,59 +131,109 @@ export function GallerySection({ images }: { images: GalleryImage[] }) {
 
         {/* ── Pagination ─────────────────────────────────────────── */}
         {totalPages > 1 && (
-          <div className="mt-14 flex items-center justify-center gap-2 md:mt-16">
-            {/* Prev */}
-            <button
-              type="button"
-              onClick={() => goToPage(page - 1)}
-              disabled={page === 0}
-              aria-label="Previous page"
-              className="flex h-10 w-10 items-center justify-center rounded-full border border-ink/15 text-ink/60 transition-colors hover:border-gilded hover:text-gilded disabled:pointer-events-none disabled:opacity-25"
-            >
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden>
-                <path d="M15 6l-6 6 6 6" />
-              </svg>
-            </button>
-
-            {/* Page numbers */}
-            {Array.from({ length: totalPages }, (_, i) => (
+          <nav aria-label="Gallery pages" className="mt-14 md:mt-16">
+            {/* ── Mobile: prev / N of Total / next ── */}
+            <div className="flex items-center justify-center gap-3 sm:hidden">
               <button
-                key={i}
                 type="button"
-                onClick={() => goToPage(i)}
-                aria-label={`Page ${i + 1}`}
-                aria-current={i === page ? "page" : undefined}
-                className={`flex h-10 min-w-[2.5rem] items-center justify-center rounded-full px-3 text-sm font-medium transition-all duration-300 ${
-                  i === page
-                    ? "text-ink shadow-[0_8px_24px_-8px_rgba(214,161,64,0.6)]"
-                    : "border border-ink/15 text-ink/60 hover:border-gilded hover:text-gilded"
-                }`}
-                style={
-                  i === page
-                    ? {
-                        backgroundImage:
-                          "linear-gradient(100deg,#c8902f 0%,#e6b651 20%,#f7dc97 45%,#f0c668 70%,#d6a140 100%)",
-                      }
-                    : undefined
-                }
+                onClick={() => goToPage(page - 1)}
+                disabled={page === 0}
+                aria-label="Previous page"
+                className="flex h-11 w-11 items-center justify-center rounded-full border border-ink/15 text-ink/60 transition-colors hover:border-gilded hover:text-gilded disabled:pointer-events-none disabled:opacity-25"
               >
-                {i + 1}
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden><path d="M15 6l-6 6 6 6" /></svg>
               </button>
-            ))}
 
-            {/* Next */}
-            <button
-              type="button"
-              onClick={() => goToPage(page + 1)}
-              disabled={page === totalPages - 1}
-              aria-label="Next page"
-              className="flex h-10 w-10 items-center justify-center rounded-full border border-ink/15 text-ink/60 transition-colors hover:border-gilded hover:text-gilded disabled:pointer-events-none disabled:opacity-25"
-            >
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden>
-                <path d="M9 6l6 6-6 6" />
-              </svg>
-            </button>
-          </div>
+              <span className="min-w-[5rem] text-center text-sm font-medium text-ink/60">
+                <span
+                  className="font-semibold text-ink"
+                  style={{ backgroundImage: "linear-gradient(100deg,#c8902f,#e6b651,#f7dc97,#d6a140)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}
+                >
+                  {page + 1}
+                </span>
+                {" "}<span className="text-ink/40">of</span>{" "}{totalPages}
+              </span>
+
+              <button
+                type="button"
+                onClick={() => goToPage(page + 1)}
+                disabled={page === totalPages - 1}
+                aria-label="Next page"
+                className="flex h-11 w-11 items-center justify-center rounded-full border border-ink/15 text-ink/60 transition-colors hover:border-gilded hover:text-gilded disabled:pointer-events-none disabled:opacity-25"
+              >
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden><path d="M9 6l6 6-6 6" /></svg>
+              </button>
+            </div>
+
+            {/* ── Desktop: smart truncated page numbers ── */}
+            <div className="hidden items-center justify-center gap-1.5 sm:flex">
+              {/* Prev arrow */}
+              <button
+                type="button"
+                onClick={() => goToPage(page - 1)}
+                disabled={page === 0}
+                aria-label="Previous page"
+                className="flex h-10 w-10 items-center justify-center rounded-full border border-ink/15 text-ink/60 transition-colors hover:border-gilded hover:text-gilded disabled:pointer-events-none disabled:opacity-25"
+              >
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden><path d="M15 6l-6 6 6 6" /></svg>
+              </button>
+
+              {/* Smart page buttons */}
+              {(() => {
+                // Always show: first, last, current, and ±1 neighbours. Fill with ellipsis.
+                const range: (number | "…")[] = [];
+                const add = new Set<number>();
+
+                [0, totalPages - 1, page - 1, page, page + 1].forEach((n) => {
+                  if (n >= 0 && n < totalPages) add.add(n);
+                });
+
+                const sorted = Array.from(add).sort((a, b) => a - b);
+
+                sorted.forEach((n, idx) => {
+                  if (idx > 0 && n > sorted[idx - 1] + 1) range.push("…");
+                  range.push(n);
+                });
+
+                return range.map((item, idx) =>
+                  item === "…" ? (
+                    <span key={`ellipsis-${idx}`} className="flex h-10 w-8 items-center justify-center text-sm text-ink/35 select-none">…</span>
+                  ) : (
+                    <button
+                      key={item}
+                      type="button"
+                      onClick={() => goToPage(item)}
+                      aria-label={`Page ${item + 1}`}
+                      aria-current={item === page ? "page" : undefined}
+                      className={`flex h-10 min-w-[2.5rem] items-center justify-center rounded-full px-3 text-sm font-medium transition-all duration-300 ${
+                        item === page
+                          ? "text-ink shadow-[0_8px_24px_-8px_rgba(214,161,64,0.55)]"
+                          : "border border-ink/15 text-ink/60 hover:border-gilded hover:text-gilded"
+                      }`}
+                      style={
+                        item === page
+                          ? { backgroundImage: "linear-gradient(100deg,#c8902f 0%,#e6b651 20%,#f7dc97 45%,#f0c668 70%,#d6a140 100%)" }
+                          : undefined
+                      }
+                    >
+                      {item + 1}
+                    </button>
+                  )
+                );
+              })()}
+
+              {/* Next arrow */}
+              <button
+                type="button"
+                onClick={() => goToPage(page + 1)}
+                disabled={page === totalPages - 1}
+                aria-label="Next page"
+                className="flex h-10 w-10 items-center justify-center rounded-full border border-ink/15 text-ink/60 transition-colors hover:border-gilded hover:text-gilded disabled:pointer-events-none disabled:opacity-25"
+              >
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden><path d="M9 6l6 6-6 6" /></svg>
+              </button>
+            </div>
+          </nav>
         )}
       </Container>
 
