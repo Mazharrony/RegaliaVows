@@ -17,6 +17,8 @@ const nextConfig: NextConfig = {
     formats: ["image/avif", "image/webp"],
     qualities: [55, 70, 75, 85],
     remotePatterns: [
+      // ImgBB CDN — gallery images hosted at mazhar-rony.imgbb.com
+      { protocol: "https", hostname: "i.ibb.co" },
       { protocol: "https", hostname: "cdn.sanity.io" },
       { protocol: "https", hostname: "images.unsplash.com" },
     ],

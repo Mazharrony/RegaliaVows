@@ -6,12 +6,27 @@ export type GalleryImage = {
   alt: string;
 };
 
+// ─── ImgBB Gallery URLs ────────────────────────────────────────────────────
+// 1. Upload images at https://mazhar-rony.imgbb.com/
+// 2. For each photo copy the "Direct link" (https://i.ibb.co/…)
+// 3. Add it below as: { src: "https://i.ibb.co/XXXX/photo.jpg", alt: "caption" }
+//
+// When this array is non-empty it takes full priority over public/gallery/.
+// Once all images are here you can delete public/gallery/ from the repo.
+const IMGBB_IMAGES: GalleryImage[] = [
+  // Paste your ImgBB direct links here, e.g.:
+  // { src: "https://i.ibb.co/XXXX/DSC02808.jpg", alt: "Bridal morning details" },
+];
+// ──────────────────────────────────────────────────────────────────────────
+
 /**
- * Reads every image inside `public/gallery/` and returns its public path.
- * Called at build time on the server — safe in RSC / generateStaticParams.
- * Drop any .jpg/.png/.webp/.avif/.gif into public/gallery/ and it appears.
+ * Returns gallery images.
+ * Priority: IMGBB_IMAGES array (when populated) → public/gallery/ folder.
  */
 export function getGalleryImages(): GalleryImage[] {
+  if (IMGBB_IMAGES.length > 0) return IMGBB_IMAGES;
+
+  // Fallback: auto-discover from public/gallery/ (local files)
   const dir = path.join(process.cwd(), "public", "gallery");
   try {
     return fs
