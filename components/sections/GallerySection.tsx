@@ -81,7 +81,7 @@ export function GallerySection({ images }: { images: GalleryImage[] }) {
         <div className="mb-12 flex items-end justify-between gap-6 md:mb-16">
           <div>
             <span className="text-eyebrow uppercase tracking-widest2 text-gilded-800">
-              The Atelier
+              Regalia Vows
             </span>
             <h2 className="mt-3 font-display text-4xl italic leading-[1.05] tracking-tight md:text-5xl lg:text-6xl">
               Moments from the archive.
