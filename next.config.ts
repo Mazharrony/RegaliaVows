@@ -2,7 +2,10 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   reactStrictMode: true,
-  distDir: ".next-local",
+  // Use a custom distDir locally to dodge a Windows file-lock on `.next/trace`
+  // when the dev server is killed abruptly. Vercel/CI must use the default
+  // `.next` so its post-build steps can find routes-manifest.json.
+  ...(process.env.VERCEL || process.env.CI ? {} : { distDir: ".next-local" }),
   allowedDevOrigins: ["192.168.9.40", "localhost", "127.0.0.1"],
   images: {
     formats: ["image/avif", "image/webp"],
