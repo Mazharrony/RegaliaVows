@@ -75,26 +75,59 @@ export function HomeHero() {
 
       <div className="relative z-10 flex min-h-[100svh] flex-col">
         <div className="mx-auto flex w-full max-w-[1600px] flex-1 flex-col justify-end px-5 pb-16 pt-28 sm:px-6 sm:pb-20 md:px-10 md:pb-32 md:pt-40 3xl:max-w-[1800px] 3xl:px-16 4xl:max-w-[2200px]">
+          {/* Editorial masthead row — eyebrow on left, edition mark on right,
+              joined by an animated hairline gold rule. */}
           <motion.div
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.4, duration: 1, ease: [0.16, 1, 0.3, 1] }}
+            className="flex items-center gap-4 sm:gap-6"
           >
             <Eyebrow>Regalia Vows · Dubai</Eyebrow>
+            <motion.span
+              initial={{ scaleX: 0 }}
+              animate={{ scaleX: 1 }}
+              transition={{ delay: 0.7, duration: 1.1, ease: [0.16, 1, 0.3, 1] }}
+              aria-hidden
+              className="hidden h-px flex-1 origin-left bg-gradient-to-r from-gilded/70 via-gilded-100/40 to-transparent sm:block"
+            />
+            <span className="eyebrow !text-gilded/80 hidden drop-shadow-[0_1px_6px_rgba(0,0,0,0.5)] sm:inline">
+              N° 01 — MMXXVI
+            </span>
+          </motion.div>
+
+          {/* Chapter mark — small, refined, sits like a pre-headline kicker. */}
+          <motion.div
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.6, duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
+            className="mt-8 flex items-center gap-3 text-eyebrow uppercase tracking-widest2 text-pearl/70 drop-shadow-[0_1px_6px_rgba(0,0,0,0.5)] md:mt-12"
+          >
+            <span aria-hidden className="h-px w-8 bg-gilded/60" />
+            <span>The Composition</span>
           </motion.div>
 
           <SplitText
             as="h1"
             text="Weddings, composed."
-            className="display text-gold mt-6 max-w-[14ch] text-display-xl italic md:mt-8 drop-shadow-[0_2px_18px_rgba(0,0,0,0.55)]"
+            className="display text-gold mt-4 max-w-[14ch] text-display-xl italic leading-[0.95] tracking-tight md:mt-6 drop-shadow-[0_2px_22px_rgba(0,0,0,0.6)]"
             stagger={0.12}
+          />
+
+          {/* Hairline divider — sweeps in beneath the headline like a margin rule. */}
+          <motion.span
+            aria-hidden
+            initial={{ scaleX: 0, opacity: 0 }}
+            animate={{ scaleX: 1, opacity: 1 }}
+            transition={{ delay: 1.25, duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
+            className="mt-6 block h-px w-24 origin-left bg-gradient-to-r from-gilded via-gilded-100 to-transparent md:mt-8 md:w-32"
           />
 
           <motion.p
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 1.4, duration: 1, ease: [0.16, 1, 0.3, 1] }}
-            className="mt-6 max-w-xl font-tight text-sm leading-relaxed text-pearl/90 drop-shadow-[0_1px_8px_rgba(0,0,0,0.45)] sm:text-base md:mt-10 md:text-lg"
+            className="mt-6 max-w-xl font-tight text-sm leading-relaxed text-pearl/90 drop-shadow-[0_1px_8px_rgba(0,0,0,0.45)] sm:text-base md:mt-8 md:text-lg"
           >
             Regalia Vows is for couples who treat their wedding as a work of art.
             Conceived in Dubai, staged the world over.
@@ -124,7 +157,13 @@ export function HomeHero() {
           transition={{ delay: 2.2, duration: 1 }}
           className="relative mx-auto mb-6 flex w-full max-w-[1600px] items-end justify-between px-5 sm:mb-8 sm:px-6 md:px-10 3xl:max-w-[1800px] 3xl:px-16 4xl:max-w-[2200px]"
         >
-          <span className="eyebrow !text-gilded drop-shadow-[0_1px_6px_rgba(0,0,0,0.5)]">Scroll to enter</span>
+          {/* Vertical animated scroll cue — a thin gold bar pulsing downward. */}
+          <span className="flex items-center gap-3">
+            <span aria-hidden className="relative block h-10 w-px overflow-hidden bg-pearl/15">
+              <span className="absolute inset-x-0 top-0 h-1/2 origin-top bg-gradient-to-b from-gilded-100 to-transparent animate-scroll-cue" />
+            </span>
+            <span className="eyebrow !text-gilded drop-shadow-[0_1px_6px_rgba(0,0,0,0.5)]">Scroll to enter</span>
+          </span>
           <span className="eyebrow !text-gilded hidden drop-shadow-[0_1px_6px_rgba(0,0,0,0.5)] sm:inline">{new Date().getFullYear()} · Volume I</span>
         </motion.div>
       </div>
