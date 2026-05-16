@@ -244,13 +244,6 @@ function MobileDrawer({ onClose }: { onClose: () => void }) {
               <path d="M9 7h8v8" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
             </svg>
           </Link>
-
-          <div className="mt-4 flex items-center justify-between text-eyebrow uppercase tracking-widest2 text-ink/55">
-            <a href={`mailto:${site.contact.email}`} className="transition-colors hover:text-gilded" data-cursor="link">
-              {site.contact.email}
-            </a>
-            <span className="text-ink/40">N° 01 · MMXXVI</span>
-          </div>
         </motion.div>
       </motion.aside>
     </div>
