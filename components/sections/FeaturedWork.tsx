@@ -1,4 +1,5 @@
-import Link from "next/link";
+import { getLocale } from "next-intl/server";
+import { Link } from "@/lib/i18n/navigation";
 import { ArrowUpRight } from "lucide-react";
 import { Container } from "@/components/ui/Container";
 import { BgImage } from "@/components/ui/BgImage";
@@ -6,15 +7,44 @@ import { Section } from "@/components/ui/Section";
 import { Eyebrow } from "@/components/ui/Eyebrow";
 import { Reveal } from "@/components/motion/Reveal";
 import { work } from "@/lib/work";
+import type { Locale } from "@/lib/i18n/config";
+
+// TODO(ru): review — drafted Russian copy pending principal sign-off.
+const copy: Record<Locale, {
+  eyebrow: string;
+  headlineTop: string;
+  headlineBottom: string;
+  lede: string;
+  view: string;
+  archive: string;
+}> = {
+  en: {
+    eyebrow: "Selected Work",
+    headlineTop: "The recent",
+    headlineBottom: "compositions.",
+    lede:
+      "A small selection from the studio archive. The full book is opened in private, on request, after an introductory conversation.",
+    view: "View",
+    archive: "Open the full archive",
+  },
+  ru: {
+    eyebrow: "Избранные работы",
+    headlineTop: "Последние",
+    headlineBottom: "композиции.",
+    lede:
+      "Небольшая выборка из архива студии. Полная книга открывается в частном порядке, по запросу, после знакомства.",
+    view: "Смотреть",
+    archive: "Открыть полный архив",
+  },
+};
 
 /**
  * Featured-work grid for the homepage. Shows the four most recent compositions
  * in an asymmetric editorial layout, then points to the full archive.
- *
- * Copy and imagery in `lib/work.ts` are placeholders — swap them out as
- * commissions are cleared for publication.
  */
-export function FeaturedWork() {
+export async function FeaturedWork() {
+  const locale = (await getLocale()) as Locale;
+  const t = copy[locale] ?? copy.en;
   const featured = work.slice(0, 4);
 
   return (
@@ -22,18 +52,16 @@ export function FeaturedWork() {
       <Container size="wide">
         <div className="grid items-end gap-10 md:grid-cols-2">
           <Reveal>
-            <Eyebrow className="!text-gilded-800">Selected Work</Eyebrow>
+            <Eyebrow className="!text-gilded-800">{t.eyebrow}</Eyebrow>
             <h2 className="display mt-8 text-display-lg italic text-ink">
-              The recent
+              {t.headlineTop}
               <br />
-              compositions.
+              {t.headlineBottom}
             </h2>
           </Reveal>
           <Reveal delay={0.1}>
             <p className="max-w-md text-base leading-relaxed text-ink/85 md:ml-auto">
-              A small selection from the studio archive. The full book is
-              opened in private, on request, after an introductory
-              conversation.
+              {t.lede}
             </p>
           </Reveal>
         </div>
@@ -50,7 +78,7 @@ export function FeaturedWork() {
               return (
                 <Reveal key={w.slug} delay={(i % 2) * 0.08} className={spans[i] ?? spans[0]}>
                   <Link
-                    href={`/case-studies/${w.slug}`}
+                    href={{ pathname: "/case-studies/[slug]", params: { slug: w.slug } }}
                     data-cursor="view"
                     data-cursor-label="Open"
                     className="group relative block h-full w-full overflow-hidden rounded-card border border-ink/10 transition-colors duration-700 ease-silk hover:border-gilded/50"
@@ -77,7 +105,7 @@ export function FeaturedWork() {
                         <p className="mt-2 text-sm text-pearl/85">{w.place}</p>
                         <span className="mt-5 inline-flex items-center gap-3 text-eyebrow uppercase tracking-widest2 text-gilded">
                           <span className="h-px w-10 bg-gilded transition-all duration-500 ease-silk group-hover:w-20" />
-                          View
+                          {t.view}
                         </span>
                       </div>
                     </div>
@@ -96,7 +124,7 @@ export function FeaturedWork() {
             className="group mt-16 inline-flex items-center gap-3 font-tight text-eyebrow uppercase tracking-widest2 text-ink hover:text-gilded-800"
           >
             <span className="h-px w-12 bg-ink/40 transition-all duration-500 ease-silk group-hover:w-24" />
-            Open the full archive
+            {t.archive}
             <ArrowUpRight size={14} strokeWidth={1.5} />
           </Link>
         </Reveal>

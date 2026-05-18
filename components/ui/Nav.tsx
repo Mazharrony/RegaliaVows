@@ -1,22 +1,26 @@
 "use client";
 
-import Link from "next/link";
 import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
+import { useTranslations } from "next-intl";
+import { Link, type Href } from "@/lib/i18n/navigation";
 import { site } from "@/lib/site";
 import { Monogram } from "./Monogram";
 import { CrownMark } from "./CrownMark";
 
-const nav = [
-  { href: "/about", label: "Story" },
-  { href: "/services", label: "Services" },
-  { href: "/sectors", label: "Sectors" },
-  { href: "/experience", label: "Experience" },
-  { href: "/case-studies", label: "Portfolio" },
-  { href: "/venues", label: "Venues" },
-];
+const NAV_ITEMS = [
+  { href: "/about", key: "story" },
+  { href: "/services", key: "services" },
+  { href: "/sectors", key: "sectors" },
+  { href: "/experience", key: "experience" },
+  { href: "/case-studies", key: "portfolio" },
+  { href: "/venues", key: "venues" },
+] as const;
 
 export function Nav() {
+  const t = useTranslations("common.nav");
+  const tc = useTranslations("common.cta");
+  const nav = NAV_ITEMS.map((item) => ({ href: item.href, label: t(item.key) }));
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
@@ -42,7 +46,7 @@ export function Nav() {
           <nav className="hidden items-center gap-9 lg:flex">
             {nav.map((item) => (
               <Link
-                key={item.href}
+                key={item.label}
                 href={item.href}
                 className="group relative font-tight text-[11px] uppercase tracking-widest2 text-ink/75 transition-colors hover:text-gilded"
                 data-cursor="link"
@@ -59,7 +63,7 @@ export function Nav() {
               className="hidden lg:inline-flex items-center font-tight text-[11px] uppercase tracking-widest2 text-ink/85 transition-colors hover:text-gilded"
               data-cursor="link"
             >
-              <span>Enquire</span>
+              <span>{tc("enquire")}</span>
               <span aria-hidden className="ml-2 inline-block h-px w-6 bg-gilded" />
             </Link>
             <button
@@ -78,12 +82,22 @@ export function Nav() {
         </div>
       </header>
 
-      <AnimatePresence>{open && <MobileDrawer onClose={() => setOpen(false)} />}</AnimatePresence>
+      <AnimatePresence>{open && <MobileDrawer onClose={() => setOpen(false)} nav={nav} enquireLabel={tc("beginEnquiry")} navigateLabel={t("navigate")} />}</AnimatePresence>
     </>
   );
 }
 
-function MobileDrawer({ onClose }: { onClose: () => void }) {
+function MobileDrawer({
+  onClose,
+  nav,
+  enquireLabel,
+  navigateLabel,
+}: {
+  onClose: () => void;
+  nav: { href: Href; label: string }[];
+  enquireLabel: string;
+  navigateLabel: string;
+}) {
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       if (e.key === "Escape") onClose();
@@ -155,7 +169,7 @@ function MobileDrawer({ onClose }: { onClose: () => void }) {
           className="relative mt-10 inline-flex items-center gap-3 px-6 text-eyebrow font-tight uppercase tracking-widest2 text-gilded sm:mt-12 sm:px-8"
         >
           <span aria-hidden className="h-px w-8 bg-gilded/60" />
-          Navigate
+          {navigateLabel}
         </motion.span>
 
         {/* Nav links */}
@@ -163,7 +177,7 @@ function MobileDrawer({ onClose }: { onClose: () => void }) {
           <ul className="flex flex-col">
             {nav.map((item, i) => (
               <motion.li
-                key={item.href}
+                key={item.label}
                 initial={{ opacity: 0, x: 24 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ delay: 0.3 + i * 0.06, duration: 0.55, ease: [0.16, 1, 0.3, 1] }}
@@ -210,7 +224,7 @@ function MobileDrawer({ onClose }: { onClose: () => void }) {
               aria-hidden
               className="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-cream/60 to-transparent transition-transform duration-700 ease-silk group-hover:translate-x-full"
             />
-            <span className="relative">Begin Enquiry</span>
+            <span className="relative">{enquireLabel}</span>
             <svg viewBox="0 0 24 24" className="relative ml-2 h-3.5 w-3.5" fill="none" aria-hidden>
               <path d="M7 17L17 7" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
               <path d="M9 7h8v8" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />

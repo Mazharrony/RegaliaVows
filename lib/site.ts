@@ -46,3 +46,33 @@ export const site = {
 } as const;
 
 export type Site = typeof site;
+
+// Localized narrative fields. Identity (name, contact, social, address) is
+// language-agnostic and stays on `site`; tagline / description / city / region
+// vary by locale and are read through `siteCopy(locale)`.
+//
+// TODO(ru): review — drafted Russian; native pass required before launch.
+export const siteCopy = {
+  en: {
+    tagline: site.tagline,
+    description: site.description,
+    city: site.city,
+    region: site.region,
+    country: site.country,
+  },
+  ru: {
+    tagline: "Свадьбы, выстроенные как произведение — и торжества, которые следуют за ними.",
+    description:
+      "Regalia Vows проектирует свадьбы и предложения руки и сердца, какие случаются раз в жизни — из Дубая, по всем Эмиратам и по всему миру. По отдельному запросу — корпоративные открытия, частные гала-приёмы, бренд-активации и запуски гостиниц для тех же клиентов.",
+    city: "Дубай",
+    region: "Дубай",
+    country: "Объединённые Арабские Эмираты",
+  },
+} as const;
+
+export type SiteCopy = (typeof siteCopy)[keyof typeof siteCopy];
+
+/** Resolve the localized narrative copy for the active locale. */
+export function getSiteCopy(locale: string): SiteCopy {
+  return (siteCopy as Record<string, SiteCopy>)[locale] ?? siteCopy.en;
+}

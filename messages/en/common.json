@@ -1,0 +1,77 @@
+{
+  "nav": {
+    "story": "Story",
+    "services": "Services",
+    "sectors": "Sectors",
+    "experience": "Experience",
+    "portfolio": "Portfolio",
+    "venues": "Venues",
+    "navigate": "Navigate"
+  },
+  "cta": {
+    "enquire": "Enquire",
+    "beginEnquiry": "Begin Enquiry",
+    "viewOurWork": "View Our Work",
+    "learnMore": "Learn More"
+  },
+  "footer": {
+    "studio": "Studio",
+    "email": "Email",
+    "telephone": "Telephone",
+    "craftedIn": "Crafted in {city}.",
+    "languageLabel": "Language",
+    "promo": {
+      "kicker": "An Inaugural Gesture",
+      "discount": "20% off",
+      "headlineTail": "your first booking with Regalia Vows.",
+      "subline": "A quiet welcome for new couples and hosts — message us on WhatsApp to begin.",
+      "whatsappCta": "Chat on WhatsApp",
+      "whatsappMessage": "Hello Regalia Vows — I'd like to enquire about my upcoming celebration and claim the 20% first-booking offer."
+    },
+    "cols": {
+      "studio": "Regalia Vows",
+      "weddings": "Weddings",
+      "alsoOffered": "Also Offered",
+      "discover": "Discover"
+    },
+    "links": {
+      "ourStory": "Our Story",
+      "theProcess": "The Process",
+      "press": "Press",
+      "journal": "Journal",
+      "bespokeWeddings": "Bespoke Weddings",
+      "cinematicProposals": "Cinematic Proposals",
+      "destination": "Destination",
+      "privateEvents": "Private Events",
+      "honeymoons": "Honeymoons",
+      "corporate": "Corporate Events",
+      "brandExperiential": "Brand & Experiential",
+      "privateSocial": "Private & Social",
+      "hospitality": "Hospitality Launches",
+      "allSectors": "All Sectors",
+      "caseStudies": "Case Studies",
+      "venues": "Venues",
+      "enquire": "Enquire"
+    },
+    "legal": {
+      "privacy": "Privacy",
+      "terms": "Terms"
+    }
+  },
+  "error": {
+    "eyebrow": "A moment, please",
+    "title": "Something fell out of frame.",
+    "body": "Our apologies \u2014 an unexpected error interrupted the composition. We have already been notified.",
+    "tryAgain": "Try again"
+  },
+  "notFound": {
+    "eyebrow": "404 \u00b7 Lost in Regalia Vows",
+    "titleA": "This room",
+    "titleB": "is empty.",
+    "body": "The page you were looking for has been re-staged or has not yet been dressed. Allow us to show you back to the foyer.",
+    "cta": "Return Home"
+  },
+  "loading": {
+    "aria": "Please wait"
+  }
+}

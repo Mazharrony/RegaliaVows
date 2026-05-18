@@ -1,0 +1,235 @@
+import type { Metadata } from "next";
+import { notFound } from "next/navigation";
+import { Link } from "@/lib/i18n/navigation";
+import { PageHero } from "@/components/sections/PageHero";
+import { Section } from "@/components/ui/Section";
+import { Container } from "@/components/ui/Container";
+import { BgImage } from "@/components/ui/BgImage";
+import { Eyebrow } from "@/components/ui/Eyebrow";
+import { Reveal } from "@/components/motion/Reveal";
+import { work, getWorkItem } from "@/lib/work";
+import { site } from "@/lib/site";
+import { breadcrumbLd, jsonLd, localeAlternates, urlForLocale } from "@/lib/seo";
+import type { Locale } from "@/lib/i18n/config";
+
+export function generateStaticParams() {
+  return work.map((w) => ({ slug: w.slug }));
+}
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: Locale; slug: string }>;
+}): Promise<Metadata> {
+  const { locale, slug } = await params;
+  const w = getWorkItem(slug);
+  if (!w) return {};
+  const title = `${w.title} — ${w.place}`;
+  const description = `${w.style} composed by Regalia Vows at ${w.place}.`;
+  const canonicalPath = `/case-studies/${slug}`;
+  return {
+    title,
+    description,
+    alternates: localeAlternates(locale, canonicalPath),
+    openGraph: {
+      type: "article",
+      url: urlForLocale(locale, canonicalPath),
+      title: `${title} · ${site.name}`,
+      description,
+      images: [w.image],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: `${title} · ${site.name}`,
+      description,
+      images: [w.image],
+    },
+  };
+}
+
+// TODO(ru): review — drafted Russian copy pending principal sign-off.
+const copy: Record<Locale, {
+  briefLabel: string;
+  arcLabel: string;
+  nextLabel: string;
+  momentSuffix: (i: number) => string;
+}> = {
+  en: {
+    briefLabel: "The Brief",
+    arcLabel: "The Arc",
+    nextLabel: "Next Composition",
+    momentSuffix: (i) => `moment ${i}`,
+  },
+  ru: {
+    briefLabel: "Бриф",
+    arcLabel: "Арка",
+    nextLabel: "Следующая композиция",
+    momentSuffix: (i) => `момент ${i}`,
+  },
+};
+
+export default async function CaseStudyPage({
+  params,
+}: {
+  params: Promise<{ locale: Locale; slug: string }>;
+}) {
+  const { locale, slug } = await params;
+  const t = copy[locale] ?? copy.en;
+  const w = getWorkItem(slug);
+  if (!w) notFound();
+
+  const peers = work.filter((x) => x.sector === w.sector && x.slug !== w.slug);
+  const next =
+    peers[0] ??
+    work[(work.findIndex((x) => x.slug === w.slug) + 1) % work.length];
+
+  const gallerySpans = [
+    "col-span-12 aspect-[16/10] md:col-span-8",
+    "col-span-12 aspect-[3/4] md:col-span-4",
+    "col-span-12 aspect-[3/4] md:col-span-4",
+    "col-span-12 aspect-[16/10] md:col-span-8",
+  ];
+
+  const ldWork = {
+    "@context": "https://schema.org",
+    "@type": "CreativeWork",
+    name: `${w.title} \u2014 ${w.place}`,
+    description: w.brief,
+    image: [w.image, ...w.gallery],
+    url: `${site.url}/case-studies/${w.slug}`,
+    dateCreated: String(w.year),
+    locationCreated: { "@type": "Place", name: w.place },
+    creator: { "@id": `${site.url}/#organization` },
+    keywords: [w.sector, w.style, w.place].join(", "),
+  };
+  const ldBreadcrumb = breadcrumbLd([
+    { name: "Home", url: "/" },
+    { name: "Case Studies", url: "/case-studies" },
+    { name: `${w.title} \u2014 ${w.place}`, url: `/case-studies/${w.slug}` },
+  ]);
+
+  return (
+    <>
+      <script type="application/ld+json" dangerouslySetInnerHTML={jsonLd(ldWork)} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={jsonLd(ldBreadcrumb)} />
+      <PageHero
+        eyebrow={`${w.place} · ${w.year}`}
+        title={`${w.title}.`}
+        description={w.style}
+      />
+
+      <Section theme="pearl" className="!py-0">
+        <div className="relative aspect-[21/9] w-full overflow-hidden">
+          <BgImage
+            src={w.image}
+            alt={`${w.title} — ${w.style}, ${w.place}`}
+            priority
+            sizes="100vw"
+          />
+          <div
+            className={`absolute inset-0 bg-gradient-to-br ${w.palette} opacity-30 mix-blend-soft-light`}
+          />
+          <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(0,0,0,0.1)_0%,rgba(0,0,0,0.55)_100%)]" />
+        </div>
+      </Section>
+
+      <Section theme="pearl">
+        <Container size="narrow">
+          <Reveal>
+            <Eyebrow>{t.briefLabel}</Eyebrow>
+            <p className="mt-8 font-display text-3xl italic leading-snug text-pearl md:text-4xl">
+              &ldquo;{w.brief}&rdquo;
+            </p>
+            <p className="mt-10 text-base leading-relaxed text-pearl/85">
+              {w.arc}
+            </p>
+          </Reveal>
+        </Container>
+      </Section>
+
+      <Section theme="pearl" className="!pt-0">
+        <Container size="wide">
+          <Reveal>
+            <dl className="grid grid-cols-2 gap-y-8 border-t border-pearl/10 pt-12 md:grid-cols-5">
+              {w.facts.map((f) => (
+                <div key={f.label}>
+                  <dt className="eyebrow !text-pearl/55">{f.label}</dt>
+                  <dd className="mt-3 font-display text-xl italic text-pearl">
+                    {f.value}
+                  </dd>
+                </div>
+              ))}
+            </dl>
+          </Reveal>
+        </Container>
+      </Section>
+
+      <Section theme="pearl">
+        <Container size="narrow">
+          <Reveal>
+            <Eyebrow>{t.arcLabel}</Eyebrow>
+          </Reveal>
+          <div className="mt-12 space-y-16">
+            {w.chapters.map((c, idx) => (
+              <Reveal key={c.title} delay={idx * 0.05}>
+                <div className="grid gap-6 md:grid-cols-[auto_1fr] md:gap-12">
+                  <span className="font-display text-3xl italic text-gilded md:text-4xl">
+                    {String(idx + 1).padStart(2, "0")}
+                  </span>
+                  <div>
+                    <h3 className="font-display text-2xl italic text-pearl md:text-3xl">
+                      {c.title}
+                    </h3>
+                    <p className="mt-5 text-base leading-relaxed text-pearl/85">
+                      {c.body}
+                    </p>
+                  </div>
+                </div>
+              </Reveal>
+            ))}
+          </div>
+        </Container>
+      </Section>
+
+      <Section theme="pearl" className="!py-0">
+        <Container size="wide">
+          <div className="grid grid-cols-12 gap-6">
+            {w.gallery.slice(0, 4).map((src, idx) => (
+              <div
+                key={`${src}-${idx}`}
+                className={`relative overflow-hidden rounded-card ${gallerySpans[idx] ?? gallerySpans[0]}`}
+              >
+                <BgImage
+                  src={src}
+                  alt={`${w.title} — ${t.momentSuffix(idx + 1)}`}
+                  sizes="(max-width: 768px) 100vw, 60vw"
+                />
+                <div
+                  className={`absolute inset-0 bg-gradient-to-br ${w.palette} opacity-25 mix-blend-soft-light`}
+                />
+                <div className="absolute inset-0 bg-[linear-gradient(180deg,transparent_55%,rgba(0,0,0,0.5)_100%)]" />
+              </div>
+            ))}
+          </div>
+        </Container>
+      </Section>
+
+      <Section theme="pearl">
+        <Container size="narrow" className="text-center">
+          <Eyebrow className="!justify-center">{t.nextLabel}</Eyebrow>
+          <Link
+            href={{ pathname: "/case-studies/[slug]", params: { slug: next.slug } }}
+            data-cursor="view"
+            data-cursor-label="Open"
+            className="mt-10 inline-block font-display text-5xl italic text-pearl hover:text-gilded md:text-7xl"
+          >
+            {next.title} →
+          </Link>
+          <p className="mt-6 text-sm text-pearl/60">
+            {next.place} · {next.year}
+          </p>
+        </Container>
+      </Section>
+    </>
+  );
+}

@@ -1,10 +1,13 @@
-import Link from "next/link";
-import { forwardRef } from "react";
+import { Link } from "@/lib/i18n/navigation";
+import { forwardRef, type ComponentProps } from "react";
 import { ArrowUpRight } from "lucide-react";
 import { cn } from "@/lib/cn";
 
 type Variant = "gilded" | "ghost" | "ink" | "outline";
 type Size = "md" | "lg";
+
+/** Same href surface as the locale-aware <Link> (typed pathnames + object form). */
+export type ButtonHref = ComponentProps<typeof Link>["href"];
 
 type CommonProps = {
   variant?: Variant;
@@ -42,7 +45,7 @@ const variants: Record<Variant, string> = {
 type ButtonAsButton = CommonProps &
   React.ButtonHTMLAttributes<HTMLButtonElement> & { href?: undefined };
 type ButtonAsLink = CommonProps & {
-  href: string;
+  href: ButtonHref;
 } & Omit<React.AnchorHTMLAttributes<HTMLAnchorElement>, "href">;
 
 type ButtonProps = ButtonAsButton | ButtonAsLink;

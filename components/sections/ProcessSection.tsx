@@ -1,37 +1,74 @@
+import { getLocale } from "next-intl/server";
 import { Container } from "@/components/ui/Container";
 import { Section } from "@/components/ui/Section";
 import { Eyebrow } from "@/components/ui/Eyebrow";
 import { Reveal } from "@/components/motion/Reveal";
+import type { Locale } from "@/lib/i18n/config";
 
-const acts = [
-  {
-    n: "I",
-    title: "Discovery",
-    note: "Champagne, three hours, no decisions.",
+type Act = { n: string; title: string; note: string };
+
+type Copy = {
+  eyebrow: string;
+  headline: string;
+  lede: string;
+  badge: string;
+  acts: readonly Act[];
+};
+
+// TODO(ru): review — drafted Russian copy pending principal sign-off.
+const copy: Record<Locale, Copy> = {
+  en: {
+    eyebrow: "The Process",
+    headline: "Seven acts. One love story.",
+    lede:
+      "From the first conversation to the morning after — a slow, cinematic process, rehearsed in private.",
+    badge: "Seven acts",
+    acts: [
+      { n: "I", title: "Discovery", note: "Champagne, three hours, no decisions." },
+      { n: "II", title: "Vision", note: "The treatment — written like a film." },
+      { n: "III", title: "Design", note: "Mood, palette, florals, fashion." },
+      { n: "IV", title: "Curation", note: "Artisans, venues, contracts." },
+      { n: "V", title: "Rehearsal", note: "Choreography down to the second." },
+      { n: "VI", title: "Celebration", note: "On the day, we are invisible." },
+      { n: "VII", title: "Afterglow", note: "Film, archive, anniversaries." },
+    ],
   },
-  { n: "II", title: "Vision", note: "The treatment — written like a film." },
-  { n: "III", title: "Design", note: "Mood, palette, florals, fashion." },
-  { n: "IV", title: "Curation", note: "Artisans, venues, contracts." },
-  { n: "V", title: "Rehearsal", note: "Choreography down to the second." },
-  { n: "VI", title: "Celebration", note: "On the day, we are invisible." },
-  { n: "VII", title: "Afterglow", note: "Film, archive, anniversaries." },
-];
+  ru: {
+    eyebrow: "Процесс",
+    headline: "Семь актов. Одна история любви.",
+    lede:
+      "От первого разговора до утра после — медленный, кинематографичный процесс, прорепетированный в частном порядке.",
+    badge: "Семь актов",
+    acts: [
+      { n: "I", title: "Знакомство", note: "Шампанское, три часа, никаких решений." },
+      { n: "II", title: "Замысел", note: "Сценарий — написанный как фильм." },
+      { n: "III", title: "Дизайн", note: "Настроение, палитра, флористика, наряды." },
+      { n: "IV", title: "Сборка", note: "Мастера, площадки, контракты." },
+      { n: "V", title: "Репетиция", note: "Хореография с точностью до секунды." },
+      { n: "VI", title: "Празднование", note: "В этот день мы невидимы." },
+      { n: "VII", title: "Послевкусие", note: "Фильм, архив, годовщины." },
+    ],
+  },
+};
 
-export function ProcessSection() {
+export async function ProcessSection() {
+  const locale = (await getLocale()) as Locale;
+  const t = copy[locale] ?? copy.en;
+  const acts = t.acts;
+
   return (
     <Section id="process" theme="pearl" className="grain">
       <Container>
         <div className="grid items-end gap-10 md:grid-cols-2">
           <Reveal>
-            <Eyebrow>The Process</Eyebrow>
+            <Eyebrow>{t.eyebrow}</Eyebrow>
             <h2 className="display mt-8 text-display-lg italic">
-              Seven acts. One love story.
+              {t.headline}
             </h2>
           </Reveal>
           <Reveal delay={0.1}>
             <p className="max-w-md text-base leading-relaxed text-pearl/80 md:ml-auto">
-              From the first conversation to the morning after — a slow,
-              cinematic process, rehearsed in private.
+              {t.lede}
             </p>
           </Reveal>
         </div>
@@ -51,7 +88,7 @@ export function ProcessSection() {
               <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,transparent_40%,rgba(11,11,13,0.85)_100%)]" />
               <span className="absolute bottom-6 left-6 text-eyebrow uppercase tracking-widest2 text-gilded">
                 <span className="mr-3 inline-block h-px w-8 bg-gold-flow align-middle" />
-                Seven acts
+                {t.badge}
               </span>
             </div>
           </Reveal>

@@ -1,23 +1,19 @@
 import type { NextConfig } from "next";
+import createNextIntlPlugin from "next-intl/plugin";
+
+const withNextIntl = createNextIntlPlugin("./i18n/request.ts");
 
 const nextConfig: NextConfig = {
   reactStrictMode: true,
-  // Prevent Vercel from bundling public/gallery images into the case-studies
-  // serverless function. The images are served as static assets, not via the
-  // Node.js function, so they must be excluded from output file tracing.
   outputFileTracingExcludes: {
-    "/case-studies": ["./public/gallery/**/*"],
+    "/[locale]/case-studies": ["./public/gallery/**/*"],
   },
-  // Use a custom distDir locally to dodge a Windows file-lock on `.next/trace`
-  // when the dev server is killed abruptly. Vercel/CI must use the default
-  // `.next` so its post-build steps can find routes-manifest.json.
   ...(process.env.VERCEL || process.env.CI ? {} : { distDir: ".next-local" }),
   allowedDevOrigins: ["192.168.9.40", "localhost", "127.0.0.1"],
   images: {
     formats: ["image/avif", "image/webp"],
     qualities: [55, 70, 75, 85],
     remotePatterns: [
-      // ImgBB CDN — gallery images hosted at mazhar-rony.imgbb.com
       { protocol: "https", hostname: "i.ibb.co" },
       { protocol: "https", hostname: "cdn.sanity.io" },
       { protocol: "https", hostname: "images.unsplash.com" },
@@ -42,9 +38,6 @@ const nextConfig: NextConfig = {
       },
     ];
   },
-  // Prevent webpack's persistent cache from trying to gzip large video blobs
-  // (which triggers `RangeError: Array buffer allocation failed` in dev), and
-  // stop the file watcher from tracking heavy video folders that aren't code.
   webpack: (config, { dev }) => {
     config.watchOptions = {
       ...(config.watchOptions ?? {}),
@@ -54,17 +47,24 @@ const nextConfig: NextConfig = {
         "**/public/videos/**",
       ],
     };
+    // Windows + spaces-in-path + Node's `fs.readlink` quirk causes webpack to
+    // throw `EISDIR` while resolving regular files in app/ (manifest.ts,
+    // icon.svg, opengraph-image.tsx, etc.). Skipping symlink resolution
+    // avoids the readlink call entirely. pnpm's `.pnpm` store still resolves
+    // correctly because Next.js handles module resolution above this layer.
+    config.resolve = {
+      ...(config.resolve ?? {}),
+      symlinks: false,
+    };
     if (dev) {
-      // Path contains spaces which breaks webpack's persistent filesystem
-      // cache snapshot resolver. The in-memory cache previously used here
-      // produced intermittent `options.factory undefined` crashes for
-      // "use client" modules at the root layout (client reference manifest
-      // would resolve to an undefined factory). Disabling cache entirely
-      // in dev avoids both failure modes.
       config.cache = false;
+    } else {
+      // Pack-file persistent cache also calls readlink during snapshots —
+      // switch to in-memory cache for production to remove that path too.
+      config.cache = { type: "memory" };
     }
     return config;
   },
 };
 
-export default nextConfig;
+export default withNextIntl(nextConfig);

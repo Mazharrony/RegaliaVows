@@ -1,0 +1,56 @@
+diff --git a/dist/build/collect-build-traces.js b/dist/build/collect-build-traces.js
+--- a/dist/build/collect-build-traces.js
++++ b/dist/build/collect-build-traces.js
+@@ -257,9 +257,9 @@
+                 async readlink (p) {
+                     try {
+                         return await _promises.default.readlink(p);
+                     } catch (e) {
+-                        if ((0, _iserror.default)(e) && (e.code === 'EINVAL' || e.code === 'ENOENT' || e.code === 'UNKNOWN')) {
++                        if ((0, _iserror.default)(e) && (e.code === 'EINVAL' || e.code === 'ENOENT' || e.code === 'UNKNOWN' || e.code === 'EISDIR')) {
+                             return null;
+                         }
+                         throw e;
+                     }
+diff --git a/dist/build/webpack/plugins/next-trace-entrypoints-plugin.js b/dist/build/webpack/plugins/next-trace-entrypoints-plugin.js
+--- a/dist/build/webpack/plugins/next-trace-entrypoints-plugin.js
++++ b/dist/build/webpack/plugins/next-trace-entrypoints-plugin.js
+@@ -407,9 +407,9 @@
+                             resolve(link);
+                         });
+                     });
+                 } catch (e) {
+-                    if ((0, _iserror.default)(e) && (e.code === 'EINVAL' || e.code === 'ENOENT' || e.code === 'UNKNOWN')) {
++                    if ((0, _iserror.default)(e) && (e.code === 'EINVAL' || e.code === 'ENOENT' || e.code === 'UNKNOWN' || e.code === 'EISDIR')) {
+                         return null;
+                     }
+                     throw e;
+                 }
+diff --git a/dist/esm/build/collect-build-traces.js b/dist/esm/build/collect-build-traces.js
+--- a/dist/esm/build/collect-build-traces.js
++++ b/dist/esm/build/collect-build-traces.js
+@@ -201,9 +201,9 @@
+                 async readlink (p) {
+                     try {
+                         return await fs.readlink(p);
+                     } catch (e) {
+-                        if (isError(e) && (e.code === 'EINVAL' || e.code === 'ENOENT' || e.code === 'UNKNOWN')) {
++                        if (isError(e) && (e.code === 'EINVAL' || e.code === 'ENOENT' || e.code === 'UNKNOWN' || e.code === 'EISDIR')) {
+                             return null;
+                         }
+                         throw e;
+                     }
+diff --git a/dist/esm/build/webpack/plugins/next-trace-entrypoints-plugin.js b/dist/esm/build/webpack/plugins/next-trace-entrypoints-plugin.js
+--- a/dist/esm/build/webpack/plugins/next-trace-entrypoints-plugin.js
++++ b/dist/esm/build/webpack/plugins/next-trace-entrypoints-plugin.js
+@@ -376,9 +376,9 @@
+                             resolve(link);
+                         });
+                     });
+                 } catch (e) {
+-                    if (isError(e) && (e.code === 'EINVAL' || e.code === 'ENOENT' || e.code === 'UNKNOWN')) {
++                    if (isError(e) && (e.code === 'EINVAL' || e.code === 'ENOENT' || e.code === 'UNKNOWN' || e.code === 'EISDIR')) {
+                         return null;
+                     }
+                     throw e;
+                 }

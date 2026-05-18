@@ -1,8 +1,11 @@
-import Link from "next/link";
 import { Instagram, Facebook } from "lucide-react";
-import { site } from "@/lib/site";
+import { getLocale, getTranslations } from "next-intl/server";
+import { Link } from "@/lib/i18n/navigation";
+import { site, getSiteCopy } from "@/lib/site";
+import type { Locale } from "@/lib/i18n/config";
 import { Container } from "./Container";
 import { Monogram } from "./Monogram";
+import { LocaleSwitcher } from "./LocaleSwitcher";
 
 // Threads & X have no first-party lucide icons — inline brand-accurate SVGs.
 function ThreadsIcon({ className }: { className?: string }) {
@@ -28,45 +31,45 @@ const socials = [
   { href: "x", label: "X (Twitter)", Icon: XIcon },
 ] as const;
 
-const cols = [
+const COL_LINKS = [
   {
-    title: "Regalia Vows",
+    titleKey: "studio",
     links: [
-      { href: "/about", label: "Our Story" },
-      { href: "/experience", label: "The Process" },
-      { href: "/press", label: "Press" },
-      { href: "/journal", label: "Journal" },
+      { href: "/about", key: "ourStory" },
+      { href: "/experience", key: "theProcess" },
+      { href: "/press", key: "press" },
+      { href: "/journal", key: "journal" },
     ],
   },
   {
-    title: "Weddings",
+    titleKey: "weddings",
     links: [
-      { href: "/services/weddings", label: "Bespoke Weddings" },
-      { href: "/services/proposals", label: "Cinematic Proposals" },
-      { href: "/services/destination-weddings", label: "Destination" },
-      { href: "/services/private-events", label: "Private Events" },
-      { href: "/services/honeymoons", label: "Honeymoons" },
+      { href: { pathname: "/services/[slug]", params: { slug: "weddings" } }, key: "bespokeWeddings" },
+      { href: { pathname: "/services/[slug]", params: { slug: "proposals" } }, key: "cinematicProposals" },
+      { href: { pathname: "/services/[slug]", params: { slug: "destination-weddings" } }, key: "destination" },
+      { href: { pathname: "/services/[slug]", params: { slug: "private-events" } }, key: "privateEvents" },
+      { href: { pathname: "/services/[slug]", params: { slug: "honeymoons" } }, key: "honeymoons" },
     ],
   },
   {
-    title: "Also Offered",
+    titleKey: "alsoOffered",
     links: [
-      { href: "/sectors/corporate", label: "Corporate Events" },
-      { href: "/sectors/brand-experiential", label: "Brand & Experiential" },
-      { href: "/sectors/private-social", label: "Private & Social" },
-      { href: "/sectors/hospitality", label: "Hospitality Launches" },
-      { href: "/sectors", label: "All Sectors" },
+      { href: { pathname: "/sectors/[slug]", params: { slug: "corporate" } }, key: "corporate" },
+      { href: { pathname: "/sectors/[slug]", params: { slug: "brand-experiential" } }, key: "brandExperiential" },
+      { href: { pathname: "/sectors/[slug]", params: { slug: "private-social" } }, key: "privateSocial" },
+      { href: { pathname: "/sectors/[slug]", params: { slug: "hospitality" } }, key: "hospitality" },
+      { href: "/sectors", key: "allSectors" },
     ],
   },
   {
-    title: "Discover",
+    titleKey: "discover",
     links: [
-      { href: "/case-studies", label: "Case Studies" },
-      { href: "/venues", label: "Venues" },
-      { href: "/contact", label: "Enquire" },
+      { href: "/case-studies", key: "caseStudies" },
+      { href: "/venues", key: "venues" },
+      { href: "/contact", key: "enquire" },
     ],
   },
-];
+] as const;
 
 function WhatsAppIcon({ className }: { className?: string }) {
   return (
@@ -76,12 +79,17 @@ function WhatsAppIcon({ className }: { className?: string }) {
   );
 }
 
-export function Footer() {
+export async function Footer() {
+  const locale = (await getLocale()) as Locale;
+  const copy = getSiteCopy(locale);
+  const t = await getTranslations("common.footer");
+  const tPromo = await getTranslations("common.footer.promo");
+  const tCols = await getTranslations("common.footer.cols");
+  const tLinks = await getTranslations("common.footer.links");
+  const tLegal = await getTranslations("common.footer.legal");
   // WhatsApp deep-link with pre-filled enquiry message.
   const waNumber = site.contact.whatsapp.replace(/[^0-9]/g, "");
-  const waMessage = encodeURIComponent(
-    "Hello Regalia Vows — I'd like to enquire about my upcoming celebration and claim the 20% first-booking offer."
-  );
+  const waMessage = encodeURIComponent(tPromo("whatsappMessage"));
   const waHref = `https://wa.me/${waNumber}?text=${waMessage}`;
 
   return (
@@ -112,7 +120,7 @@ export function Footer() {
               />
               <div>
                 <span className="text-eyebrow uppercase tracking-widest2 text-gilded-800">
-                  An Inaugural Gesture
+                  {tPromo("kicker")}
                 </span>
                 <p className="mt-2 font-display text-2xl italic leading-tight text-ink sm:text-3xl md:text-[2rem]">
                   <span
@@ -127,12 +135,12 @@ export function Footer() {
                       animation: "gold-pan 6s linear infinite",
                     }}
                   >
-                    20% off
+                    {tPromo("discount")}
                   </span>{" "}
-                  your first booking with Regalia Vows.
+                  {tPromo("headlineTail")}
                 </p>
                 <p className="mt-2 max-w-xl text-sm leading-relaxed text-ink/65">
-                  A quiet welcome for new couples and hosts — message us on WhatsApp to begin.
+                  {tPromo("subline")}
                 </p>
               </div>
             </div>
@@ -157,7 +165,7 @@ export function Footer() {
                 className="pointer-events-none absolute inset-y-0 -left-1/3 w-1/3 -skew-x-12 bg-gradient-to-r from-transparent via-white/50 to-transparent opacity-0 transition-all duration-700 ease-out group-hover:left-full group-hover:opacity-100"
               />
               <WhatsAppIcon className="h-5 w-5" />
-              <span className="relative">Chat on WhatsApp</span>
+              <span className="relative">{tPromo("whatsappCta")}</span>
               <span aria-hidden className="relative inline-block h-px w-6 bg-ink/70 transition-all duration-500 group-hover:w-10" />
             </a>
           </div>
@@ -173,19 +181,19 @@ export function Footer() {
               <span className="font-display text-2xl italic">{site.name}</span>
             </div>
             <p className="mt-6 max-w-sm font-display text-2xl italic text-pearl/80">
-              {site.tagline}
+              {copy.tagline}
             </p>
             <p className="mt-6 max-w-sm text-sm leading-relaxed text-pearl/80">
-              {site.description}
+              {copy.description}
             </p>
 
             <dl className="mt-8 space-y-3 text-sm text-pearl/85">
               <div>
-                <dt className="text-eyebrow uppercase tracking-widest2 text-gilded-800">Studio</dt>
+                <dt className="text-eyebrow uppercase tracking-widest2 text-gilded-800">{t("studio")}</dt>
                 <dd className="mt-1 max-w-xs text-ink/80">{site.contact.address}</dd>
               </div>
               <div>
-                <dt className="text-eyebrow uppercase tracking-widest2 text-gilded-800">Email</dt>
+                <dt className="text-eyebrow uppercase tracking-widest2 text-gilded-800">{t("email")}</dt>
                 <dd className="mt-1">
                   <a
                     href={`mailto:${site.contact.email}`}
@@ -197,7 +205,7 @@ export function Footer() {
                 </dd>
               </div>
               <div>
-                <dt className="text-eyebrow uppercase tracking-widest2 text-gilded-800">Telephone</dt>
+                <dt className="text-eyebrow uppercase tracking-widest2 text-gilded-800">{t("telephone")}</dt>
                 <dd className="mt-1">
                   <a
                     href={`tel:${site.contact.phone.replace(/\s/g, "")}`}
@@ -211,18 +219,18 @@ export function Footer() {
             </dl>
           </div>
 
-          {cols.map((col) => (
-            <div key={col.title}>
-              <p className="text-eyebrow uppercase tracking-widest2 text-gilded-800">{col.title}</p>
+          {COL_LINKS.map((col) => (
+            <div key={col.titleKey}>
+              <p className="text-eyebrow uppercase tracking-widest2 text-gilded-800">{tCols(col.titleKey)}</p>
               <ul className="mt-6 space-y-3">
                 {col.links.map((l) => (
-                  <li key={l.href}>
+                  <li key={typeof l.href === "string" ? l.href : l.href.pathname + ":" + l.key}>
                     <Link
                       href={l.href}
                       data-cursor="link"
                       className="text-base text-pearl/80 transition-colors hover:text-gilded"
                     >
-                      {l.label}
+                      {tLinks(l.key)}
                     </Link>
                   </li>
                 ))}
@@ -235,11 +243,11 @@ export function Footer() {
 
         <div className="mt-8 flex flex-col gap-6 text-xs uppercase tracking-widest2 text-pearl/85 md:flex-row md:items-center md:justify-between">
           <p>
-            © {new Date().getFullYear()} {site.name}. Crafted in {site.city}.
+            © {new Date().getFullYear()} {site.name}. {t("craftedIn", { city: copy.city })}
           </p>
           <div className="flex flex-wrap items-center gap-3 sm:gap-4">
             {socials.map(({ href, label, Icon }) => (
-              <Link
+              <a
                 key={href}
                 href={site.social[href]}
                 target="_blank"
@@ -250,11 +258,13 @@ export function Footer() {
                 className="flex h-10 w-10 items-center justify-center rounded-full border border-ink/15 text-ink/70 transition-colors hover:border-gilded hover:text-gilded"
               >
                 <Icon className="h-4 w-4" />
-              </Link>
+              </a>
             ))}
             <span aria-hidden className="mx-1 hidden h-4 w-px bg-ink/15 sm:block" />
-            <Link href="/legal/privacy" className="hover:text-gilded">Privacy</Link>
-            <Link href="/legal/terms" className="hover:text-gilded">Terms</Link>
+            <Link href="/legal/privacy" className="hover:text-gilded">{tLegal("privacy")}</Link>
+            <Link href="/legal/terms" className="hover:text-gilded">{tLegal("terms")}</Link>
+            <span aria-hidden className="mx-1 hidden h-4 w-px bg-ink/15 sm:block" />
+            <LocaleSwitcher />
           </div>
         </div>
       </Container>

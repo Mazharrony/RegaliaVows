@@ -1,7 +1,9 @@
 "use client";
 
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
-import Link from "next/link";
+import { useLocale } from "next-intl";
+import { Link } from "@/lib/i18n/navigation";
+import type { Locale } from "@/lib/i18n/config";
 
 // useLayoutEffect on the client, useEffect on the server (avoids SSR warning).
 // We need layout-phase cleanup so GSAP's pin-spacer is removed BEFORE React
@@ -13,70 +15,193 @@ import { BgImage } from "@/components/ui/BgImage";
 import { Eyebrow } from "@/components/ui/Eyebrow";
 import { Reveal } from "@/components/motion/Reveal";
 import { ArrowUpRight } from "lucide-react";
+import type { ButtonHref } from "@/components/ui/Button";
 
-const services = [
-  {
-    tag: "I",
-    title: "Bespoke Weddings",
-    kicker: "End-to-end design",
-    description:
-      "Multi-day celebrations in Dubai's palaces, private islands and desert estates — designed end to end.",
-    href: "/services/weddings",
-    accent: "from-gilded/30 via-transparent to-transparent",
-    image:
-      "https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=1400&q=70",
+type Service = {
+  tag: string;
+  title: string;
+  kicker: string;
+  description: string;
+  href: ButtonHref;
+  accent: string;
+  image: string;
+};
+
+type Copy = {
+  eyebrow: string;
+  headlineMobile: { line1: string; line2: string };
+  headlineDesktop: string;
+  ledeMobile: string;
+  ledeDesktop: string;
+  swipe: string;
+  scroll: string;
+  discover: string;
+  imageAltSuffix: string;
+  services: readonly Service[];
+};
+
+const IMAGES = {
+  weddings:
+    "https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=1400&q=70",
+  proposals:
+    "https://images.unsplash.com/photo-1511795409834-ef04bbd61622?auto=format&fit=crop&w=1400&q=70",
+  destination:
+    "https://images.unsplash.com/photo-1464366400600-7168b8af9bc3?auto=format&fit=crop&w=1400&q=70",
+  privateEvents:
+    "https://images.unsplash.com/photo-1530023367847-a683933f4172?auto=format&fit=crop&w=1400&q=70",
+  beyond:
+    "https://images.unsplash.com/photo-1540575467063-178a50c2df87?auto=format&fit=crop&w=1400&q=70",
+} as const;
+
+const ACCENTS = {
+  weddings: "from-gilded/30 via-transparent to-transparent",
+  proposals: "from-rose-veil/30 via-transparent to-transparent",
+  destination: "from-champagne/30 via-transparent to-transparent",
+  privateEvents: "from-verdant-olive/30 via-transparent to-transparent",
+  beyond: "from-pearl/10 via-transparent to-transparent",
+} as const;
+
+// TODO(ru): review — drafted Russian copy pending principal sign-off.
+const copy: Record<Locale, Copy> = {
+  en: {
+    eyebrow: "The Services",
+    headlineMobile: { line1: "Five chapters,", line2: "one signature." },
+    headlineDesktop: "Five chapters, one signature.",
+    ledeMobile:
+      "Whether twelve guests on a Hatta cliff or twelve hundred at the Palace, every commission is led by a senior Regalia Vows director.",
+    ledeDesktop: "Every commission is led by a senior Regalia Vows director.",
+    swipe: "Swipe",
+    scroll: "Scroll",
+    discover: "Discover",
+    imageAltSuffix: "Regalia Vows",
+    services: [
+      {
+        tag: "I",
+        title: "Bespoke Weddings",
+        kicker: "End-to-end design",
+        description:
+          "Multi-day celebrations in Dubai's palaces, private islands and desert estates — designed end to end.",
+        href: { pathname: "/services/[slug]", params: { slug: "weddings" } },
+        accent: ACCENTS.weddings,
+        image: IMAGES.weddings,
+      },
+      {
+        tag: "II",
+        title: "Cinematic Proposals",
+        kicker: "The single yes",
+        description:
+          "Operatic moments engineered with helicopters, choirs and skylines. The single most important yes, choreographed.",
+        href: { pathname: "/services/[slug]", params: { slug: "proposals" } },
+        accent: ACCENTS.proposals,
+        image: IMAGES.proposals,
+      },
+      {
+        tag: "III",
+        title: "Destination Weddings",
+        kicker: "Regalia Vows on tour",
+        description:
+          "Lake Como, Marrakech, Udaipur, Kyoto. We travel with the couple and bring Regalia Vows with us.",
+        href: { pathname: "/services/[slug]", params: { slug: "destination-weddings" } },
+        accent: ACCENTS.destination,
+        image: IMAGES.destination,
+      },
+      {
+        tag: "IV",
+        title: "Private Events",
+        kicker: "Galas & after-parties",
+        description:
+          "Engagements, vow renewals, anniversary galas and after-parties at the highest production standard.",
+        href: { pathname: "/services/[slug]", params: { slug: "private-events" } },
+        accent: ACCENTS.privateEvents,
+        image: IMAGES.privateEvents,
+      },
+      {
+        tag: "V",
+        title: "Beyond the Aisle",
+        kicker: "On request",
+        description:
+          "Corporate launches, brand activations, milestone privates and hotel openings — composed for clients we know.",
+        href: "/sectors",
+        accent: ACCENTS.beyond,
+        image: IMAGES.beyond,
+      },
+    ],
   },
-  {
-    tag: "II",
-    title: "Cinematic Proposals",
-    kicker: "The single yes",
-    description:
-      "Operatic moments engineered with helicopters, choirs and skylines. The single most important yes, choreographed.",
-    href: "/services/proposals",
-    accent: "from-rose-veil/30 via-transparent to-transparent",
-    image:
-      "https://images.unsplash.com/photo-1511795409834-ef04bbd61622?auto=format&fit=crop&w=1400&q=70",
+  ru: {
+    eyebrow: "Услуги",
+    headlineMobile: { line1: "Пять глав,", line2: "одна подпись." },
+    headlineDesktop: "Пять глав, одна подпись.",
+    ledeMobile:
+      "Будь то двенадцать гостей на скале в Хатте или тысяча двести во дворце — каждой постановкой руководит старший директор Regalia Vows.",
+    ledeDesktop: "Каждой постановкой руководит старший директор Regalia Vows.",
+    swipe: "Свайп",
+    scroll: "Прокрутка",
+    discover: "Открыть",
+    imageAltSuffix: "Regalia Vows",
+    services: [
+      {
+        tag: "I",
+        title: "Свадьбы на заказ",
+        kicker: "Полный цикл",
+        description:
+          "Многодневные торжества во дворцах Дубая, на частных островах и пустынных резиденциях — спроектированные от и до.",
+        href: { pathname: "/services/[slug]", params: { slug: "weddings" } },
+        accent: ACCENTS.weddings,
+        image: IMAGES.weddings,
+      },
+      {
+        tag: "II",
+        title: "Кинематографичные предложения",
+        kicker: "То самое «да»",
+        description:
+          "Оперные сцены с вертолётами, хорами и панорамами города. Самое важное «да» — поставлено как кадр.",
+        href: { pathname: "/services/[slug]", params: { slug: "proposals" } },
+        accent: ACCENTS.proposals,
+        image: IMAGES.proposals,
+      },
+      {
+        tag: "III",
+        title: "Свадьбы за рубежом",
+        kicker: "Regalia Vows на гастролях",
+        description:
+          "Озеро Комо, Марракеш, Удайпур, Киото. Мы летим с парой и привозим Regalia Vows с собой.",
+        href: { pathname: "/services/[slug]", params: { slug: "destination-weddings" } },
+        accent: ACCENTS.destination,
+        image: IMAGES.destination,
+      },
+      {
+        tag: "IV",
+        title: "Частные события",
+        kicker: "Гала и афтепати",
+        description:
+          "Помолвки, обновления клятв, юбилейные гала и афтепати — на высочайшем продакшн-уровне.",
+        href: { pathname: "/services/[slug]", params: { slug: "private-events" } },
+        accent: ACCENTS.privateEvents,
+        image: IMAGES.privateEvents,
+      },
+      {
+        tag: "V",
+        title: "За пределами алтаря",
+        kicker: "По запросу",
+        description:
+          "Корпоративные запуски, бренд-активации, личные юбилеи и открытия отелей — сочинённые для клиентов, которых мы знаем.",
+        href: "/sectors",
+        accent: ACCENTS.beyond,
+        image: IMAGES.beyond,
+      },
+    ],
   },
-  {
-    tag: "III",
-    title: "Destination Weddings",
-    kicker: "Regalia Vows on tour",
-    description:
-      "Lake Como, Marrakech, Udaipur, Kyoto. We travel with the couple and bring Regalia Vows with us.",
-    href: "/services/destination-weddings",
-    accent: "from-champagne/30 via-transparent to-transparent",
-    image:
-      "https://images.unsplash.com/photo-1464366400600-7168b8af9bc3?auto=format&fit=crop&w=1400&q=70",
-  },
-  {
-    tag: "IV",
-    title: "Private Events",
-    kicker: "Galas & after-parties",
-    description:
-      "Engagements, vow renewals, anniversary galas and after-parties at the highest production standard.",
-    href: "/services/private-events",
-    accent: "from-verdant-olive/30 via-transparent to-transparent",
-    image:
-      "https://images.unsplash.com/photo-1530023367847-a683933f4172?auto=format&fit=crop&w=1400&q=70",
-  },
-  {
-    tag: "V",
-    title: "Beyond the Aisle",
-    kicker: "On request",
-    description:
-      "Corporate launches, brand activations, milestone privates and hotel openings — composed for clients we know.",
-    href: "/sectors",
-    accent: "from-pearl/10 via-transparent to-transparent",
-    image:
-      "https://images.unsplash.com/photo-1540575467063-178a50c2df87?auto=format&fit=crop&w=1400&q=70",
-  },
-];
+};
 
 function ServiceCard({
   s,
+  discoverLabel,
+  altSuffix,
   variant = "mobile",
 }: {
-  s: (typeof services)[number];
+  s: Service;
+  discoverLabel: string;
+  altSuffix: string;
   variant?: "mobile" | "desktop";
 }) {
   const sizing =
@@ -95,7 +220,7 @@ function ServiceCard({
       {/* Background image — brighter so photography is the hero */}
       <BgImage
         src={s.image}
-        alt={`${s.title} — Regalia Vows`}
+        alt={`${s.title} — ${altSuffix}`}
         sizes="(max-width: 768px) 100vw, (max-width: 1280px) 50vw, 33vw"
         className="opacity-75 transition-all duration-[1200ms] ease-silk group-hover:scale-[1.04] group-hover:opacity-90"
       />
@@ -128,7 +253,7 @@ function ServiceCard({
           </h3>
           <span className="mt-4 inline-flex items-center gap-2 text-eyebrow uppercase tracking-widest2 text-gilded">
             <span className="bg-gradient-to-r from-gilded via-gilded-100 to-gilded bg-clip-text text-transparent">
-              Discover
+              {discoverLabel}
             </span>
             <ArrowUpRight
               size={14}
@@ -143,6 +268,9 @@ function ServiceCard({
 }
 
 export function ServicesSection() {
+  const locale = useLocale() as Locale;
+  const t = copy[locale] ?? copy.en;
+  const services = t.services;
   const wrapperRef = useRef<HTMLElement>(null);
   const trackRef = useRef<HTMLDivElement>(null);
   const progressBarRef = useRef<HTMLSpanElement>(null);
@@ -248,17 +376,16 @@ export function ServicesSection() {
         <Container className="mb-10">
           <div className="space-y-8">
             <Reveal>
-              <Eyebrow>The Services</Eyebrow>
+              <Eyebrow>{t.eyebrow}</Eyebrow>
               <h2 className="display mt-6 text-4xl italic leading-[1.05] sm:text-5xl">
-                Five chapters,
+                {t.headlineMobile.line1}
                 <br />
-                one signature.
+                {t.headlineMobile.line2}
               </h2>
             </Reveal>
             <Reveal delay={0.1}>
               <p className="max-w-md text-base leading-relaxed text-ink/75">
-                Whether twelve guests on a Hatta cliff or twelve hundred at the
-                Palace, every commission is led by a senior Regalia Vows director.
+                {t.ledeMobile}
               </p>
             </Reveal>
           </div>
@@ -269,14 +396,14 @@ export function ServicesSection() {
           aria-label="Services carousel"
         >
           {services.map((s) => (
-            <ServiceCard key={s.title} s={s} />
+            <ServiceCard key={s.title} s={s} discoverLabel={t.discover} altSuffix={t.imageAltSuffix} />
           ))}
           <span aria-hidden className="flex-none w-2" />
         </div>
 
         <div className="mt-6 flex items-center justify-center gap-2 text-eyebrow uppercase tracking-widest2 text-ink/55">
           <span className="h-px w-6 bg-ink/25" />
-          Swipe
+          {t.swipe}
           <span className="h-px w-6 bg-ink/25" />
         </div>
       </section>
@@ -301,16 +428,16 @@ export function ServicesSection() {
       <div className="relative flex h-screen flex-col overflow-hidden pt-24 pb-4 lg:pt-28 lg:pb-5 4xl:pt-32">
         <div className="shrink-0 px-8 md:px-12 lg:px-16">
           <Reveal>
-            <Eyebrow>The Services</Eyebrow>
+            <Eyebrow>{t.eyebrow}</Eyebrow>
           </Reveal>
           <Reveal delay={0.05}>
             <h2 className="display mt-4 text-3xl italic leading-[1.05] md:text-4xl lg:text-[2.5rem] xl:text-[2.75rem]">
-              Five chapters, one signature.
+              {t.headlineDesktop}
             </h2>
           </Reveal>
           <Reveal delay={0.1}>
             <p className="mt-3 max-w-md text-sm leading-relaxed text-ink/65 md:text-[15px]">
-              Every commission is led by a senior Regalia Vows director.
+              {t.ledeDesktop}
             </p>
           </Reveal>
           <span aria-hidden className="mt-5 block h-px w-16 bg-gilded/50" />
@@ -322,7 +449,7 @@ export function ServicesSection() {
             className="flex h-full items-center gap-8 px-8 md:gap-10 md:px-12 lg:gap-12 lg:px-16 will-change-transform"
           >
             {services.map((s) => (
-              <ServiceCard key={s.title} s={s} variant="desktop" />
+              <ServiceCard key={s.title} s={s} discoverLabel={t.discover} altSuffix={t.imageAltSuffix} variant="desktop" />
             ))}
           </div>
         </div>
@@ -347,7 +474,7 @@ export function ServicesSection() {
             />
           </div>
           <span className="text-eyebrow uppercase tracking-widest2 text-ink/55">
-            Scroll
+            {t.scroll}
           </span>
         </div>
       </div>

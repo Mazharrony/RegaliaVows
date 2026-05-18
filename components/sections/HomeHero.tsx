@@ -2,9 +2,48 @@
 
 import { useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
+import { useLocale } from "next-intl";
 import { Eyebrow } from "@/components/ui/Eyebrow";
 import { Button } from "@/components/ui/Button";
 import { BgImage } from "@/components/ui/BgImage";
+import type { Locale } from "@/lib/i18n/config";
+
+// TODO(ru): review — drafted Russian copy pending principal sign-off.
+const copy: Record<Locale, {
+  eyebrow: string;
+  headline: string;
+  body: string;
+  bodyTail: string;
+  ctaPrimary: string;
+  ctaSecondary: string;
+  scrollCue: string;
+  volume: string;
+}> = {
+  en: {
+    eyebrow: "Regalia Vows · Dubai",
+    headline: "Weddings, composed.",
+    body:
+      "Regalia Vows is for couples who treat their wedding as a work of art. Conceived in Dubai, staged the world over.",
+    bodyTail:
+      "And, on request, the corporate, brand and private occasions our clients ask us to compose next.",
+    ctaPrimary: "Begin the Conversation",
+    ctaSecondary: "View Our Work",
+    scrollCue: "Scroll to enter",
+    volume: "Volume I",
+  },
+  ru: {
+    eyebrow: "Regalia Vows · Дубай",
+    headline: "Свадьба как партитура.",
+    body:
+      "Regalia Vows — для пар, которые относятся к свадьбе как к произведению искусства. Замысел рождается в Дубае, постановка — по всему миру.",
+    bodyTail:
+      "А по отдельной просьбе — корпоративные, бренд- и частные вечера, которые наши клиенты доверяют нам после.",
+    ctaPrimary: "Начать разговор",
+    ctaSecondary: "Наши работы",
+    scrollCue: "Прокрутите вниз",
+    volume: "Том I",
+  },
+};
 
 // Cinematic hero — self-hosted, muted, looping mp4 sized via object-cover.
 // Two encodes (1080p desktop / 720p mobile) are served straight from the
@@ -15,6 +54,8 @@ const SRC_DESKTOP = "/videos/hero.mp4";
 const SRC_MOBILE = "/videos/hero-mobile.mp4";
 
 export function HomeHero() {
+  const locale = useLocale() as Locale;
+  const t = copy[locale] ?? copy.en;
   const [reduce, setReduce] = useState(false);
   const videoRef = useRef<HTMLVideoElement | null>(null);
 
@@ -81,7 +122,7 @@ export function HomeHero() {
             transition={{ delay: 0.4, duration: 1, ease: [0.16, 1, 0.3, 1] }}
             className="flex items-center gap-4 sm:gap-6"
           >
-            <Eyebrow>Regalia Vows · Dubai</Eyebrow>
+            <Eyebrow>{t.eyebrow}</Eyebrow>
             <motion.span
               initial={{ scaleX: 0 }}
               animate={{ scaleX: 1 }}
@@ -108,7 +149,7 @@ export function HomeHero() {
               animation: "gold-pan 4.5s linear infinite",
             }}
           >
-            Weddings, composed.
+            {t.headline}
           </motion.h1>
 
           {/* Hairline divider — sweeps in beneath the headline like a margin rule. */}
@@ -126,10 +167,9 @@ export function HomeHero() {
             transition={{ delay: 1.4, duration: 1, ease: [0.16, 1, 0.3, 1] }}
             className="mt-6 max-w-xl font-tight text-sm leading-relaxed text-white drop-shadow-[0_1px_8px_rgba(0,0,0,0.45)] sm:text-base md:mt-8 md:text-lg"
           >
-            Regalia Vows is for couples who treat their wedding as a work of art.
-            Conceived in Dubai, staged the world over.
+            {t.body}
             <span className="mt-3 hidden text-white md:block">
-              And, on request, the corporate, brand and private occasions our clients ask us to compose next.
+              {t.bodyTail}
             </span>
           </motion.p>
 
@@ -140,10 +180,10 @@ export function HomeHero() {
             className="mt-8 flex flex-col items-stretch gap-3 sm:flex-row sm:flex-wrap sm:items-center sm:gap-4 md:mt-12"
           >
             <Button href="/contact" variant="gilded" size="lg" withArrow>
-              Begin the Conversation
+              {t.ctaPrimary}
             </Button>
             <Button href="/case-studies" variant="outline" size="lg" withArrow>
-              View Our Work
+              {t.ctaSecondary}
             </Button>
           </motion.div>
         </div>
@@ -159,9 +199,9 @@ export function HomeHero() {
             <span aria-hidden className="relative block h-10 w-px overflow-hidden bg-pearl/15">
               <span className="absolute inset-x-0 top-0 h-1/2 origin-top bg-gradient-to-b from-gilded-100 to-transparent animate-scroll-cue" />
             </span>
-            <span className="eyebrow !text-gilded drop-shadow-[0_1px_6px_rgba(0,0,0,0.5)]">Scroll to enter</span>
+            <span className="eyebrow !text-gilded drop-shadow-[0_1px_6px_rgba(0,0,0,0.5)]">{t.scrollCue}</span>
           </span>
-          <span className="eyebrow !text-gilded hidden drop-shadow-[0_1px_6px_rgba(0,0,0,0.5)] sm:inline">{new Date().getFullYear()} · Volume I</span>
+          <span className="eyebrow !text-gilded hidden drop-shadow-[0_1px_6px_rgba(0,0,0,0.5)] sm:inline">{new Date().getFullYear()} · {t.volume}</span>
         </motion.div>
       </div>
     </section>
