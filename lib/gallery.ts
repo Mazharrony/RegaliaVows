@@ -191,6 +191,17 @@ const IMGBB_IMAGES: GalleryImage[] = [
   { src: "https://i.ibb.co/8nbHyFKb/JOY07406.jpg", alt: "JOY07406" },
   { src: "https://i.ibb.co/hJtVfD9d/JOY07414.jpg", alt: "JOY07414" },
   { src: "https://i.ibb.co/JFccLrsT/JOY07427.jpg", alt: "JOY07427" },
+  { src: "https://i.ibb.co/R4Pzfm4K/SOTH-Lamiyea-And-Safial-Mua-salon31-official-Photos-by-emranfrahmandays.jpg", alt: "SOTH Wedding" },
+  { src: "https://i.ibb.co/pvnR4Z9J/SOTH-Lamiyea-And-Safial-Mua-salon31-official-Photos-by-emranfrahmandays-1.jpg", alt: "SOTH Wedding 1" },
+  { src: "https://i.ibb.co/wrh8wL7R/SOTH-Lamiyea-And-Safial-Mua-salon31-official-Photos-by-emranfrahmandays-2.jpg", alt: "SOTH Wedding 2" },
+  { src: "https://i.ibb.co/rGwD4st7/SOTH-Lamiyea-And-Safial-Mua-salon31-official-Photos-by-emranfrahmandays-3.jpg", alt: "SOTH Wedding 3" },
+  { src: "https://i.ibb.co/MyGR588y/SOTH-Lamiyea-And-Safial-Mua-salon31-official-Photos-by-emranfrahmandays-4.jpg", alt: "SOTH Wedding 4" },
+  { src: "https://i.ibb.co/fdTrw7Qp/SOTH-Lamiyea-And-Safial-Mua-salon31-official-Photos-by-emranfrahmandays-5.jpg", alt: "SOTH Wedding 5" },
+  { src: "https://i.ibb.co/gMGNK45L/SOTH-Lamiyea-And-Safial-Mua-salon31-official-Photos-by-emranfrahmandays-6.jpg", alt: "SOTH Wedding 6" },
+  { src: "https://i.ibb.co/6RVM8c95/SOTH-Lamiyea-And-Safial-Mua-salon31-official-Photos-by-emranfrahmandays-7.jpg", alt: "SOTH Wedding 7" },
+  { src: "https://i.ibb.co/9kBwDx1d/SOTH-Lamiyea-And-Safial-Mua-salon31-official-Photos-by-emranfrahmandays-8.jpg", alt: "SOTH Wedding 8" },
+  { src: "https://i.ibb.co/p6wNnsVV/SOTH-Lamiyea-And-Safial-Mua-salon31-official-Photos-by-emranfrahmandays-9.jpg", alt: "SOTH Wedding 9" },
+  { src: "https://i.ibb.co/4RKtdM3b/SOTH-Lamiyea-And-Safial-Mua-salon31-official-Photos-by-emranfrahmandays-10.jpg", alt: "SOTH Wedding 10" },
 ];
 // ──────────────────────────────────────────────────────────────────────────
 
