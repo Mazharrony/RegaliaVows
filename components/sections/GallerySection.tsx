@@ -7,9 +7,83 @@ import type { GalleryImage } from "@/lib/gallery";
 
 const PAGE_SIZE = 12;
 
+// ─── Per-tile thumbnail with skeleton placeholder ──────────────────────────
+function GalleryThumb({
+  img,
+  onOpen,
+}: {
+  img: GalleryImage;
+  onOpen: () => void;
+}) {
+  const [loaded, setLoaded] = useState(false);
+  const [errored, setErrored] = useState(false);
+
+  return (
+    <button
+      type="button"
+      onClick={onOpen}
+      data-cursor="link"
+      className="group relative mb-3 block w-full overflow-hidden rounded-sm bg-ink/5 break-inside-avoid sm:mb-4"
+    >
+      {/* Skeleton placeholder — visible until the image finishes loading */}
+      {!loaded && !errored && (
+        <div
+          aria-hidden
+          className="relative w-full animate-pulse overflow-hidden bg-gradient-to-br from-ink/[0.05] via-ink/[0.09] to-ink/[0.05]"
+          style={{ aspectRatio: "4 / 5" }}
+        >
+          <span className="absolute left-1/2 top-1/2 block h-7 w-7 -translate-x-1/2 -translate-y-1/2 animate-spin rounded-full border-2 border-ink/10 border-t-gilded/70" />
+        </div>
+      )}
+
+      {errored && (
+        <div
+          aria-hidden
+          className="flex w-full items-center justify-center bg-ink/[0.06] text-eyebrow uppercase tracking-widest2 text-ink/35"
+          style={{ aspectRatio: "4 / 5" }}
+        >
+          unavailable
+        </div>
+      )}
+
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img
+        src={img.src}
+        alt={img.alt}
+        loading="lazy"
+        decoding="async"
+        onLoad={() => setLoaded(true)}
+        onError={() => setErrored(true)}
+        className={`h-auto w-full transition-[opacity,transform] duration-700 ease-out group-hover:scale-[1.04] ${
+          loaded ? "opacity-100" : "absolute inset-0 opacity-0"
+        }`}
+      />
+      <span className="pointer-events-none absolute inset-0 bg-gradient-to-t from-ink/45 via-transparent to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
+      <span
+        aria-hidden
+        className="pointer-events-none absolute inset-0 ring-1 ring-inset ring-gilded/0 transition-all duration-500 group-hover:ring-gilded/55 rounded-sm"
+      />
+      <span className="absolute bottom-3 right-3 flex h-8 w-8 items-center justify-center rounded-full bg-ink/60 text-pearl opacity-0 backdrop-blur-sm transition-all duration-500 group-hover:opacity-100">
+        <svg
+          width="14"
+          height="14"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="1.8"
+          aria-hidden
+        >
+          <path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7" />
+        </svg>
+      </span>
+    </button>
+  );
+}
+
 export function GallerySection({ images }: { images: GalleryImage[] }) {
   const [active, setActive] = useState<number | null>(null);
   const [page, setPage] = useState(0);
+  const [lightboxLoaded, setLightboxLoaded] = useState(false);
   const scrollOnNextRender = useRef(false);
 
   // Scroll to section top AFTER React has re-rendered the new page
@@ -44,6 +118,7 @@ export function GallerySection({ images }: { images: GalleryImage[] }) {
 
   useEffect(() => {
     if (active === null) return;
+    setLightboxLoaded(false);
     document.documentElement.style.overflow = "hidden";
     const onKey = (e: KeyboardEvent) => {
       if (e.key === "Escape") close();
@@ -102,40 +177,11 @@ export function GallerySection({ images }: { images: GalleryImage[] }) {
           className="columns-1 gap-3 sm:columns-2 sm:gap-4 lg:columns-3 xl:columns-4"
         >
           {pageImages.map((img, i) => (
-            <button
+            <GalleryThumb
               key={img.src}
-              type="button"
-              onClick={() => openGlobal(i)}
-              data-cursor="link"
-              className="group relative mb-3 block w-full overflow-hidden rounded-sm bg-ink/5 break-inside-avoid sm:mb-4"
-            >
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src={img.src}
-                alt={img.alt}
-                loading="lazy"
-                decoding="async"
-                className="h-auto w-full transition-transform duration-700 ease-out group-hover:scale-[1.04]"
-              />
-              <span className="pointer-events-none absolute inset-0 bg-gradient-to-t from-ink/45 via-transparent to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
-              <span
-                aria-hidden
-                className="pointer-events-none absolute inset-0 ring-1 ring-inset ring-gilded/0 transition-all duration-500 group-hover:ring-gilded/55 rounded-sm"
-              />
-              <span className="absolute bottom-3 right-3 flex h-8 w-8 items-center justify-center rounded-full bg-ink/60 text-pearl opacity-0 backdrop-blur-sm transition-all duration-500 group-hover:opacity-100">
-                <svg
-                  width="14"
-                  height="14"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="1.8"
-                  aria-hidden
-                >
-                  <path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7" />
-                </svg>
-              </span>
-            </button>
+              img={img}
+              onOpen={() => openGlobal(i)}
+            />
           ))}
         </motion.div>
 
@@ -329,6 +375,16 @@ export function GallerySection({ images }: { images: GalleryImage[] }) {
               </svg>
             </button>
 
+            {/* Loader — visible until the full-size image finishes loading */}
+            {!lightboxLoaded && (
+              <span
+                aria-hidden
+                className="pointer-events-none absolute left-1/2 top-1/2 z-0 -translate-x-1/2 -translate-y-1/2"
+              >
+                <span className="block h-10 w-10 animate-spin rounded-full border-2 border-pearl/15 border-t-gilded" />
+              </span>
+            )}
+
             {/* Image — draggable horizontally for swipe nav on touch */}
             <motion.img
               key={images[active].src}
@@ -346,7 +402,10 @@ export function GallerySection({ images }: { images: GalleryImage[] }) {
                 if (info.offset.x < -60) next();
                 else if (info.offset.x > 60) prev();
               }}
-              className="relative z-10 max-h-[88vh] max-w-[88vw] cursor-grab touch-none object-contain shadow-[0_30px_80px_-20px_rgba(0,0,0,0.7)] active:cursor-grabbing"
+              onLoad={() => setLightboxLoaded(true)}
+              className={`relative z-10 max-h-[88vh] max-w-[88vw] cursor-grab touch-none object-contain shadow-[0_30px_80px_-20px_rgba(0,0,0,0.7)] active:cursor-grabbing transition-opacity duration-300 ${
+                lightboxLoaded ? "opacity-100" : "opacity-0"
+              }`}
               onClick={(e) => e.stopPropagation()}
             />
 
