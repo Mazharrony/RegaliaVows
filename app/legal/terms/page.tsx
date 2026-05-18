@@ -64,7 +64,7 @@ const clauses: Clause[] = [
           All imagery, written content, typographic identity, design language,
           process documentation and proprietary methodology on the Site
           (collectively, the &ldquo;<strong>Studio Works</strong>&rdquo;) are
-          the intellectual property of Regalia Vows FZ-LLC and are protected
+          the intellectual property of Regalia Vows LLC and are protected
           by UAE and international copyright law. The Studio Works may not be
           reproduced, redistributed, used to train machine-learning models, or
           adapted in any form without our prior written consent.

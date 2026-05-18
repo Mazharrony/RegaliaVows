@@ -22,7 +22,7 @@ const clauses: Clause[] = [
     body: (
       <>
         <p>
-          Regalia Vows FZ-LLC (&ldquo;<strong>Regalia Vows</strong>,&rdquo;
+          Regalia Vows LLC (&ldquo;<strong>Regalia Vows</strong>,&rdquo;
           &ldquo;<strong>we</strong>,&rdquo; &ldquo;<strong>us</strong>&rdquo;)
           is a private commissioning house registered in the United Arab
           Emirates and operating from {site.contact.address}. We act as the
