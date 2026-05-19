@@ -64,6 +64,7 @@ const COL_LINKS = [
   {
     titleKey: "discover",
     links: [
+      { href: "/packages", key: "packages" },
       { href: "/case-studies", key: "caseStudies" },
       { href: "/venues", key: "venues" },
       { href: "/contact", key: "enquire" },

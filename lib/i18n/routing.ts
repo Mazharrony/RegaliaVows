@@ -15,6 +15,7 @@ export const pathnames = {
     en: "/services/[slug]",
     ru: "/услуги/[slug]",
   },
+  "/packages": { en: "/packages", ru: "/пакеты" },
   "/sectors": { en: "/sectors", ru: "/направления" },
   "/sectors/[slug]": {
     en: "/sectors/[slug]",

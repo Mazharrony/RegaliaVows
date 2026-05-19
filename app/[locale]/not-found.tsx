@@ -4,7 +4,7 @@ import { Section } from "@/components/ui/Section";
 import { Button } from "@/components/ui/Button";
 
 export default function NotFound() {
-  const t = useTranslations("notFound");
+  const t = useTranslations("common.notFound");
   return (
     <Section theme="pearl" className="!pt-44 min-h-[80vh]">
       <Container size="narrow" className="text-center">

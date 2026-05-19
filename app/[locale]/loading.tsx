@@ -2,7 +2,7 @@ import { getTranslations } from "next-intl/server";
 import { Monogram } from "@/components/ui/Monogram";
 
 export default async function Loading() {
-  const t = await getTranslations("loading");
+  const t = await getTranslations("common.loading");
   return (
     <div
       className="fixed inset-0 z-[120] grid place-items-center overflow-hidden bg-cream"

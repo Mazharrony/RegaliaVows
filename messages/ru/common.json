@@ -2,6 +2,7 @@
   "nav": {
     "story": "История",
     "services": "Услуги",
+    "packages": "Пакеты",
     "sectors": "Направления",
     "experience": "Процесс",
     "portfolio": "Портфолио",
@@ -49,6 +50,7 @@
       "privateSocial": "Частные и социальные",
       "hospitality": "Открытия отелей и ресторанов",
       "allSectors": "Все направления",
+      "packages": "Пакеты",
       "caseStudies": "Кейсы",
       "venues": "Площадки",
       "enquire": "Связаться"

@@ -2,6 +2,7 @@
   "nav": {
     "story": "Story",
     "services": "Services",
+    "packages": "Packages",
     "sectors": "Sectors",
     "experience": "Experience",
     "portfolio": "Portfolio",
@@ -49,6 +50,7 @@
       "privateSocial": "Private & Social",
       "hospitality": "Hospitality Launches",
       "allSectors": "All Sectors",
+      "packages": "Packages",
       "caseStudies": "Case Studies",
       "venues": "Venues",
       "enquire": "Enquire"

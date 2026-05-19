@@ -215,7 +215,7 @@ function ServiceCard({
       data-cursor="view"
       data-cursor-label="View"
       data-theme="dark"
-      className={`dark-panel group relative isolate block overflow-clip rounded-card border border-transparent bg-ink-50 transition-[transform,opacity] duration-700 ease-silk transform-gpu hover:-translate-y-1 [border-image:linear-gradient(to_bottom,theme(colors.gilded/80),theme(colors.gilded-100/40),theme(colors.gilded/15))_1] ${sizing}`}
+      className={`dark-panel group relative isolate block overflow-clip rounded-card border border-transparent bg-ink-50 transition-[transform,opacity] duration-700 ease-silk transform-gpu hover:-translate-y-1 [border-image:linear-gradient(to_bottom,theme(colors.gilded/80),theme(colors.gilded.100/40),theme(colors.gilded/15))_1] ${sizing}`}
     >
       {/* Background image — brighter so photography is the hero */}
       <BgImage

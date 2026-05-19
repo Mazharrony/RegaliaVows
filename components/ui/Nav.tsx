@@ -11,6 +11,7 @@ import { CrownMark } from "./CrownMark";
 const NAV_ITEMS = [
   { href: "/about", key: "story" },
   { href: "/services", key: "services" },
+  { href: "/packages", key: "packages" },
   { href: "/sectors", key: "sectors" },
   { href: "/experience", key: "experience" },
   { href: "/case-studies", key: "portfolio" },
