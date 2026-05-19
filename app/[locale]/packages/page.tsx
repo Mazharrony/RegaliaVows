@@ -1,4 +1,5 @@
 import { Fragment } from "react";
+import type { Metadata } from "next";
 import { Link } from "@/lib/i18n/navigation";
 import { Check, X as XIcon, Minus } from "lucide-react";
 import { PageHero } from "@/components/sections/PageHero";
@@ -7,37 +8,238 @@ import { Container } from "@/components/ui/Container";
 import { Eyebrow } from "@/components/ui/Eyebrow";
 import { Button } from "@/components/ui/Button";
 import { Reveal } from "@/components/motion/Reveal";
-import { localePageMetadata } from "@/lib/seo";
-import {
-  packages,
-  addOns,
-  comparison,
-  permits,
-  processSteps,
-  trustStats,
-  faqs,
-  formatPrice,
-} from "@/lib/packages";
+import { localeAlternates, urlForLocale } from "@/lib/seo";
+import type { Locale } from "@/lib/i18n/config";
+import { getPackagesContent, formatPrice } from "@/lib/packages";
 
-export const generateMetadata = localePageMetadata("/packages", {
-  title: "Proposal Packages — The Intimate Edit, Signature Vow & Regalia Experience",
-  description:
-    "Three signature proposal packages in Dubai by Regalia Vows. The Intimate Edit, The Signature Vow and The Regalia Experience — bespoke luxury proposals with full permit and venue management.",
-  keywords: [
-    "proposal package dubai",
-    "luxury proposal dubai",
-    "cinematic proposal package UAE",
-    "proposal planner dubai pricing",
-    "marriage proposal dubai cost",
-    "engagement proposal dubai",
-  ],
-  openGraph: {
-    title: "Proposal Packages | Regalia Vows",
-    description:
-      "Three signature proposal packages in Dubai. Designed, permitted and produced by a senior team.",
-    type: "website",
+// TODO(ru): review — drafted Russian copy pending principal sign-off.
+const copy: Record<
+  Locale,
+  {
+    seo: {
+      title: string;
+      description: string;
+      keywords: string[];
+      ogTitle: string;
+      ogDescription: string;
+    };
+    hero: { eyebrow: string; title: string; description: string };
+    priceFrom: string;
+    priceFooter: string;
+    included: string;
+    notIncluded: string;
+    perfectFor: string;
+    timeline: string;
+    addOns: { eyebrow: string; title: React.ReactNode; body: string };
+    comparison: { eyebrow: string; title: React.ReactNode; detail: string; fromLabel: string };
+    permitsGuide: { eyebrow: string; title: React.ReactNode; body: string };
+    process: { eyebrow: string; title: React.ReactNode };
+    faq: { eyebrow: string; title: React.ReactNode };
+    cta: {
+      eyebrow: string;
+      title: React.ReactNode;
+      body: string;
+      button: string;
+      back: string;
+    };
+  }
+> = {
+  en: {
+    seo: {
+      title:
+        "Proposal Packages — The Intimate Edit, Signature Vow & Regalia Experience",
+      description:
+        "Three signature proposal packages in Dubai by Regalia Vows. The Intimate Edit, The Signature Vow and The Regalia Experience — bespoke luxury proposals with full permit and venue management.",
+      keywords: [
+        "proposal package dubai",
+        "luxury proposal dubai",
+        "cinematic proposal package UAE",
+        "proposal planner dubai pricing",
+        "marriage proposal dubai cost",
+        "engagement proposal dubai",
+      ],
+      ogTitle: "Proposal Packages | Regalia Vows",
+      ogDescription:
+        "Three signature proposal packages in Dubai. Designed, permitted and produced by a senior team.",
+    },
+    hero: {
+      eyebrow: "Signature Experiences",
+      title: "Choose your perfect moment.",
+      description:
+        "Three meticulously crafted experiences. Each one designed to be unforgettable. Every proposal built entirely around the two of you.",
+    },
+    priceFrom: "From",
+    priceFooter:
+      "All prices in AED · USD equivalents shown · Currency rate indicative",
+    included: "What's Included",
+    notIncluded: "Not Included",
+    perfectFor: "Perfect For",
+    timeline: "Timeline",
+    addOns: {
+      eyebrow: "Enhance Your Experience",
+      title: (
+        <>
+          Luxury <em className="text-gilded-700">add-ons</em>.
+        </>
+      ),
+      body: "Every experience can be elevated. Add any of the following to your package and we will weave it seamlessly into your proposal.",
+    },
+    comparison: {
+      eyebrow: "Side by Side",
+      title: (
+        <>
+          Complete <em className="text-gilded-700">comparison</em>.
+        </>
+      ),
+      detail: "Detail",
+      fromLabel: "From AED",
+    },
+    permitsGuide: {
+      eyebrow: "Important Information",
+      title: (
+        <>
+          Dubai permit <em className="text-gilded-700">guide</em>.
+        </>
+      ),
+      body: "Understanding permit requirements in Dubai is essential for a seamless proposal. Here is everything you need to know — and everything we handle for you.",
+    },
+    process: {
+      eyebrow: "How It Works",
+      title: (
+        <>
+          From enquiry to <em className="text-gilded-700">her yes</em>.
+        </>
+      ),
+    },
+    faq: {
+      eyebrow: "Common Questions",
+      title: (
+        <>
+          Everything you <em className="text-gilded-700">need to know</em>.
+        </>
+      ),
+    },
+    cta: {
+      eyebrow: "Begin Your Brief",
+      title: (
+        <>
+          She deserves <em className="text-gilded-700">the extraordinary</em>.
+        </>
+      ),
+      body: "Every great love story deserves an extraordinary beginning. Tell us about her — and we will design the rest.",
+      button: "Begin a private enquiry",
+      back: "← View the proposal service",
+    },
   },
-});
+  ru: {
+    seo: {
+      title:
+        "Пакеты предложений — Камерная редакция, Фирменная клятва и Опыт Regalia",
+      description:
+        "Три фирменных пакета предложений в Дубае от Regalia Vows. «Камерная редакция», «Фирменная клятва» и «Опыт Regalia» — индивидуальные люкс-предложения с полным сопровождением разрешений и площадок.",
+      keywords: [
+        "пакет предложения дубай",
+        "люкс предложение дубай",
+        "кинематографичное предложение оаэ",
+        "планировщик предложений дубай цена",
+        "стоимость предложения руки и сердца дубай",
+        "помолвка дубай",
+      ],
+      ogTitle: "Пакеты предложений | Regalia Vows",
+      ogDescription:
+        "Три фирменных пакета предложений в Дубае. Спроектированы, согласованы и поставлены опытной командой.",
+    },
+    hero: {
+      eyebrow: "Фирменные впечатления",
+      title: "Выберите ваш идеальный момент.",
+      description:
+        "Три тщательно выстроенных впечатления. Каждое — задумано как незабываемое. Каждое предложение строится исключительно вокруг вас двоих.",
+    },
+    priceFrom: "От",
+    priceFooter:
+      "Цены в AED · эквиваленты в USD показаны · курс ориентировочный",
+    included: "Что входит",
+    notIncluded: "Не входит",
+    perfectFor: "Подходит",
+    timeline: "Тайминг",
+    addOns: {
+      eyebrow: "Усильте впечатление",
+      title: (
+        <>
+          Люксовые <em className="text-gilded-700">опции</em>.
+        </>
+      ),
+      body: "Любое впечатление можно усилить. Добавьте любую из опций — и мы органично впишем её в ваше предложение.",
+    },
+    comparison: {
+      eyebrow: "Сравнение",
+      title: (
+        <>
+          Полное <em className="text-gilded-700">сравнение</em>.
+        </>
+      ),
+      detail: "Деталь",
+      fromLabel: "От AED",
+    },
+    permitsGuide: {
+      eyebrow: "Важная информация",
+      title: (
+        <>
+          Гид по <em className="text-gilded-700">разрешениям</em> в Дубае.
+        </>
+      ),
+      body: "Понимание требований к разрешениям в Дубае — основа гладкого предложения. Здесь — всё, что нужно знать, и всё, что мы берём на себя.",
+    },
+    process: {
+      eyebrow: "Как это устроено",
+      title: (
+        <>
+          От заявки до <em className="text-gilded-700">её «да»</em>.
+        </>
+      ),
+    },
+    faq: {
+      eyebrow: "Частые вопросы",
+      title: (
+        <>
+          Всё, что нужно <em className="text-gilded-700">знать</em>.
+        </>
+      ),
+    },
+    cta: {
+      eyebrow: "Начните бриф",
+      title: (
+        <>
+          Она заслуживает <em className="text-gilded-700">исключительного</em>.
+        </>
+      ),
+      body: "Каждая большая история любви заслуживает исключительного начала. Расскажите нам о ней — остальное мы спроектируем.",
+      button: "Начать приватный запрос",
+      back: "← Перейти к услуге «Предложения»",
+    },
+  },
+};
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: Locale }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+  const t = copy[locale] ?? copy.en;
+  return {
+    title: t.seo.title,
+    description: t.seo.description,
+    keywords: t.seo.keywords,
+    alternates: localeAlternates(locale, "/packages"),
+    openGraph: {
+      title: t.seo.ogTitle,
+      description: t.seo.ogDescription,
+      type: "website",
+      url: urlForLocale(locale, "/packages"),
+    },
+  };
+}
 
 function ValueCell({ value }: { value: string }) {
   if (value === "yes")
@@ -47,13 +249,22 @@ function ValueCell({ value }: { value: string }) {
   return <span className="text-ink/75">{value}</span>;
 }
 
-export default function PackagesPage() {
+export default async function PackagesPage({
+  params,
+}: {
+  params: Promise<{ locale: Locale }>;
+}) {
+  const { locale } = await params;
+  const t = copy[locale] ?? copy.en;
+  const { packages, addOns, comparison, permits, processSteps, trustStats, faqs } =
+    getPackagesContent(locale);
+
   return (
     <>
       <PageHero
-        eyebrow="Signature Experiences"
-        title="Choose your perfect moment."
-        description="Three meticulously crafted experiences. Each one designed to be unforgettable. Every proposal built entirely around the two of you."
+        eyebrow={t.hero.eyebrow}
+        title={t.hero.title}
+        description={t.hero.description}
       />
 
       {/* ─────────── Packages grid ─────────── */}
@@ -72,7 +283,7 @@ export default function PackagesPage() {
                 >
                   {p.featured ? (
                     <span className="absolute -top-3 left-1/2 -translate-x-1/2 whitespace-nowrap bg-gilded px-4 py-1 font-tight text-[0.65rem] uppercase tracking-widest2 text-ink shadow-[0_8px_24px_-8px_rgba(214,161,64,0.7)] md:left-auto md:right-6 md:translate-x-0">
-                      {p.badge ?? "Most Chosen"}
+                      {p.badge ?? (locale === "ru" ? "Чаще всего выбирают" : "Most Chosen")}
                     </span>
                   ) : null}
 
@@ -87,7 +298,7 @@ export default function PackagesPage() {
 
                   <div className="mt-7">
                     <div className="flex items-baseline gap-2">
-                      <span className="font-tight text-[0.65rem] uppercase tracking-widest2 text-ink/50">From</span>
+                      <span className="font-tight text-[0.65rem] uppercase tracking-widest2 text-ink/50">{t.priceFrom}</span>
                       <span className="font-display text-sm text-gilded-800">AED</span>
                       <span className="font-display text-[2.6rem] italic leading-none text-ink">{formatPrice(p.priceFrom.AED)}</span>
                     </div>
@@ -110,7 +321,7 @@ export default function PackagesPage() {
                   <div className="mt-8 flex flex-col gap-7">
                     <div>
                       <span className="font-tight text-[0.65rem] uppercase tracking-widest2 text-gilded-700">
-                        What&apos;s Included
+                        {t.included}
                       </span>
                       <ul className="mt-4 space-y-2.5">
                         {p.inclusions.map((inc, idx) => (
@@ -125,7 +336,7 @@ export default function PackagesPage() {
                     {p.exclusions.length > 0 ? (
                       <div>
                         <span className="font-tight text-[0.65rem] uppercase tracking-widest2 text-ink/45">
-                          Not Included
+                          {t.notIncluded}
                         </span>
                         <ul className="mt-4 space-y-2.5">
                           {p.exclusions.map((exc, idx) => (
@@ -147,26 +358,26 @@ export default function PackagesPage() {
 
                     <div>
                       <span className="font-tight text-[0.65rem] uppercase tracking-widest2 text-gilded-700">
-                        Perfect For
+                        {t.perfectFor}
                       </span>
                       <p className="mt-2 text-sm leading-relaxed text-ink/75">{p.perfectFor}</p>
                     </div>
 
                     <div>
                       <span className="font-tight text-[0.65rem] uppercase tracking-widest2 text-gilded-700">
-                        Timeline
+                        {t.timeline}
                       </span>
                       <dl className="mt-4 space-y-0">
-                        {p.timeline.map((t, idx, arr) => (
+                        {p.timeline.map((tl, idx, arr) => (
                           <div
-                            key={t.label}
+                            key={tl.label}
                             className={
                               "flex justify-between gap-4 py-2 text-sm " +
                               (idx < arr.length - 1 ? "border-b border-ink/5" : "")
                             }
                           >
-                            <dt className="text-ink/60">{t.label}</dt>
-                            <dd className="text-right text-ink/85">{t.value}</dd>
+                            <dt className="text-ink/60">{tl.label}</dt>
+                            <dd className="text-right text-ink/85">{tl.value}</dd>
                           </div>
                         ))}
                       </dl>
@@ -178,7 +389,7 @@ export default function PackagesPage() {
           </div>
 
           <p className="mt-12 text-center font-tight text-[0.65rem] uppercase tracking-widest2 text-ink/45">
-            All prices in AED · USD equivalents shown · Currency rate indicative
+            {t.priceFooter}
           </p>
         </Container>
       </Section>
@@ -187,12 +398,12 @@ export default function PackagesPage() {
       <Section theme="pearl" className="!pt-0">
         <Container>
           <div className="text-center">
-            <Eyebrow className="!justify-center">Enhance Your Experience</Eyebrow>
+            <Eyebrow className="!justify-center">{t.addOns.eyebrow}</Eyebrow>
             <h2 className="mt-4 font-display text-display-sm italic text-ink md:text-display-md">
-              Luxury <em className="text-gilded-700">add-ons</em>.
+              {t.addOns.title}
             </h2>
             <p className="mx-auto mt-4 max-w-2xl text-sm leading-relaxed text-ink/70">
-              Every experience can be elevated. Add any of the following to your package and we will weave it seamlessly into your proposal.
+              {t.addOns.body}
             </p>
           </div>
 
@@ -233,9 +444,9 @@ export default function PackagesPage() {
       <Section theme="pearl" className="!pt-0">
         <Container>
           <div className="text-center">
-            <Eyebrow className="!justify-center">Side by Side</Eyebrow>
+            <Eyebrow className="!justify-center">{t.comparison.eyebrow}</Eyebrow>
             <h2 className="mt-4 font-display text-display-sm italic text-ink md:text-display-md">
-              Complete <em className="text-gilded-700">comparison</em>.
+              {t.comparison.title}
             </h2>
           </div>
 
@@ -244,7 +455,7 @@ export default function PackagesPage() {
               <thead>
                 <tr className="border-b border-ink/15">
                   <th className="w-[34%] py-5 pl-6 pr-4 font-tight text-[0.65rem] uppercase tracking-widest2 text-ink/45">
-                    Detail
+                    {t.comparison.detail}
                   </th>
                   {packages.map((p) => (
                     <th
@@ -258,7 +469,7 @@ export default function PackagesPage() {
                         {p.name}
                       </span>
                       <span className="mt-1 block font-display text-sm italic text-ink/65">
-                        From AED {formatPrice(p.priceFrom.AED)}
+                        {t.comparison.fromLabel} {formatPrice(p.priceFrom.AED)}
                       </span>
                     </th>
                   ))}
@@ -301,12 +512,12 @@ export default function PackagesPage() {
       <Section theme="pearl" className="!pt-0">
         <Container>
           <div className="text-center">
-            <Eyebrow className="!justify-center">Important Information</Eyebrow>
+            <Eyebrow className="!justify-center">{t.permitsGuide.eyebrow}</Eyebrow>
             <h2 className="mt-4 font-display text-display-sm italic text-ink md:text-display-md">
-              Dubai permit <em className="text-gilded-700">guide</em>.
+              {t.permitsGuide.title}
             </h2>
             <p className="mx-auto mt-4 max-w-2xl text-sm leading-relaxed text-ink/70">
-              Understanding permit requirements in Dubai is essential for a seamless proposal. Here is everything you need to know — and everything we handle for you.
+              {t.permitsGuide.body}
             </p>
           </div>
 
@@ -333,9 +544,9 @@ export default function PackagesPage() {
       <Section theme="pearl" className="!pt-0">
         <Container>
           <div className="text-center">
-            <Eyebrow className="!justify-center">How It Works</Eyebrow>
+            <Eyebrow className="!justify-center">{t.process.eyebrow}</Eyebrow>
             <h2 className="mt-4 font-display text-display-sm italic text-ink md:text-display-md">
-              From enquiry to <em className="text-gilded-700">her yes</em>.
+              {t.process.title}
             </h2>
           </div>
 
@@ -371,18 +582,18 @@ export default function PackagesPage() {
             <span aria-hidden className="absolute inset-x-12 top-0 h-px bg-gradient-to-r from-transparent via-gilded/70 to-transparent" />
             <span aria-hidden className="absolute inset-x-12 bottom-0 h-px bg-gradient-to-r from-transparent via-gilded/40 to-transparent" />
             <div className="grid grid-cols-2 gap-y-10 sm:grid-cols-3 lg:grid-cols-6">
-              {trustStats.map((t, i) => (
+              {trustStats.map((tStat, i) => (
                 <div
-                  key={t.label}
+                  key={tStat.label}
                   className={
                     "flex flex-col items-center text-center " +
                     // Vertical dividers between cells on lg+
                     (i % 6 !== 0 ? "lg:border-l lg:border-ink/10" : "")
                   }
                 >
-                  <span className="font-display text-4xl italic text-gilded-700 md:text-5xl">{t.value}</span>
+                  <span className="font-display text-4xl italic text-gilded-700 md:text-5xl">{tStat.value}</span>
                   <span className="mt-2 font-tight text-[0.65rem] uppercase tracking-widest2 text-ink/60">
-                    {t.label}
+                    {tStat.label}
                   </span>
                 </div>
               ))}
@@ -395,9 +606,9 @@ export default function PackagesPage() {
       <Section theme="pearl" className="!pt-0">
         <Container>
           <div className="text-center">
-            <Eyebrow className="!justify-center">Common Questions</Eyebrow>
+            <Eyebrow className="!justify-center">{t.faq.eyebrow}</Eyebrow>
             <h2 className="mt-4 font-display text-display-sm italic text-ink md:text-display-md">
-              Everything you <em className="text-gilded-700">need to know</em>.
+              {t.faq.title}
             </h2>
           </div>
 
@@ -431,22 +642,22 @@ export default function PackagesPage() {
             <span aria-hidden className="absolute inset-x-20 bottom-0 h-px bg-gradient-to-r from-transparent via-gilded/60 to-transparent" />
 
             <div className="relative mx-auto max-w-2xl">
-              <Eyebrow className="!justify-center">Begin Your Brief</Eyebrow>
+              <Eyebrow className="!justify-center">{t.cta.eyebrow}</Eyebrow>
               <h2 className="mt-5 font-display text-display-sm italic text-ink md:text-display-md">
-                She deserves <em className="text-gilded-700">the extraordinary</em>.
+                {t.cta.title}
               </h2>
               <p className="mx-auto mt-5 max-w-lg text-sm leading-relaxed text-ink/70">
-                Every great love story deserves an extraordinary beginning. Tell us about her — and we will design the rest.
+                {t.cta.body}
               </p>
               <div className="mt-10 flex flex-col items-center justify-center gap-6 sm:flex-row">
                 <Button href="/contact" variant="gilded" size="lg" withArrow>
-                  Begin a private enquiry
+                  {t.cta.button}
                 </Button>
                 <Link
                   href={{ pathname: "/services/[slug]", params: { slug: "proposals" } }}
                   className="font-tight text-[0.65rem] uppercase tracking-widest2 text-gilded-700 transition-colors hover:text-gilded"
                 >
-                  ← View the proposal service
+                  {t.cta.back}
                 </Link>
               </div>
             </div>
