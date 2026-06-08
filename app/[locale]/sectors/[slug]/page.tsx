@@ -202,6 +202,15 @@ export default async function SectorDetailPage({
                   </li>
                 ))}
               </ul>
+              {s.slug === "corporate" && (
+                <Link
+                  href="/event-photography-dubai"
+                  data-cursor="link"
+                  className="mt-8 inline-flex items-center gap-2 font-tight text-eyebrow uppercase tracking-widest2 text-gilded-700 transition-colors duration-500 hover:text-gilded"
+                >
+                  See full event photography coverage →
+                </Link>
+              )}
             </Reveal>
           </div>
 

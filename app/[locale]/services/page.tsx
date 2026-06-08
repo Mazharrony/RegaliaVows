@@ -5,6 +5,7 @@ import { Container } from "@/components/ui/Container";
 import { BgImage } from "@/components/ui/BgImage";
 import { Eyebrow } from "@/components/ui/Eyebrow";
 import { Button } from "@/components/ui/Button";
+import type { ButtonHref } from "@/components/ui/Button";
 import { Reveal } from "@/components/motion/Reveal";
 import { CrownMark } from "@/components/ui/CrownMark";
 import { ArrowUpRight } from "lucide-react";
@@ -14,7 +15,7 @@ import type { Locale } from "@/lib/i18n/config";
 export const generateMetadata = localePageMetadata("/services", {
   title: "Services",
   description:
-    "Six chapters of service — bespoke weddings, cinematic proposals, destination weddings, private events, corporate commissions and post-wedding honeymoons.",
+    "Seven chapters of service — bespoke weddings, cinematic proposals, destination weddings, private events, corporate commissions, post-wedding honeymoons and event photography across Dubai.",
 });
 
 type ServiceSlug =
@@ -23,38 +24,51 @@ type ServiceSlug =
   | "destination-weddings"
   | "private-events"
   | "corporate-and-private"
-  | "honeymoons";
+  | "honeymoons"
+  | "event-photography-dubai";
 
-const SERVICE_META: Record<ServiceSlug, { n: string; image: string }> = {
+const SERVICE_META: Record<ServiceSlug, { n: string; image: string; href: ButtonHref }> = {
   weddings: {
     n: "I",
     image:
       "https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=1600&q=70",
+    href: { pathname: "/services/[slug]", params: { slug: "weddings" } },
   },
   proposals: {
     n: "II",
     image:
       "https://images.unsplash.com/photo-1519225421980-715cb0215aed?auto=format&fit=crop&w=1600&q=70",
+    href: { pathname: "/services/[slug]", params: { slug: "proposals" } },
   },
   "destination-weddings": {
     n: "III",
     image:
       "https://images.unsplash.com/photo-1464366400600-7168b8af9bc3?auto=format&fit=crop&w=1600&q=70",
+    href: { pathname: "/services/[slug]", params: { slug: "destination-weddings" } },
   },
   "private-events": {
     n: "IV",
     image:
       "https://images.unsplash.com/photo-1530023367847-a683933f4172?auto=format&fit=crop&w=1600&q=70",
+    href: { pathname: "/services/[slug]", params: { slug: "private-events" } },
   },
   "corporate-and-private": {
     n: "V",
     image:
       "https://images.unsplash.com/photo-1540575467063-178a50c2df87?auto=format&fit=crop&w=1600&q=70",
+    href: { pathname: "/services/[slug]", params: { slug: "corporate-and-private" } },
   },
   honeymoons: {
     n: "VI",
     image:
       "https://images.unsplash.com/photo-1505228395891-9a51e7e86bf6?auto=format&fit=crop&w=1600&q=70",
+    href: { pathname: "/services/[slug]", params: { slug: "honeymoons" } },
+  },
+  "event-photography-dubai": {
+    n: "VII",
+    image:
+      "https://images.unsplash.com/photo-1492684223066-81342ee5ff30?auto=format&fit=crop&w=1600&q=70",
+    href: "/event-photography-dubai",
   },
 };
 
@@ -65,6 +79,7 @@ const SERVICE_ORDER: ServiceSlug[] = [
   "private-events",
   "corporate-and-private",
   "honeymoons",
+  "event-photography-dubai",
 ];
 
 type ServiceCopy = { title: string; body: string; investment: string };
@@ -94,13 +109,13 @@ type Copy = {
 const copy: Record<Locale, Copy> = {
   en: {
     heroEyebrow: "The Services",
-    heroTitle: "Six chapters, one signature.",
+    heroTitle: "Seven chapters, one signature.",
     heroDescription:
       "Every commission begins with the same conversation — and ends, no two ever alike. We accept a limited number of files each year, and we read every enquiry ourselves.",
     rangeEyebrow: "The Range",
     rangeTitle: "Weddings first. The rest, on request.",
     rangeBody:
-      "Regalia Vows is a wedding atelier first — bespoke weddings, cinematic proposals and the destinations and honeymoons that bracket them. For the same households we serve in the aisle, we extend the studio to private and corporate commissions: galas, brand launches, milestone nights. Six chapters in total, every one written by hand.",
+      "Regalia Vows is a wedding atelier first — bespoke weddings, cinematic proposals and the destinations and honeymoons that bracket them. For the same households we serve in the aisle, we extend the studio to private and corporate commissions, and to dedicated event photography across Dubai. Seven chapters in total, every one written by hand.",
     serviceLabel: "Service",
     altSuffix: "Regalia Vows service",
     services: {
@@ -134,6 +149,11 @@ const copy: Record<Locale, Copy> = {
         body: "The week after the wedding, planned with the same hand. Itineraries, residencies and quiet places to disappear together.",
         investment: "From AED 120,000",
       },
+      "event-photography-dubai": {
+        title: "Event Photography Dubai",
+        body: "Editorial event photography across the UAE — exhibitions, galas, concerts, graduations and Burj Khalifa projections, composed with the same eye we bring to the aisle.",
+        investment: "On request",
+      },
     },
     unitesEyebrow: "What Unites Them",
     unitesTitle: "Different chapters, the same hand.",
@@ -159,13 +179,13 @@ const copy: Record<Locale, Copy> = {
   },
   ru: {
     heroEyebrow: "Услуги",
-    heroTitle: "Шесть глав, одна подпись.",
+    heroTitle: "Семь глав, одна подпись.",
     heroDescription:
       "Каждый заказ начинается с одной и той же беседы — и заканчивается так, что двух одинаковых не бывает. Мы принимаем ограниченное число файлов в год и читаем каждый запрос лично.",
     rangeEyebrow: "Спектр",
     rangeTitle: "Свадьбы — в первую очередь. Остальное — по запросу.",
     rangeBody:
-      "Regalia Vows прежде всего свадебное ателье — индивидуальные свадьбы, кинематографические предложения, а также destination-форматы и медовые месяцы, обрамляющие их. Для тех же семей, кого мы сопровождаем у алтаря, мы расширяем студию на частные и корпоративные заказы: гала, запуски брендов, юбилейные вечера. Всего шесть глав, и каждая написана от руки.",
+      "Regalia Vows прежде всего свадебное ателье — индивидуальные свадьбы, кинематографические предложения, а также destination-форматы и медовые месяцы, обрамляющие их. Для тех же семей, кого мы сопровождаем у алтаря, мы расширяем студию на частные и корпоративные заказы, а также на съёмку событий по всему Дубаю. Семь глав, и каждая написана от руки.",
     serviceLabel: "Услуга",
     altSuffix: "услуга Regalia Vows",
     services: {
@@ -198,6 +218,11 @@ const copy: Record<Locale, Copy> = {
         title: "Медовые месяцы",
         body: "Неделя после свадьбы, спланированная той же рукой. Маршруты, резиденции и тихие места, чтобы исчезнуть вдвоём.",
         investment: "От 120 000 AED",
+      },
+      "event-photography-dubai": {
+        title: "Съёмка событий в Дубае",
+        body: "Редакционная съёмка событий по всем ОАЭ — выставки, гала, концерты, выпускные вечера и проекции на Burj Khalifa, снятые тем же взглядом, что и у алтаря.",
+        investment: "По запросу",
       },
     },
     unitesEyebrow: "Что их объединяет",
@@ -268,7 +293,7 @@ export default async function ServicesPage({
               return (
                 <Reveal key={slug} delay={(i % 2) * 0.08}>
                   <Link
-                    href={{ pathname: "/services/[slug]", params: { slug } }}
+                    href={meta.href}
                     data-cursor="view"
                     data-cursor-label="View"
                     className={`group block ${i % 3 === 1 ? "md:mt-16" : ""}`}

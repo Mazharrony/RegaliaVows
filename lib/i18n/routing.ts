@@ -38,6 +38,11 @@ export const pathnames = {
     en: "/contact/corporate",
     ru: "/контакты/корпоративные",
   },
+  // TODO(ru): translate slug — currently English on both locales.
+  "/event-photography-dubai": {
+    en: "/event-photography-dubai",
+    ru: "/event-photography-dubai",
+  },
   "/legal/privacy": {
     en: "/legal/privacy",
     ru: "/правовое/конфиденциальность",

@@ -62,6 +62,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     ["/press", { changeFrequency: "monthly", priority: 0.5 }],
     ["/contact", { changeFrequency: "yearly", priority: 0.6 }],
     ["/contact/corporate", { changeFrequency: "yearly", priority: 0.6 }],
+    ["/event-photography-dubai", { changeFrequency: "monthly", priority: 0.85 }],
     ["/legal/privacy", { changeFrequency: "yearly", priority: 0.2 }],
     ["/legal/terms", { changeFrequency: "yearly", priority: 0.2 }],
   ];

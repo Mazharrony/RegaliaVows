@@ -154,11 +154,12 @@ export function CorporateEnquiryForm() {
                   <RadioGroup<CorporateEnquiryInput>
                     name="eventType"
                     options={[
-                      { value: "brand-launch", label: "Brand Launch · Product Reveal" },
-                      { value: "gala", label: "Gala · Awards · Charity Dinner" },
-                      { value: "conference", label: "Conference · Summit" },
-                      { value: "incentive", label: "Incentive Trip · Off-site" },
-                      { value: "private-vip", label: "Private VIP · Family Office" },
+                      { value: "exhibition-conference-trade-show", label: "Exhibitions, Conference & Trade Show" },
+                      { value: "commercial-pr", label: "Commercial & PR Events Photography" },
+                      { value: "concert-festival-live", label: "Concerts, Festivals & Live Events Photography" },
+                      { value: "graduation-party", label: "Graduation Party" },
+                      { value: "private-public-party", label: "Private and Public Party Photography" },
+                      { value: "gala-award-night", label: "Gala Dinners and Award Night Photography" },
                     ]}
                     register={register}
                   />

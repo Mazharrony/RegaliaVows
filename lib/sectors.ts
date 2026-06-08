@@ -1,6 +1,8 @@
 // The four secondary pillars Regalia Vows extends beyond weddings.
 // Weddings & Proposals remain the primary niche and live under /services.
 
+import { eventCoverageTypes } from "./event-photography";
+
 export type SectorSlug =
   | "corporate"
   | "brand-experiential"
@@ -31,7 +33,8 @@ export const sectors: readonly Sector[] = [
     title: "Corporate Events.",
     shortTitle: "Corporate Events",
     eyebrow: "Sector I",
-    oneLiner: "Brand launches, galas, conferences, AGMs and family-office commissions.",
+    oneLiner:
+      "Exhibitions, conferences, galas, graduations, concerts, Burj Khalifa projections and private commissions across Dubai and the UAE.",
     description:
       "The same composition we bring to a wedding, applied to the moments a brand or a private office wants to remember. Treated with the discretion of a private commission.",
     philosophy:
@@ -76,14 +79,7 @@ export const sectors: readonly Sector[] = [
         body: "Two directors and a tested ground crew on site from rigging through wrap. A written post-event report follows within seven days.",
       },
     ],
-    inclusions: [
-      "Creative direction & narrative treatment",
-      "Venue scouting — ballrooms, ADNEC, DWTC, Dubai Opera, private estates",
-      "Production, AV, lighting & scenographic build",
-      "Talent, keynote & performer concierge",
-      "F&B programme & guest journey choreography",
-      "Permits, security, VIP protocol & press handling",
-    ],
+    inclusions: eventCoverageTypes,
     investment: "On request",
     image:
       "https://images.unsplash.com/photo-1540575467063-178a50c2df87?auto=format&fit=crop&w=1600&q=75",

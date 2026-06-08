@@ -40,7 +40,14 @@ export const corporateEnquirySchema = z.object({
 
   // Step 2 - Brief
   eventType: z.enum(
-    ["brand-launch", "gala", "conference", "incentive", "private-vip"],
+    [
+      "exhibition-conference-trade-show",
+      "commercial-pr",
+      "concert-festival-live",
+      "graduation-party",
+      "private-public-party",
+      "gala-award-night",
+    ],
     { required_error: "Choose an event type." },
   ),
   vision: z.string().min(20, "A few sentences, please.").max(2000),
