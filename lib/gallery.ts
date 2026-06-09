@@ -31,15 +31,15 @@ const ALBUMS: GalleryAlbum[] = [
     story: {
       en: {
         eyebrow: "A Wedding · 2024",
-        title: "Lamiyea & Safial — a soth in confidence.",
+        title: "Lamiyea & Safial — a quiet vow.",
         narrative:
-          "An intimate soth composed in a private salon: heirloom florals, candlelit thresholds, and the quiet rituals that precede the vow. We held the room to the family — a tableau of red, gold, and the slow lift of veil.",
+          "A private celebration held close to family: heirloom florals, candlelit thresholds, and the small rituals that lead to the vow. Photographed in low, considered light — red and gold tempered to a whisper, every gesture given its own space to land.",
       },
       ru: {
         eyebrow: "Свадьба · 2024",
-        title: "Ламия и Сафиал — сот в тишине.",
+        title: "Ламия и Сафиал — тихая клятва.",
         narrative:
-          "Камерный сот в частном салоне: фамильные цветы, пороги в свечах и тихие ритуалы, предшествующие клятве. Мы оставили зал семье — полотно красного, золотого и медленного поднятия покрывала.",
+          "Камерное торжество в кругу семьи: фамильные цветы, пороги в свечах и негромкие ритуалы, ведущие к клятве. Снято в мягком, продуманном свете — красное и золотое приглушены до шёпота, каждому жесту оставлено своё дыхание.",
       },
     },
     images: [
